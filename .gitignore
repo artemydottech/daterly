@@ -1,1 +1,13 @@
 node_modules
+
+# Build output
+dist
+
+# Logs
+*.log
+
+# AI tools
+.claude/
+.cursor/
+.copilot/
+.github/copilot-instructions.md

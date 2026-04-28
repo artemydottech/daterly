@@ -1,0 +1,159 @@
+@import 'react-day-picker/style.css';
+
+/* ─── Токены ──────────────────────────────────────────────── */
+:root {
+  --datepicker-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  --datepicker-font-size: 16px;
+  --datepicker-font-size-label: 12px;
+
+  /* sima-land palette */
+  --datepicker-color-text: #212121;
+  --datepicker-color-placeholder: #9e9e9e;
+  --datepicker-color-border: #e0e0e0;
+  --datepicker-color-border-focus: #1f84db;
+  --datepicker-color-border-error: #fb3a2f;
+  --datepicker-color-bg: #fff;
+  --datepicker-color-bg-disabled: #fafafa;
+  --datepicker-color-label: #9e9e9e;
+  --datepicker-color-label-focus: #1f84db;
+  --datepicker-color-label-error: #fb3a2f;
+  --datepicker-color-accent: #1f84db;
+
+  /* calendar */
+  --datepicker-color-today-bg: #e4f1f9;
+  --datepicker-color-hover: #f5f5f5;
+
+  /* размеры */
+  --datepicker-height: 56px;
+  --datepicker-radius: 8px;
+  --datepicker-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --datepicker-label-top-filled: 8px;
+  --datepicker-input-padding-top: 22px;
+}
+
+/* ─── Обёртка ─────────────────────────────────────────────── */
+.datepicker,
+.daterangepicker {
+  position: relative;
+  display: inline-block;
+  font-family: var(--datepicker-font-family);
+  font-size: var(--datepicker-font-size);
+}
+
+
+/* ─── Поле (рамка + label + input) ───────────────────────── */
+.datepicker__field {
+  position: relative;
+  height: var(--datepicker-height);
+  min-width: 180px;
+  background: var(--datepicker-color-bg);
+  border: 1px solid var(--datepicker-color-border);
+  border-radius: var(--datepicker-radius);
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+  cursor: text;
+}
+
+.daterangepicker .datepicker__field {
+  min-width: 320px;
+}
+
+/* Состояния поля */
+.datepicker[data-focused] .datepicker__field {
+  border-color: var(--datepicker-color-border-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--datepicker-color-border-focus) 15%, transparent);
+}
+
+.datepicker[data-failed] .datepicker__field {
+  border-color: var(--datepicker-color-border-error);
+}
+
+.datepicker[data-disabled] .datepicker__field {
+  background: var(--datepicker-color-bg-disabled);
+  border-color: var(--datepicker-color-border);
+  cursor: not-allowed;
+}
+
+/* ─── Floating label ──────────────────────────────────────── */
+.datepicker__label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--datepicker-font-size);
+  color: var(--datepicker-color-label);
+  pointer-events: none;
+  transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.datepicker[data-focused] .datepicker__label,
+.datepicker[data-filled] .datepicker__label {
+  top: var(--datepicker-label-top-filled);
+  transform: none;
+  font-size: var(--datepicker-font-size-label);
+}
+
+.datepicker[data-focused] .datepicker__label {
+  color: var(--datepicker-color-label-focus);
+}
+
+.datepicker[data-failed] .datepicker__label {
+  color: var(--datepicker-color-label-error);
+}
+
+/* ─── Input ───────────────────────────────────────────────── */
+.datepicker__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--datepicker-input-padding-top) 12px 8px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--datepicker-font-family);
+  font-size: var(--datepicker-font-size);
+  color: var(--datepicker-color-text);
+  cursor: text;
+}
+
+/* Когда нет label — центрируем по вертикали */
+.datepicker__field:not(:has(.datepicker__label)) .datepicker__input {
+  padding: 0 12px;
+}
+
+.datepicker__input::placeholder {
+  color: var(--datepicker-color-placeholder);
+}
+
+.datepicker__input:disabled {
+  cursor: not-allowed;
+  color: var(--datepicker-color-placeholder);
+}
+
+/* ─── Попап ───────────────────────────────────────────────── */
+.datepicker__popover {
+  position: absolute;
+  top: calc(var(--datepicker-height) + 6px);
+  left: 0;
+  z-index: 100;
+  background: var(--datepicker-color-bg);
+  border: 1px solid var(--datepicker-color-border);
+  border-radius: var(--datepicker-radius);
+  box-shadow: var(--datepicker-shadow);
+  padding: 12px;
+}
+
+/* ─── Интеграция с react-day-picker ───────────────────────── */
+.datepicker-calendar {
+  --rdp-accent-color: var(--datepicker-color-accent);
+  --rdp-accent-background-color: var(--datepicker-color-today-bg);
+  --rdp-background-color: var(--datepicker-color-hover);
+  margin: 0;
+  font-family: var(--datepicker-font-family);
+  font-size: var(--datepicker-font-size);
+  color: var(--datepicker-color-text);
+}
