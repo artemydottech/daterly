@@ -11,3 +11,4 @@ dist
 .cursor/
 .copilot/
 .github/copilot-instructions.md
+CLAUDE.md
