@@ -1,6 +1,6 @@
 {
   "name": "@artemy-tech/datepicker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "React DatePicker with react-hook-form support",
   "keywords": [
@@ -42,7 +42,7 @@
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "changeset": "changeset",
-    "version": "changeset version",
+    "cs:version": "changeset version",
     "release": "tsup && changeset publish"
   },
   "dependencies": {
