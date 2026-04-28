@@ -1,0 +1,58 @@
+{
+  "name": "@artemy-tech/datepicker",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "React DatePicker with react-hook-form support",
+  "keywords": [
+    "react",
+    "datepicker",
+    "react-hook-form",
+    "date-range"
+  ],
+  "author": "Artemy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/твой-username/datepicker"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./rhf": {
+      "types": "./dist/rhf.d.ts",
+      "import": "./dist/rhf.js",
+      "require": "./dist/rhf.cjs"
+    },
+    "./styles": "./dist/styles/variables.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "tsup && changeset publish"
+  },
+  "dependencies": {
+    "react-day-picker": "^9.0.0",
+    "date-fns": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "react-hook-form": ">=7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-hook-form": {
+      "optional": true
+    }
+  },
+  "devDependencies": {}
+}
