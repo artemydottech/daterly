@@ -13,7 +13,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/твой-username/datepicker"
+    "url": "git+https://github.com/artemydottech/datepicker.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "exports": {
     ".": {
