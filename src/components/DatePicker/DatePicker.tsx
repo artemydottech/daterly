@@ -35,6 +35,8 @@ function parseDate(masked: string): Date | undefined {
   return isValid(date) && format(date, DATE_FORMAT) === masked ? date : undefined
 }
 
+export type DatePickerSize = 's' | 'm' | 'l'
+
 export interface DatePickerProps {
   value?: Date
   defaultValue?: Date
@@ -45,6 +47,7 @@ export interface DatePickerProps {
   toDate?: Date
   disabled?: boolean
   failed?: boolean
+  size?: DatePickerSize
   className?: string
 }
 
@@ -58,6 +61,7 @@ export function DatePicker({
   toDate,
   disabled = false,
   failed = false,
+  size = 'm',
   className,
 }: DatePickerProps) {
   const isControlled = value !== undefined
@@ -144,7 +148,7 @@ export function DatePicker({
   return (
     <div
       ref={containerRef}
-      className={['datepicker', className].filter(Boolean).join(' ')}
+      className={['datepicker', `datepicker--${size}`, className].filter(Boolean).join(' ')}
       data-focused={focused || open || undefined}
       data-filled={filled || undefined}
       data-failed={failed || inputInvalid || undefined}
@@ -172,7 +176,7 @@ export function DatePicker({
         />
       </div>
       {open && (
-        <div className="datepicker__popover" role="dialog" aria-label="Календарь">
+        <div className={`datepicker__popover datepicker__popover--${size}`} role="dialog" aria-label="Календарь">
           <Calendar
             mode="single"
             selected={selected}

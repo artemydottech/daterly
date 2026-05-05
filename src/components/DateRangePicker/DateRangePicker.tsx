@@ -52,6 +52,9 @@ function formatRange(from: Date | undefined, to: Date | undefined): string {
 
 export type { DateRange }
 
+export type DateRangePickerSize = 's' | 'm' | 'l'
+export type DateRangePickerCalendarLayout = 'vertical' | 'horizontal'
+
 export interface DateRangePickerProps {
   value?: DateRange
   defaultValue?: DateRange
@@ -61,6 +64,8 @@ export interface DateRangePickerProps {
   toDate?: Date
   disabled?: boolean
   failed?: boolean
+  size?: DateRangePickerSize
+  calendarLayout?: DateRangePickerCalendarLayout
   className?: string
 }
 
@@ -73,6 +78,8 @@ export function DateRangePicker({
   toDate: toConstraint,
   disabled = false,
   failed = false,
+  size = 'm',
+  calendarLayout = 'vertical',
   className,
 }: DateRangePickerProps) {
   const isControlled = value !== undefined
@@ -216,7 +223,7 @@ export function DateRangePicker({
   return (
     <div
       ref={containerRef}
-      className={['datepicker', 'daterangepicker', className].filter(Boolean).join(' ')}
+      className={['datepicker', 'daterangepicker', `datepicker--${size}`, className].filter(Boolean).join(' ')}
       data-focused={focused || open || undefined}
       data-filled={filled || undefined}
       data-failed={failed || inputInvalid || undefined}
@@ -244,7 +251,15 @@ export function DateRangePicker({
         />
       </div>
       {open && (
-        <div className="datepicker__popover" role="dialog" aria-label="Выберите период">
+        <div
+          className={[
+            'datepicker__popover',
+            `datepicker__popover--${size}`,
+            calendarLayout === 'horizontal' && 'datepicker__popover--horizontal',
+          ].filter(Boolean).join(' ')}
+          role="dialog"
+          aria-label="Выберите период"
+        >
           <Calendar
             mode="range"
             selected={calendarSelected}
