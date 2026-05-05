@@ -1,4 +1,4 @@
-# @artemy-tech/datepicker
+# [@artemy-tech/datepicker](https://www.npmjs.com/package/@artemy-tech/datepicker)
 
 React DatePicker с опциональной поддержкой react-hook-form. Построен на базе [react-day-picker v9](https://daypicker.dev/) (headless) и [date-fns v3](https://date-fns.org/).
 

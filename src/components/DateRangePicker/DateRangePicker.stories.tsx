@@ -9,21 +9,73 @@ const meta: Meta<typeof DateRangePicker> = {
   tags: ['autodocs'],
   parameters: {
     docs: {
+      description: {
+        component:
+          'Поле выбора диапазона дат. Первый клик устанавливает начало периода, второй — конец.',
+      },
       story: {
         height: '460px',
       },
     },
+  },
+  argTypes: {
+    size: {
+      control: 'radio',
+      options: ['s', 'm', 'l'],
+    },
+    calendarLayout: {
+      control: 'radio',
+      options: ['vertical', 'horizontal'],
+    },
+    showTime: {
+      control: 'select',
+      options: ['—', 'HH:mm', 'HH:mm:ss'],
+      mapping: {
+        '—': undefined,
+        'HH:mm': { format: 'HH:mm' },
+        'HH:mm:ss': { format: 'HH:mm:ss' },
+      },
+    },
+    value: { control: false },
+    defaultValue: { control: false },
+    fromDate: { control: false },
+    toDate: { control: false },
+    onChange: { control: false },
   },
 }
 
 export default meta
 type Story = StoryObj<typeof DateRangePicker>
 
-export const БезLabel: Story = {}
+export const БезLabel: Story = {
+  args: {
+    size: 'm',
+  },
+}
 
 export const СFloatingLabel: Story = {
   args: {
     label: 'Период проживания',
+    size: 'm',
+  },
+}
+
+export const СВыборомВремени: Story = {
+  args: {
+    label: 'Период',
+    showTime: { format: 'HH:mm' } as never,
+    size: 'm',
+  },
+}
+
+export const Горизонтальный: Story = {
+  args: {
+    label: 'Период',
+    calendarLayout: 'horizontal',
+    size: 'm',
+  },
+  parameters: {
+    docs: { story: { height: '420px' } },
   },
 }
 
@@ -31,6 +83,7 @@ export const Отключённый: Story = {
   args: {
     label: 'Период',
     disabled: true,
+    size: 'm',
   },
 }
 

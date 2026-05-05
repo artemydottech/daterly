@@ -1,9 +1,12 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState, type ReactNode } from 'react'
 import { format, isValid, parse } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import type { DateRange } from 'react-day-picker'
+import type { DatePickerShowTime } from '../DatePicker/DatePicker'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { Calendar } from '../Calendar'
+import { TimePanel } from '../TimePanel'
+import { CalendarIcon } from '../icons/CalendarIcon'
 
 const DATE_FORMAT = 'dd.MM.yyyy'
 
@@ -50,7 +53,14 @@ function formatRange(from: Date | undefined, to: Date | undefined): string {
   return `${fromStr} — ${format(to, DATE_FORMAT)}`
 }
 
+function resolveShowSeconds(showTime?: DatePickerShowTime): boolean {
+  if (!showTime) return false
+  if (showTime === true) return true
+  return showTime.format === 'HH:mm:ss'
+}
+
 export type { DateRange }
+export type { DatePickerShowTime }
 
 export type DateRangePickerSize = 's' | 'm' | 'l'
 export type DateRangePickerCalendarLayout = 'vertical' | 'horizontal'
@@ -66,6 +76,9 @@ export interface DateRangePickerProps {
   failed?: boolean
   size?: DateRangePickerSize
   calendarLayout?: DateRangePickerCalendarLayout
+  showTime?: DatePickerShowTime
+  icon?: ReactNode | false
+  iconPosition?: 'start' | 'end'
   className?: string
 }
 
@@ -80,9 +93,15 @@ export function DateRangePicker({
   failed = false,
   size = 'm',
   calendarLayout = 'vertical',
+  showTime,
+  icon,
+  iconPosition = 'end',
   className,
 }: DateRangePickerProps) {
+  const resolvedIcon = icon === false ? null : (icon ?? <CalendarIcon />)
+
   const isControlled = value !== undefined
+  const showSeconds = resolveShowSeconds(showTime)
 
   const [internalFrom, setInternalFrom] = useState<Date | undefined>(defaultValue?.from)
   const [internalTo, setInternalTo] = useState<Date | undefined>(defaultValue?.to)
@@ -93,7 +112,6 @@ export function DateRangePicker({
   const [open, setOpen] = useState(false)
   const [focused, setFocused] = useState(false)
 
-  // Calendar picking state — managed separately from confirmed dates
   const [anchorDate, setAnchorDate] = useState<Date | undefined>(undefined)
   const [hoveredDate, setHoveredDate] = useState<Date | undefined>(undefined)
 
@@ -111,7 +129,6 @@ export function DateRangePicker({
   }, [])
   useClickOutside(containerRef, close)
 
-  // Visual range shown in calendar
   const calendarSelected: DateRange | undefined = anchorDate
     ? hoveredDate
       ? anchorDate <= hoveredDate
@@ -120,26 +137,29 @@ export function DateRangePicker({
       : { from: anchorDate, to: undefined }
     : { from: confirmedFrom, to: confirmedTo }
 
-  // ── Calendar handlers ─────────────────────────────────────────
-
-  // All selection logic lives here. onSelect is a no-op so calendar display is fully controlled.
   function handleDayClick(day: Date) {
     if (!anchorDate) {
-      // Phase 1: pick the "from" anchor
-      setAnchorDate(day)
-      if (!isControlled) { setInternalFrom(day); setInternalTo(undefined) }
+      const from = showTime
+        ? new Date(day.getFullYear(), day.getMonth(), day.getDate(),
+            confirmedFrom?.getHours() ?? 0, confirmedFrom?.getMinutes() ?? 0, confirmedFrom?.getSeconds() ?? 0)
+        : day
+      setAnchorDate(from)
+      if (!isControlled) { setInternalFrom(from); setInternalTo(undefined) }
       setInputValue(format(day, DATE_FORMAT))
       setInputInvalid(false)
-      onChange?.(day ? { from: day, to: undefined } : undefined)
+      onChange?.({ from, to: undefined })
     } else {
-      // Phase 2: pick "to" and close
-      let from = anchorDate, to = day
-      if (day < anchorDate) { from = day; to = anchorDate }
+      let from = anchorDate, to = showTime
+        ? new Date(day.getFullYear(), day.getMonth(), day.getDate(),
+            confirmedTo?.getHours() ?? 0, confirmedTo?.getMinutes() ?? 0, confirmedTo?.getSeconds() ?? 0)
+        : day
+      if (day < anchorDate) { const tmp = from; from = to; to = tmp }
       if (!isControlled) { setInternalFrom(from); setInternalTo(to) }
       setInputValue(formatRange(from, to))
       setInputInvalid(false)
       onChange?.({ from, to })
-      close()
+      if (!showTime) close()
+      else setAnchorDate(undefined)
     }
   }
 
@@ -147,7 +167,19 @@ export function DateRangePicker({
     if (anchorDate) setHoveredDate(day)
   }
 
-  // ── Text input handlers ───────────────────────────────────────
+  function handleFromTimeChange(h: number, m: number, s: number) {
+    const base = confirmedFrom ?? new Date()
+    const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s)
+    if (!isControlled) setInternalFrom(newDate)
+    onChange?.({ from: newDate, to: confirmedTo })
+  }
+
+  function handleToTimeChange(h: number, m: number, s: number) {
+    const base = confirmedTo ?? new Date()
+    const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s)
+    if (!isControlled) setInternalTo(newDate)
+    onChange?.({ from: confirmedFrom, to: newDate })
+  }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const input = e.target
@@ -189,7 +221,6 @@ export function DateRangePicker({
       return
     }
     if (e.key === 'Backspace' && pos > 0 && /[\s—]/.test(input.value[pos - 1])) {
-      // skip over separator characters
       e.preventDefault()
       const val = input.value
       const charsToSkip = val.slice(0, pos).match(/[\s—]+$/)?.[0].length ?? 1
@@ -229,7 +260,15 @@ export function DateRangePicker({
       data-failed={failed || inputInvalid || undefined}
       data-disabled={disabled || undefined}
     >
-      <div className="datepicker__field" onClick={() => !disabled && inputRef.current?.focus()}>
+      <div
+        className="datepicker__field"
+        data-icon-start={resolvedIcon && iconPosition === 'start' ? true : undefined}
+        data-icon-end={resolvedIcon && iconPosition === 'end' ? true : undefined}
+        onClick={() => !disabled && inputRef.current?.focus()}
+      >
+        {resolvedIcon && iconPosition === 'start' && (
+          <span className="datepicker__icon datepicker__icon--start">{resolvedIcon}</span>
+        )}
         {label && <span className="datepicker__label">{label}</span>}
         <input
           ref={inputRef}
@@ -249,6 +288,9 @@ export function DateRangePicker({
           aria-haspopup="dialog"
           aria-invalid={inputInvalid || undefined}
         />
+        {resolvedIcon && iconPosition === 'end' && (
+          <span className="datepicker__icon datepicker__icon--end">{resolvedIcon}</span>
+        )}
       </div>
       {open && (
         <div
@@ -256,22 +298,58 @@ export function DateRangePicker({
             'datepicker__popover',
             `datepicker__popover--${size}`,
             calendarLayout === 'horizontal' && 'datepicker__popover--horizontal',
+            showTime && 'datepicker__popover--with-time',
           ].filter(Boolean).join(' ')}
           role="dialog"
           aria-label="Выберите период"
         >
-          <Calendar
-            mode="range"
-            selected={calendarSelected}
-            onSelect={() => {}}
-            onDayClick={handleDayClick}
-            onDayMouseEnter={handleDayMouseEnter}
-            onDayMouseLeave={() => setHoveredDate(undefined)}
-            startMonth={fromConstraint}
-            endMonth={toConstraint}
-            numberOfMonths={2}
-            locale={ru}
-          />
+          {showTime ? (
+            <>
+              <div className="datepicker__popover-body">
+                <div className="datepicker__popover-calendar">
+                  <Calendar
+                    mode="range"
+                    selected={calendarSelected}
+                    onSelect={() => {}}
+                    onDayClick={handleDayClick}
+                    onDayMouseEnter={handleDayMouseEnter}
+                    onDayMouseLeave={() => setHoveredDate(undefined)}
+                    startMonth={fromConstraint}
+                    endMonth={toConstraint}
+                    numberOfMonths={2}
+                    locale={ru}
+                  />
+                </div>
+              </div>
+              <div className="datepicker__time-row">
+                <div className="datepicker__time-col">
+                  <span className="datepicker__time-label">Начало</span>
+                  <TimePanel value={confirmedFrom} showSeconds={showSeconds} onChange={handleFromTimeChange} />
+                </div>
+                <div className="datepicker__time-separator" />
+                <div className="datepicker__time-col">
+                  <span className="datepicker__time-label">Конец</span>
+                  <TimePanel value={confirmedTo} showSeconds={showSeconds} onChange={handleToTimeChange} />
+                </div>
+              </div>
+              <div className="datepicker__popover-footer">
+                <button className="datepicker__ok-btn" type="button" onClick={close}>OK</button>
+              </div>
+            </>
+          ) : (
+            <Calendar
+              mode="range"
+              selected={calendarSelected}
+              onSelect={() => {}}
+              onDayClick={handleDayClick}
+              onDayMouseEnter={handleDayMouseEnter}
+              onDayMouseLeave={() => setHoveredDate(undefined)}
+              startMonth={fromConstraint}
+              endMonth={toConstraint}
+              numberOfMonths={2}
+              locale={ru}
+            />
+          )}
         </div>
       )}
     </div>
