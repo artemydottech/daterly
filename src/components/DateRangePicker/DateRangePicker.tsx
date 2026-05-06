@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { format, isValid, parse } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import type { DateRange } from 'react-day-picker'
@@ -7,6 +7,7 @@ import { useClickOutside } from '../../hooks/useClickOutside'
 import { Calendar } from '../Calendar'
 import { TimePanel } from '../TimePanel'
 import { CalendarIcon } from '../icons/CalendarIcon'
+import { Spinner } from '../icons/Spinner'
 
 const DATE_FORMAT = 'dd.MM.yyyy'
 
@@ -74,6 +75,7 @@ export interface DateRangePickerProps {
   toDate?: Date
   disabled?: boolean
   failed?: boolean
+  loading?: boolean
   size?: DateRangePickerSize
   calendarLayout?: DateRangePickerCalendarLayout
   showTime?: DatePickerShowTime
@@ -91,6 +93,7 @@ export function DateRangePicker({
   toDate: toConstraint,
   disabled = false,
   failed = false,
+  loading = false,
   size = 'm',
   calendarLayout = 'vertical',
   showTime,
@@ -98,7 +101,7 @@ export function DateRangePicker({
   iconPosition = 'end',
   className,
 }: DateRangePickerProps) {
-  const resolvedIcon = icon === false ? null : (icon ?? <CalendarIcon />)
+  const resolvedIcon = loading ? <Spinner /> : icon === false ? null : (icon ?? <CalendarIcon />)
 
   const isControlled = value !== undefined
   const showSeconds = resolveShowSeconds(showTime)
@@ -117,6 +120,10 @@ export function DateRangePicker({
 
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  // Track last emitted range to ignore parent echoing it back
+  const lastEmittedFromRef = useRef<Date | undefined>(value !== undefined ? value?.from : defaultValue?.from)
+  const lastEmittedToRef = useRef<Date | undefined>(value !== undefined ? value?.to : defaultValue?.to)
+  const wasControlledRef = useRef(value !== undefined)
 
   const confirmedFrom = isControlled ? value?.from : internalFrom
   const confirmedTo = isControlled ? value?.to : internalTo
@@ -128,6 +135,27 @@ export function DateRangePicker({
     setHoveredDate(undefined)
   }, [])
   useClickOutside(containerRef, close)
+
+  // Sync inputValue when value changes externally (e.g. form reset)
+  useEffect(() => {
+    if (value !== undefined) wasControlledRef.current = true
+    const newFrom = value?.from
+    const newTo = value?.to
+    const fromTime = newFrom?.getTime() ?? null
+    const toTime = newTo?.getTime() ?? null
+    const lastFromTime = lastEmittedFromRef.current?.getTime() ?? null
+    const lastToTime = lastEmittedToRef.current?.getTime() ?? null
+    if (fromTime === lastFromTime && toTime === lastToTime) return
+    if (!wasControlledRef.current && value === undefined) return
+
+    setInputValue(formatRange(newFrom, newTo))
+    setInputInvalid(false)
+    if (!isControlled) { setInternalFrom(newFrom); setInternalTo(newTo) }
+    setAnchorDate(undefined)
+    setHoveredDate(undefined)
+    lastEmittedFromRef.current = newFrom
+    lastEmittedToRef.current = newTo
+  }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const calendarSelected: DateRange | undefined = anchorDate
     ? hoveredDate
@@ -147,6 +175,8 @@ export function DateRangePicker({
       if (!isControlled) { setInternalFrom(from); setInternalTo(undefined) }
       setInputValue(format(day, DATE_FORMAT))
       setInputInvalid(false)
+      lastEmittedFromRef.current = from
+      lastEmittedToRef.current = undefined
       onChange?.({ from, to: undefined })
     } else {
       let from = anchorDate, to = showTime
@@ -157,6 +187,8 @@ export function DateRangePicker({
       if (!isControlled) { setInternalFrom(from); setInternalTo(to) }
       setInputValue(formatRange(from, to))
       setInputInvalid(false)
+      lastEmittedFromRef.current = from
+      lastEmittedToRef.current = to
       onChange?.({ from, to })
       if (!showTime) close()
       else setAnchorDate(undefined)
@@ -171,6 +203,7 @@ export function DateRangePicker({
     const base = confirmedFrom ?? new Date()
     const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s)
     if (!isControlled) setInternalFrom(newDate)
+    lastEmittedFromRef.current = newDate
     onChange?.({ from: newDate, to: confirmedTo })
   }
 
@@ -178,6 +211,7 @@ export function DateRangePicker({
     const base = confirmedTo ?? new Date()
     const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s)
     if (!isControlled) setInternalTo(newDate)
+    lastEmittedToRef.current = newDate
     onChange?.({ from: confirmedFrom, to: newDate })
   }
 
@@ -202,6 +236,8 @@ export function DateRangePicker({
     setInputInvalid((fromComplete && !parsedFrom) || (toComplete && !parsedTo))
 
     if (!isControlled) { setInternalFrom(parsedFrom); setInternalTo(parsedTo) }
+    lastEmittedFromRef.current = parsedFrom
+    lastEmittedToRef.current = parsedTo
     onChange?.(parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : undefined)
 
     requestAnimationFrame(() =>
@@ -244,12 +280,15 @@ export function DateRangePicker({
     const parsedTo = digits.length >= 16 ? parseDate(applyDateMask(digits.slice(8, 16))) : undefined
     setInputInvalid((digits.length >= 8 && !parsedFrom) || (digits.length >= 16 && !parsedTo))
     if (!isControlled) { setInternalFrom(parsedFrom); setInternalTo(parsedTo) }
+    lastEmittedFromRef.current = parsedFrom
+    lastEmittedToRef.current = parsedTo
     onChange?.(parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : undefined)
 
     requestAnimationFrame(() => inputRef.current?.setSelectionRange(masked.length, masked.length))
   }
 
   const placeholder = label && !focused && !filled ? undefined : 'дд.мм.гггг — дд.мм.гггг'
+  const interactive = !disabled && !loading
 
   return (
     <div
@@ -258,13 +297,13 @@ export function DateRangePicker({
       data-focused={focused || open || undefined}
       data-filled={filled || undefined}
       data-failed={failed || inputInvalid || undefined}
-      data-disabled={disabled || undefined}
+      data-disabled={!interactive || undefined}
     >
       <div
         className="datepicker__field"
         data-icon-start={resolvedIcon && iconPosition === 'start' ? true : undefined}
         data-icon-end={resolvedIcon && iconPosition === 'end' ? true : undefined}
-        onClick={() => !disabled && inputRef.current?.focus()}
+        onClick={() => interactive && inputRef.current?.focus()}
       >
         {resolvedIcon && iconPosition === 'start' && (
           <span className="datepicker__icon datepicker__icon--start">{resolvedIcon}</span>
@@ -277,11 +316,11 @@ export function DateRangePicker({
           className="datepicker__input"
           value={inputValue}
           placeholder={placeholder}
-          disabled={disabled}
+          disabled={!interactive}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
-          onFocus={() => { setFocused(true); if (!disabled) setOpen(true) }}
+          onFocus={() => { setFocused(true); if (interactive) setOpen(true) }}
           onBlur={() => setFocused(false)}
           aria-label={label ?? 'Выберите период'}
           aria-expanded={open}

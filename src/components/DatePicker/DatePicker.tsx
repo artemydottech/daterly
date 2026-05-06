@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { format, isValid, parse } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { Calendar } from '../Calendar'
 import { TimePanel } from '../TimePanel'
 import { CalendarIcon } from '../icons/CalendarIcon'
+import { Spinner } from '../icons/Spinner'
 
 export type DatePickerSize = 's' | 'm' | 'l'
 export type DatePickerShowTime = boolean | { format: 'HH:mm' | 'HH:mm:ss' }
@@ -71,6 +72,7 @@ export interface DatePickerProps {
   toDate?: Date
   disabled?: boolean
   failed?: boolean
+  loading?: boolean
   size?: DatePickerSize
   noCalendar?: boolean
   showTime?: DatePickerShowTime
@@ -89,6 +91,7 @@ export function DatePicker({
   toDate,
   disabled = false,
   failed = false,
+  loading = false,
   size = 'm',
   noCalendar = false,
   showTime,
@@ -102,7 +105,7 @@ export function DatePicker({
   const defaultPlaceholder = placeholder ?? buildPlaceholder(timeFormat)
   const showSeconds = timeFormat === 'HH:mm:ss'
 
-  const resolvedIcon = icon === false ? null : (icon ?? <CalendarIcon />)
+  const resolvedIcon = loading ? <Spinner /> : icon === false ? null : (icon ?? <CalendarIcon />)
 
   const isControlled = value !== undefined
   const [internalDate, setInternalDate] = useState<Date | undefined>(defaultValue)
@@ -116,6 +119,10 @@ export function DatePicker({
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const lastValidRef = useRef(inputValue)
+  // Track what we last emitted via onChange so we can ignore parent echoing it back
+  const lastEmittedRef = useRef<Date | undefined>(value !== undefined ? value : defaultValue)
+  // Once we see a defined value, we always sync external changes (handles RHF reset)
+  const wasControlledRef = useRef(value !== undefined)
 
   const selected = isControlled ? value : internalDate
   const filled = inputValue.length > 0
@@ -123,7 +130,24 @@ export function DatePicker({
   const close = useCallback(() => setOpen(false), [])
   useClickOutside(containerRef, close)
 
+  // Sync inputValue when value changes externally (e.g. form reset)
+  useEffect(() => {
+    if (value !== undefined) wasControlledRef.current = true
+    const lastTime = lastEmittedRef.current?.getTime() ?? null
+    const valueTime = value?.getTime() ?? null
+    if (valueTime === lastTime) return
+    if (!wasControlledRef.current && value === undefined) return
+
+    const formatted = value && isValid(value) ? format(value, dateFormat) : ''
+    setInputValue(formatted)
+    lastValidRef.current = formatted
+    setInputInvalid(false)
+    if (!isControlled) setInternalDate(value)
+    lastEmittedRef.current = value
+  }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
+
   function applyValid(masked: string, date: Date | undefined) {
+    lastEmittedRef.current = date
     lastValidRef.current = masked
     setInputValue(masked)
     setInputInvalid(false)
@@ -134,12 +158,14 @@ export function DatePicker({
   function commit(masked: string) {
     const digits = masked.replace(/\D/g, '')
     if (digits.length === 0) {
+      lastEmittedRef.current = undefined
       lastValidRef.current = ''
       setInputInvalid(false)
       if (!isControlled) setInternalDate(undefined)
       onChange?.(undefined)
     } else if (digits.length === maxDigits) {
       const date = parseDateTime(masked, dateFormat, maxDigits)
+      lastEmittedRef.current = date
       if (date) lastValidRef.current = masked
       setInputInvalid(!date)
       if (!isControlled) setInternalDate(date)
@@ -207,7 +233,6 @@ export function DatePicker({
 
     let dateToCommit = date
     if (timeFormat) {
-      // Preserve currently-selected or currently-typed time when picking a new date
       const base = selected && isValid(selected) ? selected : new Date(0)
       dateToCommit = new Date(
         date.getFullYear(), date.getMonth(), date.getDate(),
@@ -225,6 +250,8 @@ export function DatePicker({
     applyValid(format(newDate, dateFormat), newDate)
   }
 
+  const interactive = !disabled && !loading
+
   return (
     <div
       ref={containerRef}
@@ -232,13 +259,13 @@ export function DatePicker({
       data-focused={focused || open || undefined}
       data-filled={filled || undefined}
       data-failed={failed || inputInvalid || undefined}
-      data-disabled={disabled || undefined}
+      data-disabled={!interactive || undefined}
     >
       <div
         className="datepicker__field"
         data-icon-start={resolvedIcon && iconPosition === 'start' ? true : undefined}
         data-icon-end={resolvedIcon && iconPosition === 'end' ? true : undefined}
-        onClick={() => !disabled && inputRef.current?.focus()}
+        onClick={() => interactive && inputRef.current?.focus()}
       >
         {resolvedIcon && iconPosition === 'start' && (
           <span className="datepicker__icon datepicker__icon--start">{resolvedIcon}</span>
@@ -251,11 +278,11 @@ export function DatePicker({
           className="datepicker__input"
           value={inputValue}
           placeholder={label && !focused ? undefined : defaultPlaceholder}
-          disabled={disabled}
+          disabled={!interactive}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
-          onFocus={() => { setFocused(true); if (!disabled && !noCalendar) setOpen(true) }}
+          onFocus={() => { setFocused(true); if (interactive && !noCalendar) setOpen(true) }}
           onBlur={handleBlur}
           aria-label={label ?? 'Выберите дату'}
           aria-expanded={!noCalendar ? open : undefined}

@@ -7,4 +7,5 @@ export type { DatePickerProps, DatePickerShowTime } from './components/DatePicke
 export { DateRangePicker } from './components/DateRangePicker'
 export type { DateRangePickerProps, DateRange } from './components/DateRangePicker'
 
-export const VERSION = '0.0.1'
+export { Button } from './components/Button'
+export type { ButtonProps } from './components/Button'

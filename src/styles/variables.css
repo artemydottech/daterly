@@ -331,6 +331,111 @@
   opacity: 0.85;
 }
 
+/* Spinner */
+.datepicker-spinner {
+  display: inline-block;
+  width: var(--datepicker-icon-size);
+  height: var(--datepicker-icon-size);
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  animation: datepicker-spin 0.65s linear infinite;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+@keyframes datepicker-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Button */
+.dp-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  border-radius: var(--datepicker-radius);
+  font-family: var(--datepicker-font-family);
+  font-weight: 600;
+  box-sizing: border-box;
+  padding: 0 var(--datepicker-padding-h);
+  border: 0;
+  outline: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    background 0.2s ease-in-out,
+    transform 0.1s ease-in-out;
+}
+
+.dp-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.dp-btn:disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.dp-btn--s {
+  height: 32px;
+  font-size: 14px;
+}
+
+.dp-btn--m {
+  height: 40px;
+  font-size: var(--datepicker-font-size);
+}
+
+.dp-btn--primary {
+  background: var(--datepicker-color-accent);
+  color: #fff;
+}
+
+.dp-btn--primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--datepicker-color-accent) 85%, #000);
+}
+
+.dp-btn--secondary {
+  background: transparent;
+  color: var(--datepicker-color-accent);
+  border: 1px solid var(--datepicker-color-accent);
+}
+
+.dp-btn--secondary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--datepicker-color-accent) 8%, transparent);
+}
+
+.dp-btn--loading {
+  color: transparent;
+}
+
+.dp-btn--loading .datepicker-spinner {
+  position: absolute;
+  top: calc(50% - var(--datepicker-icon-size) / 2);
+  left: calc(50% - var(--datepicker-icon-size) / 2);
+  color: var(--datepicker-color-accent);
+}
+
+.dp-btn--loading.dp-btn--primary .datepicker-spinner {
+  color: #fff;
+}
+
+.datepicker-rhf {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.datepicker-rhf__error {
+  font-size: 12px;
+  color: var(--datepicker-color-border-error);
+  font-family: var(--datepicker-font-family);
+  line-height: 1;
+}
+
 .time-panel {
   display: flex;
 }
