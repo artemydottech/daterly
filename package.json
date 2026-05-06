@@ -46,8 +46,8 @@
     "release": "tsup && changeset publish"
   },
   "dependencies": {
-    "react-day-picker": "^9.0.0",
-    "date-fns": "^3.0.0"
+    "date-fns": "^3.0.0",
+    "react-day-picker": "^9.0.0"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
@@ -60,6 +60,7 @@
     }
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.0",
     "@storybook/addon-essentials": "^8.0.0",
     "@storybook/react-vite": "^8.0.0",
     "@testing-library/react": "^16.0.0",
