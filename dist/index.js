@@ -1,15 +1,37 @@
 import {
   Calendar,
   DatePicker,
-  DateRangePicker
-} from "./chunk-GMAK5HRI.js";
+  DateRangePicker,
+  Spinner
+} from "./chunk-DQSX6QKR.js";
 
-// src/index.ts
-var VERSION = "0.0.1";
+// src/components/Button/Button.tsx
+import { jsx, jsxs } from "react/jsx-runtime";
+function Button({
+  variant = "primary",
+  size = "m",
+  loading = false,
+  disabled,
+  className,
+  children,
+  ...rest
+}) {
+  const classes = [
+    "dp-btn",
+    `dp-btn--${variant}`,
+    `dp-btn--${size}`,
+    loading && "dp-btn--loading",
+    className
+  ].filter(Boolean).join(" ");
+  return /* @__PURE__ */ jsxs("button", { ...rest, className: classes, disabled: disabled || loading, children: [
+    children,
+    loading && /* @__PURE__ */ jsx(Spinner, {})
+  ] });
+}
 export {
+  Button,
   Calendar,
   DatePicker,
-  DateRangePicker,
-  VERSION
+  DateRangePicker
 };
 //# sourceMappingURL=index.js.map
