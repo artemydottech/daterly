@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { format, isValid, parse } from 'date-fns'
+import { format, isValid, parse, startOfDay } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { Calendar } from '../Calendar'
@@ -56,10 +56,34 @@ function getCursorPos(masked: string, digitCount: number): number {
   return masked.length
 }
 
+function toDateOnly(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0)
+}
+
 function parseDateTime(masked: string, dateFormat: string, maxDigits: number): Date | undefined {
   if (masked.replace(/\D/g, '').length !== maxDigits) return undefined
   const date = parse(masked, dateFormat, new Date())
-  return isValid(date) && format(date, dateFormat) === masked ? date : undefined
+  if (!isValid(date) || format(date, dateFormat) !== masked) return undefined
+  return maxDigits === 8 ? toDateOnly(date) : date
+}
+
+export interface DatePickerInputProps {
+  ref: React.Ref<HTMLInputElement>
+  type: 'text'
+  inputMode: 'numeric'
+  className: string
+  value: string
+  placeholder: string | undefined
+  disabled: boolean
+  onChange: React.ChangeEventHandler<HTMLInputElement>
+  onKeyDown: React.KeyboardEventHandler<HTMLInputElement>
+  onPaste: React.ClipboardEventHandler<HTMLInputElement>
+  onFocus: React.FocusEventHandler<HTMLInputElement>
+  onBlur: React.FocusEventHandler<HTMLInputElement>
+  'aria-label': string
+  'aria-expanded': boolean | undefined
+  'aria-haspopup': 'dialog' | undefined
+  'aria-invalid': true | undefined
 }
 
 export interface DatePickerProps {
@@ -79,6 +103,7 @@ export interface DatePickerProps {
   icon?: ReactNode | false
   iconPosition?: 'start' | 'end'
   className?: string
+  renderInput?: (props: DatePickerInputProps) => ReactNode
 }
 
 export function DatePicker({
@@ -98,12 +123,20 @@ export function DatePicker({
   icon,
   iconPosition = 'end',
   className,
+  renderInput,
 }: DatePickerProps) {
   const timeFormat = resolveTimeFormat(showTime)
   const dateFormat = buildDateFormat(timeFormat)
   const maxDigits = buildMaxDigits(timeFormat)
   const defaultPlaceholder = placeholder ?? buildPlaceholder(timeFormat)
   const showSeconds = timeFormat === 'HH:mm:ss'
+
+  const fromDay = fromDate ? startOfDay(fromDate) : undefined
+  const toDay = toDate ? startOfDay(toDate) : undefined
+  const disabledDays = [
+    ...(fromDay ? [{ before: fromDay }] : []),
+    ...(toDay ? [{ after: toDay }] : []),
+  ]
 
   const resolvedIcon = loading ? <Spinner /> : icon === false ? null : (icon ?? <CalendarIcon />)
 
@@ -231,13 +264,15 @@ export function DatePicker({
       return
     }
 
-    let dateToCommit = date
+    let dateToCommit: Date
     if (timeFormat) {
       const base = selected && isValid(selected) ? selected : new Date(0)
       dateToCommit = new Date(
         date.getFullYear(), date.getMonth(), date.getDate(),
         base.getHours(), base.getMinutes(), base.getSeconds(),
       )
+    } else {
+      dateToCommit = toDateOnly(date)
     }
 
     applyValid(format(dateToCommit, dateFormat), dateToCommit)
@@ -271,24 +306,29 @@ export function DatePicker({
           <span className="datepicker__icon datepicker__icon--start">{resolvedIcon}</span>
         )}
         {label && <span className="datepicker__label">{label}</span>}
-        <input
-          ref={inputRef}
-          type="text"
-          inputMode="numeric"
-          className="datepicker__input"
-          value={inputValue}
-          placeholder={label && !focused ? undefined : defaultPlaceholder}
-          disabled={!interactive}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          onPaste={handlePaste}
-          onFocus={() => { setFocused(true); if (interactive && !noCalendar) setOpen(true) }}
-          onBlur={handleBlur}
-          aria-label={label ?? 'Выберите дату'}
-          aria-expanded={!noCalendar ? open : undefined}
-          aria-haspopup={!noCalendar ? 'dialog' : undefined}
-          aria-invalid={inputInvalid || undefined}
-        />
+        {(() => {
+          const inputProps: DatePickerInputProps = {
+            ref: inputRef,
+            type: 'text',
+            inputMode: 'numeric',
+            className: 'datepicker__input',
+            value: inputValue,
+            placeholder: label && !focused ? undefined : defaultPlaceholder,
+            disabled: !interactive,
+            onChange: handleChange,
+            onKeyDown: handleKeyDown,
+            onPaste: handlePaste,
+            onFocus: () => { setFocused(true); if (interactive && !noCalendar) setOpen(true) },
+            onBlur: handleBlur,
+            'aria-label': label ?? 'Выберите дату',
+            'aria-expanded': !noCalendar ? open : undefined,
+            'aria-haspopup': !noCalendar ? 'dialog' : undefined,
+            'aria-invalid': inputInvalid || undefined,
+          }
+          if (renderInput) return renderInput(inputProps)
+          const { ref, ...rest } = inputProps
+          return <input ref={ref as React.RefObject<HTMLInputElement>} {...rest} />
+        })()}
         {resolvedIcon && iconPosition === 'end' && (
           <span className="datepicker__icon datepicker__icon--end">{resolvedIcon}</span>
         )}
@@ -311,8 +351,10 @@ export function DatePicker({
                     mode="single"
                     selected={selected}
                     onSelect={handleCalendarSelect}
-                    startMonth={fromDate}
-                    endMonth={toDate}
+                    startMonth={fromDay}
+                    endMonth={toDay}
+                    disabled={disabledDays.length ? disabledDays : undefined}
+                    navLayout="around"
                     locale={ru}
                   />
                 </div>
@@ -340,8 +382,10 @@ export function DatePicker({
               mode="single"
               selected={selected}
               onSelect={handleCalendarSelect}
-              startMonth={fromDate}
-              endMonth={toDate}
+              startMonth={fromDay}
+              endMonth={toDay}
+              disabled={disabledDays.length ? disabledDays : undefined}
+              navLayout="around"
               locale={ru}
             />
           )}

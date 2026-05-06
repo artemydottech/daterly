@@ -84,5 +84,5 @@ export const Controlled: Story = {
 }
 
 export const WithDateConstraints: Story = {
-  args: { label: 'Дата (не раньше сегодня)', fromDate: new Date(), size: 'm' },
+  render: () => <DatePicker label="Дата (не раньше сегодня)" fromDate={new Date()} size="m" />,
 }

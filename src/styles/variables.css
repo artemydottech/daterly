@@ -1,8 +1,8 @@
 @import 'react-day-picker/style.css';
 
 :root {
-  --datepicker-font-family:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  --datepicker-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    system-ui, sans-serif;
   --datepicker-font-size: 16px;
   --datepicker-font-size-label: 12px;
 
@@ -26,7 +26,8 @@
   --datepicker-label-top-filled: 4px;
   --datepicker-input-padding-top: 20px;
   --datepicker-radius: 4px;
-  --datepicker-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --datepicker-shadow: 0 0 4px rgba(0, 0, 0, 0.04),
+    0 2px 4px rgba(0, 0, 0, 0.08);
 
   --datepicker-icon-size: 16px;
   --datepicker-icon-gap: 6px;
@@ -58,7 +59,7 @@
 .datepicker__field {
   position: relative;
   height: var(--datepicker-height);
-  min-width: 180px;
+  min-width: 220px;
   background: var(--datepicker-color-bg);
   border: 1px solid var(--datepicker-color-border);
   border-radius: var(--datepicker-radius);
@@ -90,17 +91,17 @@
 .datepicker__label {
   position: absolute;
   left: calc(var(--datepicker-padding-h) + var(--_prefix-extra, 0px));
+  right: calc(var(--datepicker-padding-h) + var(--_suffix-extra, 0px));
   top: 50%;
   transform: translateY(-50%);
   font-size: var(--datepicker-font-size);
   color: var(--datepicker-color-label);
   pointer-events: none;
-  transition:
-    top 0.15s ease,
-    font-size 0.15s ease,
-    color 0.15s ease,
+  transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease,
     transform 0.15s ease;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1;
 }
 
@@ -179,11 +180,15 @@
 }
 
 .datepicker__field[data-icon-start] {
-  --_prefix-extra: calc(var(--datepicker-icon-size) + var(--datepicker-icon-gap));
+  --_prefix-extra: calc(
+    var(--datepicker-icon-size) + var(--datepicker-icon-gap)
+  );
 }
 
 .datepicker__field[data-icon-end] {
-  --_suffix-extra: calc(var(--datepicker-icon-size) + var(--datepicker-icon-gap));
+  --_suffix-extra: calc(
+    var(--datepicker-icon-size) + var(--datepicker-icon-gap)
+  );
 }
 
 .datepicker--s .datepicker__input {
@@ -220,23 +225,90 @@
   --rdp-accent-color: var(--datepicker-color-accent);
   --rdp-accent-background-color: var(--datepicker-color-today-bg);
   --rdp-background-color: var(--datepicker-color-hover);
+  --rdp-weekday-opacity: 1;
+  --rdp-selected-border: none;
   margin: 0;
   font-family: var(--datepicker-font-family);
   font-size: var(--datepicker-font-size);
   color: var(--datepicker-color-text);
 }
 
+.datepicker-calendar .rdp-month_grid {
+  border-spacing: 0;
+}
+
+.datepicker-calendar .rdp-day {
+  padding: 0;
+}
+
 .datepicker-calendar .rdp-day_button {
   font-size: inherit;
   font-family: inherit;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-radius 0.15s ease;
+}
+
+.datepicker-calendar .rdp-caption_label {
+  text-transform: capitalize;
+  font-size: var(--datepicker-font-size);
+  font-weight: 600;
+}
+
+.datepicker-calendar .rdp-weekday {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--datepicker-color-label);
+  text-transform: capitalize;
+}
+
+.datepicker-calendar .rdp-chevron {
+  fill: var(--datepicker-color-text);
+}
+
+.datepicker-calendar .rdp-button_previous:hover:not(:disabled),
+.datepicker-calendar .rdp-button_next:hover:not(:disabled) {
+  background-color: var(--datepicker-color-hover);
+  border-radius: var(--datepicker-radius);
+}
+
+.datepicker-calendar
+  .rdp-day:not(.rdp-selected):not(.rdp-range_middle)
+  .rdp-day_button:hover:not(:disabled) {
+  background-color: var(--datepicker-color-hover);
+}
+
+.datepicker-calendar
+  .rdp-today:not(.rdp-outside):not(.rdp-selected):not(.rdp-range_middle)
+  .rdp-day_button {
+  background-color: var(--datepicker-color-today-bg);
+  color: var(--datepicker-color-accent);
+}
+
+.datepicker-calendar .rdp-selected:not(.rdp-range_middle) .rdp-day_button {
+  background-color: var(--datepicker-color-accent);
+  color: #fff;
+  border: none;
+}
+
+.datepicker-calendar .rdp-range_middle .rdp-day_button {
+  border-radius: 0;
+  border: none;
+}
+
+.datepicker-calendar .rdp-range_middle .rdp-day_button:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--datepicker-color-accent) 20%,
+    transparent
+  );
 }
 
 .datepicker__popover--s .datepicker-calendar {
   font-size: 12px;
   --rdp-day-height: 28px;
   --rdp-day-width: 28px;
-  --rdp-day_button-height: 26px;
-  --rdp-day_button-width: 26px;
+  --rdp-day_button-height: 28px;
+  --rdp-day_button-width: 28px;
   --rdp-nav_button-height: 1.75rem;
   --rdp-nav_button-width: 1.75rem;
   --rdp-nav-height: 2rem;
@@ -246,8 +318,8 @@
   font-size: 14px;
   --rdp-day-height: 36px;
   --rdp-day-width: 36px;
-  --rdp-day_button-height: 34px;
-  --rdp-day_button-width: 34px;
+  --rdp-day_button-height: 36px;
+  --rdp-day_button-width: 36px;
   --rdp-nav_button-height: 2rem;
   --rdp-nav_button-width: 2rem;
   --rdp-nav-height: 2.5rem;
@@ -331,7 +403,6 @@
   opacity: 0.85;
 }
 
-/* Spinner */
 .datepicker-spinner {
   display: inline-block;
   width: var(--datepicker-icon-size);
@@ -345,10 +416,11 @@
 }
 
 @keyframes datepicker-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Button */
 .dp-btn {
   position: relative;
   display: inline-flex;
@@ -365,9 +437,6 @@
   outline: 0;
   overflow: hidden;
   cursor: pointer;
-  transition:
-    background 0.2s ease-in-out,
-    transform 0.1s ease-in-out;
 }
 
 .dp-btn:active:not(:disabled) {
@@ -405,7 +474,11 @@
 }
 
 .dp-btn--secondary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--datepicker-color-accent) 8%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--datepicker-color-accent) 8%,
+    transparent
+  );
 }
 
 .dp-btn--loading {
