@@ -1,10 +1,18 @@
 # @artemy-tech/datepicker
 
+## 0.4.1
+
+### Patch Changes
+
+- Add `customInput` prop to `DatePicker` — pass any `ReactElement` to use as a trigger (button, chip, etc.). The element receives `value` and `onClick` via `cloneElement`; no `forwardRef` needed.
+
+- Export `DatePickerInputProps` type from the public API (`@artemy-tech/datepicker`).
+
 ## 0.4.0
 
 ### Minor Changes
 
-- 2831a9f: Add Button component, RHF wrappers, and fix form integration.
+- Add Button component, RHF wrappers, and fix form integration.
 
   New exports via `./rhf`: `RHFDatePicker`, `RHFDateRangePicker` — Controller-based wrappers for react-hook-form with automatic error display.
 

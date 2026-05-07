@@ -68,6 +68,15 @@
   cursor: text;
 }
 
+.datepicker__field--custom {
+  height: auto;
+  min-width: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  cursor: auto;
+}
+
 .daterangepicker .datepicker__field {
   min-width: 320px;
 }

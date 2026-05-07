@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { cloneElement, useCallback, useEffect, useRef, useState, type ReactElement, type ReactNode } from 'react'
 import { format, isValid, parse, startOfDay } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useClickOutside } from '../../hooks/useClickOutside'
@@ -104,6 +104,7 @@ export interface DatePickerProps {
   iconPosition?: 'start' | 'end'
   className?: string
   renderInput?: (props: DatePickerInputProps) => ReactNode
+  customInput?: ReactElement<{ value?: string; onClick?: () => void }>
 }
 
 export function DatePicker({
@@ -124,6 +125,7 @@ export function DatePicker({
   iconPosition = 'end',
   className,
   renderInput,
+  customInput,
 }: DatePickerProps) {
   const timeFormat = resolveTimeFormat(showTime)
   const dateFormat = buildDateFormat(timeFormat)
@@ -296,43 +298,51 @@ export function DatePicker({
       data-failed={failed || inputInvalid || undefined}
       data-disabled={!interactive || undefined}
     >
-      <div
-        className="datepicker__field"
-        data-icon-start={resolvedIcon && iconPosition === 'start' ? true : undefined}
-        data-icon-end={resolvedIcon && iconPosition === 'end' ? true : undefined}
-        onClick={() => interactive && inputRef.current?.focus()}
-      >
-        {resolvedIcon && iconPosition === 'start' && (
-          <span className="datepicker__icon datepicker__icon--start">{resolvedIcon}</span>
-        )}
-        {label && <span className="datepicker__label">{label}</span>}
-        {(() => {
-          const inputProps: DatePickerInputProps = {
-            ref: inputRef,
-            type: 'text',
-            inputMode: 'numeric',
-            className: 'datepicker__input',
+      {customInput
+        ? cloneElement(customInput, {
             value: inputValue,
-            placeholder: label && !focused ? undefined : defaultPlaceholder,
-            disabled: !interactive,
-            onChange: handleChange,
-            onKeyDown: handleKeyDown,
-            onPaste: handlePaste,
-            onFocus: () => { setFocused(true); if (interactive && !noCalendar) setOpen(true) },
-            onBlur: handleBlur,
-            'aria-label': label ?? 'Выберите дату',
-            'aria-expanded': !noCalendar ? open : undefined,
-            'aria-haspopup': !noCalendar ? 'dialog' : undefined,
-            'aria-invalid': inputInvalid || undefined,
-          }
-          if (renderInput) return renderInput(inputProps)
-          const { ref, ...rest } = inputProps
-          return <input ref={ref as React.RefObject<HTMLInputElement>} {...rest} />
-        })()}
-        {resolvedIcon && iconPosition === 'end' && (
-          <span className="datepicker__icon datepicker__icon--end">{resolvedIcon}</span>
-        )}
-      </div>
+            onClick: () => interactive && setOpen(prev => !prev),
+          })
+        : (
+          <div
+            className={['datepicker__field', renderInput ? 'datepicker__field--custom' : ''].filter(Boolean).join(' ')}
+            data-icon-start={resolvedIcon && iconPosition === 'start' ? true : undefined}
+            data-icon-end={resolvedIcon && iconPosition === 'end' ? true : undefined}
+            onClick={() => interactive && inputRef.current?.focus()}
+          >
+            {resolvedIcon && iconPosition === 'start' && (
+              <span className="datepicker__icon datepicker__icon--start">{resolvedIcon}</span>
+            )}
+            {label && <span className="datepicker__label">{label}</span>}
+            {(() => {
+              const inputProps: DatePickerInputProps = {
+                ref: inputRef,
+                type: 'text',
+                inputMode: 'numeric',
+                className: 'datepicker__input',
+                value: inputValue,
+                placeholder: label && !focused ? undefined : defaultPlaceholder,
+                disabled: !interactive,
+                onChange: handleChange,
+                onKeyDown: handleKeyDown,
+                onPaste: handlePaste,
+                onFocus: () => { setFocused(true); if (interactive && !noCalendar) setOpen(true) },
+                onBlur: handleBlur,
+                'aria-label': label ?? 'Выберите дату',
+                'aria-expanded': !noCalendar ? open : undefined,
+                'aria-haspopup': !noCalendar ? 'dialog' : undefined,
+                'aria-invalid': inputInvalid || undefined,
+              }
+              if (renderInput) return renderInput(inputProps)
+              const { ref, ...rest } = inputProps
+              return <input ref={ref as React.RefObject<HTMLInputElement>} {...rest} />
+            })()}
+            {resolvedIcon && iconPosition === 'end' && (
+              <span className="datepicker__icon datepicker__icon--end">{resolvedIcon}</span>
+            )}
+          </div>
+        )
+      }
       {!noCalendar && open && (
         <div
           className={[

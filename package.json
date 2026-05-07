@@ -1,6 +1,6 @@
 {
   "name": "@artemy-tech/datepicker",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "description": "React DatePicker with react-hook-form support",
   "keywords": [
@@ -68,6 +68,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "antd": "^6.3.7",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.0.0",

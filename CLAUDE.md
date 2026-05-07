@@ -48,4 +48,34 @@ All visual tokens are CSS custom properties prefixed `--datepicker-*`. Component
 
 ### Versioning
 
-Releases use [Changesets](https://github.com/changesets/changesets): `npm run changeset` → `npm run version` → `npm run release`.
+Releases use [Changesets](https://github.com/changesets/changesets).
+
+**ВАЖНО: не запускать `npm run changeset` интерактивно.** Пользователь однажды случайно выбрал `minor` вместо `patch` и версия ушла в 0.4.0 вместо 0.3.1.
+
+#### Правильный процесс релиза
+
+Когда пользователь говорит "готовим релиз" или "сделай changeset":
+
+1. Посмотреть что изменилось: `git log <last-tag>..HEAD --oneline`
+2. Определить тип бампа:
+   - `patch` — bug fix, стили, внутренний рефакторинг
+   - `minor` — новый проп/фича, обратно совместимое изменение API
+   - `major` — breaking change
+3. Создать файл `.changeset/<slug>.md` вручную (не через CLI):
+
+```markdown
+---
+"@artemy-tech/datepicker": patch
+---
+
+Описание изменений для CHANGELOG.
+```
+
+1. Пользователь сам запускает финальные команды:
+
+   ```bash
+   npm run cs:version   # применяет changeset → обновляет package.json и CHANGELOG.md
+   npm run release      # build + publish на npm
+   ```
+
+Имя файла — любой slug, например `fix-timezone-noon.md`. Файл удаляется автоматически после `cs:version`.
