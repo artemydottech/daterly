@@ -1,5 +1,11 @@
 # @artemy-tech/datepicker
 
+## 0.4.2
+
+### Patch Changes
+
+- Add CONTRIBUTING.md with setup instructions, commit style guide, and PR process (Russian + English).
+
 ## 0.4.1
 
 ### Patch Changes
