@@ -1,7 +1,7 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { DayPickerProps } from 'react-day-picker';
 export { DateRange } from 'react-day-picker';
-export { D as DatePicker, a as DatePickerProps, b as DatePickerShowTime, c as DateRangePicker, d as DateRangePickerProps } from './DateRangePicker-Bp95dxDX.cjs';
+export { D as DatePicker, a as DatePickerInputProps, b as DatePickerProps, c as DatePickerShowTime, d as DateRangePicker, e as DateRangePickerProps } from './DateRangePicker-C8_RSTkZ.cjs';
 import { ButtonHTMLAttributes } from 'react';
 
 type CalendarProps = DayPickerProps & {

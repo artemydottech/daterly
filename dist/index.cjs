@@ -156,10 +156,14 @@ function getCursorPos(masked, digitCount) {
   }
   return masked.length;
 }
+function toDateOnly(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
+}
 function parseDateTime(masked, dateFormat, maxDigits) {
   if (masked.replace(/\D/g, "").length !== maxDigits) return void 0;
   const date = (0, import_date_fns.parse)(masked, dateFormat, /* @__PURE__ */ new Date());
-  return (0, import_date_fns.isValid)(date) && (0, import_date_fns.format)(date, dateFormat) === masked ? date : void 0;
+  if (!(0, import_date_fns.isValid)(date) || (0, import_date_fns.format)(date, dateFormat) !== masked) return void 0;
+  return maxDigits === 8 ? toDateOnly(date) : date;
 }
 function DatePicker({
   value,
@@ -177,13 +181,21 @@ function DatePicker({
   showTime,
   icon,
   iconPosition = "end",
-  className
+  className,
+  renderInput,
+  customTrigger
 }) {
   const timeFormat = resolveTimeFormat(showTime);
   const dateFormat = buildDateFormat(timeFormat);
   const maxDigits = buildMaxDigits(timeFormat);
   const defaultPlaceholder = placeholder != null ? placeholder : buildPlaceholder(timeFormat);
   const showSeconds = timeFormat === "HH:mm:ss";
+  const fromDay = fromDate ? (0, import_date_fns.startOfDay)(fromDate) : void 0;
+  const toDay = toDate ? (0, import_date_fns.startOfDay)(toDate) : void 0;
+  const disabledDays = [
+    ...fromDay ? [{ before: fromDay }] : [],
+    ...toDay ? [{ after: toDay }] : []
+  ];
   const resolvedIcon = loading ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Spinner, {}) : icon === false ? null : icon != null ? icon : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CalendarIcon, {});
   const isControlled = value !== void 0;
   const [internalDate, setInternalDate] = (0, import_react3.useState)(defaultValue);
@@ -300,7 +312,7 @@ function DatePicker({
       if (!timeFormat) setOpen(false);
       return;
     }
-    let dateToCommit = date;
+    let dateToCommit;
     if (timeFormat) {
       const base = selected && (0, import_date_fns.isValid)(selected) ? selected : /* @__PURE__ */ new Date(0);
       dateToCommit = new Date(
@@ -311,6 +323,8 @@ function DatePicker({
         base.getMinutes(),
         base.getSeconds()
       );
+    } else {
+      dateToCommit = toDateOnly(date);
     }
     applyValid((0, import_date_fns.format)(dateToCommit, dateFormat), dateToCommit);
     if (!timeFormat) setOpen(false);
@@ -331,10 +345,10 @@ function DatePicker({
       "data-failed": failed || inputInvalid || void 0,
       "data-disabled": !interactive || void 0,
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+        customTrigger ? customTrigger(inputValue, () => interactive && setOpen((prev) => !prev)) : /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
           "div",
           {
-            className: "datepicker__field",
+            className: ["datepicker__field", renderInput ? "datepicker__field--custom" : ""].filter(Boolean).join(" "),
             "data-icon-start": resolvedIcon && iconPosition === "start" ? true : void 0,
             "data-icon-end": resolvedIcon && iconPosition === "end" ? true : void 0,
             onClick: () => {
@@ -344,9 +358,8 @@ function DatePicker({
             children: [
               resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "datepicker__icon datepicker__icon--start", children: resolvedIcon }),
               label && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "datepicker__label", children: label }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-                "input",
-                {
+              (() => {
+                const inputProps = {
                   ref: inputRef,
                   type: "text",
                   inputMode: "numeric",
@@ -366,8 +379,11 @@ function DatePicker({
                   "aria-expanded": !noCalendar ? open : void 0,
                   "aria-haspopup": !noCalendar ? "dialog" : void 0,
                   "aria-invalid": inputInvalid || void 0
-                }
-              ),
+                };
+                if (renderInput) return renderInput(inputProps);
+                const { ref, ...rest } = inputProps;
+                return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("input", { ref, ...rest });
+              })(),
               resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "datepicker__icon datepicker__icon--end", children: resolvedIcon })
             ]
           }
@@ -390,8 +406,10 @@ function DatePicker({
                     mode: "single",
                     selected,
                     onSelect: handleCalendarSelect,
-                    startMonth: fromDate,
-                    endMonth: toDate,
+                    startMonth: fromDay,
+                    endMonth: toDay,
+                    disabled: disabledDays.length ? disabledDays : void 0,
+                    navLayout: "around",
                     locale: import_locale.ru
                   }
                 ) }),
@@ -420,8 +438,10 @@ function DatePicker({
                 mode: "single",
                 selected,
                 onSelect: handleCalendarSelect,
-                startMonth: fromDate,
-                endMonth: toDate,
+                startMonth: fromDay,
+                endMonth: toDay,
+                disabled: disabledDays.length ? disabledDays : void 0,
+                navLayout: "around",
                 locale: import_locale.ru
               }
             )
@@ -465,10 +485,14 @@ function getRangeCursorPos(masked, digitCount) {
   }
   return masked.length;
 }
+function toDateOnly2(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
+}
 function parseDate(masked) {
   if (masked.replace(/\D/g, "").length !== 8) return void 0;
   const date = (0, import_date_fns2.parse)(masked, DATE_FORMAT2, /* @__PURE__ */ new Date());
-  return (0, import_date_fns2.isValid)(date) && (0, import_date_fns2.format)(date, DATE_FORMAT2) === masked ? date : void 0;
+  if (!(0, import_date_fns2.isValid)(date) || (0, import_date_fns2.format)(date, DATE_FORMAT2) !== masked) return void 0;
+  return toDateOnly2(date);
 }
 function formatRange(from, to) {
   if (!from) return "";
@@ -492,7 +516,7 @@ function DateRangePicker({
   failed = false,
   loading = false,
   size = "m",
-  calendarLayout = "vertical",
+  calendarLayout = "horizontal",
   showTime,
   icon,
   iconPosition = "end",
@@ -501,8 +525,18 @@ function DateRangePicker({
   const resolvedIcon = loading ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Spinner, {}) : icon === false ? null : icon != null ? icon : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(CalendarIcon, {});
   const isControlled = value !== void 0;
   const showSeconds = resolveShowSeconds(showTime);
-  const [internalFrom, setInternalFrom] = (0, import_react4.useState)(defaultValue == null ? void 0 : defaultValue.from);
-  const [internalTo, setInternalTo] = (0, import_react4.useState)(defaultValue == null ? void 0 : defaultValue.to);
+  const fromDay = fromConstraint ? (0, import_date_fns2.startOfDay)(fromConstraint) : void 0;
+  const toDay = toConstraint ? (0, import_date_fns2.startOfDay)(toConstraint) : void 0;
+  const disabledDays = [
+    ...fromDay ? [{ before: fromDay }] : [],
+    ...toDay ? [{ after: toDay }] : []
+  ];
+  const [internalFrom, setInternalFrom] = (0, import_react4.useState)(
+    defaultValue == null ? void 0 : defaultValue.from
+  );
+  const [internalTo, setInternalTo] = (0, import_react4.useState)(
+    defaultValue == null ? void 0 : defaultValue.to
+  );
   const [inputValue, setInputValue] = (0, import_react4.useState)(
     () => formatRange(defaultValue == null ? void 0 : defaultValue.from, defaultValue == null ? void 0 : defaultValue.to)
   );
@@ -513,8 +547,12 @@ function DateRangePicker({
   const [hoveredDate, setHoveredDate] = (0, import_react4.useState)(void 0);
   const inputRef = (0, import_react4.useRef)(null);
   const containerRef = (0, import_react4.useRef)(null);
-  const lastEmittedFromRef = (0, import_react4.useRef)(value !== void 0 ? value == null ? void 0 : value.from : defaultValue == null ? void 0 : defaultValue.from);
-  const lastEmittedToRef = (0, import_react4.useRef)(value !== void 0 ? value == null ? void 0 : value.to : defaultValue == null ? void 0 : defaultValue.to);
+  const lastEmittedFromRef = (0, import_react4.useRef)(
+    value !== void 0 ? value == null ? void 0 : value.from : defaultValue == null ? void 0 : defaultValue.from
+  );
+  const lastEmittedToRef = (0, import_react4.useRef)(
+    value !== void 0 ? value == null ? void 0 : value.to : defaultValue == null ? void 0 : defaultValue.to
+  );
   const wasControlledRef = (0, import_react4.useRef)(value !== void 0);
   const confirmedFrom = isControlled ? value == null ? void 0 : value.from : internalFrom;
   const confirmedTo = isControlled ? value == null ? void 0 : value.to : internalTo;
@@ -558,7 +596,7 @@ function DateRangePicker({
         (_a = confirmedFrom == null ? void 0 : confirmedFrom.getHours()) != null ? _a : 0,
         (_b = confirmedFrom == null ? void 0 : confirmedFrom.getMinutes()) != null ? _b : 0,
         (_c = confirmedFrom == null ? void 0 : confirmedFrom.getSeconds()) != null ? _c : 0
-      ) : day;
+      ) : toDateOnly2(day);
       setAnchorDate(from);
       if (!isControlled) {
         setInternalFrom(from);
@@ -577,7 +615,7 @@ function DateRangePicker({
         (_d = confirmedTo == null ? void 0 : confirmedTo.getHours()) != null ? _d : 0,
         (_e = confirmedTo == null ? void 0 : confirmedTo.getMinutes()) != null ? _e : 0,
         (_f = confirmedTo == null ? void 0 : confirmedTo.getSeconds()) != null ? _f : 0
-      ) : day;
+      ) : toDateOnly2(day);
       if (day < anchorDate) {
         const tmp = from;
         from = to;
@@ -601,14 +639,28 @@ function DateRangePicker({
   }
   function handleFromTimeChange(h, m, s) {
     const base = confirmedFrom != null ? confirmedFrom : /* @__PURE__ */ new Date();
-    const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s);
+    const newDate = new Date(
+      base.getFullYear(),
+      base.getMonth(),
+      base.getDate(),
+      h,
+      m,
+      s
+    );
     if (!isControlled) setInternalFrom(newDate);
     lastEmittedFromRef.current = newDate;
     onChange == null ? void 0 : onChange({ from: newDate, to: confirmedTo });
   }
   function handleToTimeChange(h, m, s) {
     const base = confirmedTo != null ? confirmedTo : /* @__PURE__ */ new Date();
-    const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s);
+    const newDate = new Date(
+      base.getFullYear(),
+      base.getMonth(),
+      base.getDate(),
+      h,
+      m,
+      s
+    );
     if (!isControlled) setInternalTo(newDate);
     lastEmittedToRef.current = newDate;
     onChange == null ? void 0 : onChange({ from: confirmedFrom, to: newDate });
@@ -637,7 +689,9 @@ function DateRangePicker({
     }
     lastEmittedFromRef.current = parsedFrom;
     lastEmittedToRef.current = parsedTo;
-    onChange == null ? void 0 : onChange(parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : void 0);
+    onChange == null ? void 0 : onChange(
+      parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : void 0
+    );
     requestAnimationFrame(
       () => {
         var _a2;
@@ -661,9 +715,13 @@ function DateRangePicker({
       const val = input.value;
       const charsToSkip = (_c = (_b = val.slice(0, pos).match(/[\s—]+$/)) == null ? void 0 : _b[0].length) != null ? _c : 1;
       const newPos = pos - charsToSkip;
-      const masked = applyRangeMask((val.slice(0, newPos - 1) + val.slice(newPos)).replace(/\D/g, ""));
+      const masked = applyRangeMask(
+        (val.slice(0, newPos - 1) + val.slice(newPos)).replace(/\D/g, "")
+      );
       setInputValue(masked);
-      requestAnimationFrame(() => input.setSelectionRange(newPos - 1, newPos - 1));
+      requestAnimationFrame(
+        () => input.setSelectionRange(newPos - 1, newPos - 1)
+      );
     }
   }
   function handlePaste(e) {
@@ -676,18 +734,24 @@ function DateRangePicker({
     setHoveredDate(void 0);
     const parsedFrom = digits.length >= 8 ? parseDate(applyDateMask(digits.slice(0, 8))) : void 0;
     const parsedTo = digits.length >= 16 ? parseDate(applyDateMask(digits.slice(8, 16))) : void 0;
-    setInputInvalid(digits.length >= 8 && !parsedFrom || digits.length >= 16 && !parsedTo);
+    setInputInvalid(
+      digits.length >= 8 && !parsedFrom || digits.length >= 16 && !parsedTo
+    );
     if (!isControlled) {
       setInternalFrom(parsedFrom);
       setInternalTo(parsedTo);
     }
     lastEmittedFromRef.current = parsedFrom;
     lastEmittedToRef.current = parsedTo;
-    onChange == null ? void 0 : onChange(parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : void 0);
-    requestAnimationFrame(() => {
-      var _a;
-      return (_a = inputRef.current) == null ? void 0 : _a.setSelectionRange(masked.length, masked.length);
-    });
+    onChange == null ? void 0 : onChange(
+      parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : void 0
+    );
+    requestAnimationFrame(
+      () => {
+        var _a;
+        return (_a = inputRef.current) == null ? void 0 : _a.setSelectionRange(masked.length, masked.length);
+      }
+    );
   }
   const placeholder = label && !focused && !filled ? void 0 : "\u0434\u0434.\u043C\u043C.\u0433\u0433\u0433\u0433 \u2014 \u0434\u0434.\u043C\u043C.\u0433\u0433\u0433\u0433";
   const interactive = !disabled && !loading;
@@ -695,7 +759,12 @@ function DateRangePicker({
     "div",
     {
       ref: containerRef,
-      className: ["datepicker", "daterangepicker", `datepicker--${size}`, className].filter(Boolean).join(" "),
+      className: [
+        "datepicker",
+        "daterangepicker",
+        `datepicker--${size}`,
+        className
+      ].filter(Boolean).join(" "),
       "data-focused": focused || open || void 0,
       "data-filled": filled || void 0,
       "data-failed": failed || inputInvalid || void 0,
@@ -764,8 +833,9 @@ function DateRangePicker({
                   onDayClick: handleDayClick,
                   onDayMouseEnter: handleDayMouseEnter,
                   onDayMouseLeave: () => setHoveredDate(void 0),
-                  startMonth: fromConstraint,
-                  endMonth: toConstraint,
+                  startMonth: fromDay,
+                  endMonth: toDay,
+                  disabled: disabledDays.length ? disabledDays : void 0,
                   numberOfMonths: 2,
                   locale: import_locale2.ru
                 }
@@ -773,15 +843,37 @@ function DateRangePicker({
               /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "datepicker__time-row", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "datepicker__time-col", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "datepicker__time-label", children: "\u041D\u0430\u0447\u0430\u043B\u043E" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(TimePanel, { value: confirmedFrom, showSeconds, onChange: handleFromTimeChange })
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                    TimePanel,
+                    {
+                      value: confirmedFrom,
+                      showSeconds,
+                      onChange: handleFromTimeChange
+                    }
+                  )
                 ] }),
                 /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "datepicker__time-separator" }),
                 /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "datepicker__time-col", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "datepicker__time-label", children: "\u041A\u043E\u043D\u0435\u0446" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(TimePanel, { value: confirmedTo, showSeconds, onChange: handleToTimeChange })
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                    TimePanel,
+                    {
+                      value: confirmedTo,
+                      showSeconds,
+                      onChange: handleToTimeChange
+                    }
+                  )
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "datepicker__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "datepicker__ok-btn", type: "button", onClick: close, children: "OK" }) })
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "datepicker__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                "button",
+                {
+                  className: "datepicker__ok-btn",
+                  type: "button",
+                  onClick: close,
+                  children: "OK"
+                }
+              ) })
             ] }) : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
               Calendar,
               {
