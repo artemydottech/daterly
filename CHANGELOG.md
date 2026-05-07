@@ -1,5 +1,11 @@
 # @artemy-tech/datepicker
 
+## 0.4.3
+
+### Patch Changes
+
+- Rename `customInput` → `customTrigger`; change type from `ReactElement` to render-function `(value: string, onClick: () => void) => ReactNode`. Fixes bug where selected date was not displayed inside the trigger element.
+
 ## 0.4.2
 
 ### Patch Changes

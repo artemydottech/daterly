@@ -1,4 +1,4 @@
-import { cloneElement, useCallback, useEffect, useRef, useState, type ReactElement, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { format, isValid, parse, startOfDay } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useClickOutside } from '../../hooks/useClickOutside'
@@ -104,7 +104,7 @@ export interface DatePickerProps {
   iconPosition?: 'start' | 'end'
   className?: string
   renderInput?: (props: DatePickerInputProps) => ReactNode
-  customInput?: ReactElement<{ value?: string; onClick?: () => void }>
+  customTrigger?: (value: string, onClick: () => void) => ReactNode
 }
 
 export function DatePicker({
@@ -125,7 +125,7 @@ export function DatePicker({
   iconPosition = 'end',
   className,
   renderInput,
-  customInput,
+  customTrigger,
 }: DatePickerProps) {
   const timeFormat = resolveTimeFormat(showTime)
   const dateFormat = buildDateFormat(timeFormat)
@@ -298,11 +298,8 @@ export function DatePicker({
       data-failed={failed || inputInvalid || undefined}
       data-disabled={!interactive || undefined}
     >
-      {customInput
-        ? cloneElement(customInput, {
-            value: inputValue,
-            onClick: () => interactive && setOpen(prev => !prev),
-          })
+      {customTrigger
+        ? customTrigger(inputValue, () => interactive && setOpen(prev => !prev))
         : (
           <div
             className={['datepicker__field', renderInput ? 'datepicker__field--custom' : ''].filter(Boolean).join(' ')}

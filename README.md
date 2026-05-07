@@ -7,7 +7,7 @@ React DatePicker с опциональной поддержкой react-hook-for
 - Выбор одиночной даты и диапазона дат
 - Контролируемый и неконтролируемый режимы
 - Выбор времени (`showTime`)
-- Кастомный триггер через `customInput` — любой элемент (кнопка, chip) открывает попап, `forwardRef` не нужен
+- Кастомный триггер через `customTrigger` — render-функция, получает текущее значение и `onClick`
 - Кастомный инпут через `renderInput` — интеграция с любой UI-библиотекой (Ant Design, MUI, shadcn и др.)
 - Интеграция с react-hook-form (нулевые издержки если не используется)
 - Стилизация через CSS-переменные (`--datepicker-*`)
@@ -76,15 +76,19 @@ const [range, setRange] = useState<DateRange | undefined>()
 />
 ```
 
-### Кастомный триггер (`customInput`)
+### Кастомный триггер (`customTrigger`)
 
-Через `customInput` можно передать любой элемент-триггер — кнопку, chip и т.д. `DatePicker` инжектит в него `value` (отформатированная дата) и `onClick` (открыть/закрыть календарь). `forwardRef` не нужен.
+Через `customTrigger` можно передать render-функцию, которая получает отформатированное значение и обработчик клика.
 
 ```tsx
 import { DatePicker } from '@artemy-tech/datepicker';
 
 <DatePicker
-  customInput={<button type="button">Выбрать дату</button>}
+  customTrigger={(value, onClick) => (
+    <button type="button" onClick={onClick}>
+      {value || 'Выбрать дату'}
+    </button>
+  )}
 />
 ```
 
@@ -164,8 +168,8 @@ function BookingForm() {
 | `loading`      | `boolean`                                       | `false`            | Состояние загрузки                                  |
 | `icon`         | `ReactNode \| false`                            | `<CalendarIcon />` | Иконка (`false` — скрыть)                           |
 | `iconPosition` | `'start' \| 'end'`                              | `'end'`            | Позиция иконки                                      |
-| `renderInput`  | `(props: DatePickerInputProps) => ReactNode`    | —                  | Кастомный `<input>`; маска и попап сохраняются      |
-| `customInput`  | `ReactElement`                                  | —                  | Триггер-элемент; получает `value` и `onClick`       |
+| `renderInput`    | `(props: DatePickerInputProps) => ReactNode`              | —                  | Кастомный `<input>`; маска и попап сохраняются      |
+| `customTrigger`  | `(value: string, onClick: () => void) => ReactNode`       | —                  | Render-функция для произвольного триггера            |
 | `className`    | `string`                                        | —                  | CSS-класс на корневом элементе                      |
 
 ### DateRangePicker — пропсы
