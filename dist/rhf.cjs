@@ -118,33 +118,136 @@ function Spinner() {
 
 // src/utils/date-mask.ts
 var import_date_fns = require("date-fns");
-var DATE_FORMAT = "dd.MM.yyyy";
+
+// src/utils/format-schema.ts
+var DATE_TOKENS = ["yyyy", "dd", "MM"];
+var TIME_TOKENS = ["HH", "mm", "ss"];
+var ALL_TOKENS = [...DATE_TOKENS, ...TIME_TOKENS];
+var TOKEN_LENGTH = {
+  yyyy: 4,
+  dd: 2,
+  MM: 2,
+  HH: 2,
+  mm: 2,
+  ss: 2
+};
+var RU_TOKEN_PLACEHOLDER = {
+  yyyy: "\u0433\u0433\u0433\u0433",
+  dd: "\u0434\u0434",
+  MM: "\u043C\u043C",
+  HH: "\u0447\u0447",
+  mm: "\u043C\u043C",
+  ss: "\u0441\u0441"
+};
+var EN_TOKEN_PLACEHOLDER = {
+  yyyy: "yyyy",
+  dd: "dd",
+  MM: "mm",
+  HH: "hh",
+  mm: "mm",
+  ss: "ss"
+};
+function tokenize(format4, allowTime) {
+  const parts = [];
+  let i = 0;
+  while (i < format4.length) {
+    let matched = null;
+    for (const token of ALL_TOKENS) {
+      if (format4.startsWith(token, i)) {
+        matched = token;
+        break;
+      }
+    }
+    if (matched) {
+      if (!allowTime && TIME_TOKENS.includes(matched)) {
+        throw new Error(
+          `dateFormat must not contain time tokens (got "${matched}"). Use the "showTime" prop instead.`
+        );
+      }
+      parts.push({ kind: "token", token: matched });
+      i += matched.length;
+      continue;
+    }
+    parts.push({ kind: "sep", char: format4[i] });
+    i++;
+  }
+  return parts;
+}
+function validateDateParts(parts) {
+  var _a, _b;
+  const counts = {};
+  for (const p of parts) {
+    if (p.kind === "token") counts[p.token] = ((_a = counts[p.token]) != null ? _a : 0) + 1;
+  }
+  for (const token of DATE_TOKENS) {
+    if (counts[token] !== 1) {
+      throw new Error(
+        `dateFormat must contain "${token}" exactly once. Supported tokens: dd, MM, yyyy. Got: ${(_b = counts[token]) != null ? _b : 0}`
+      );
+    }
+  }
+}
+function buildSchemaFromParts(parts, isRu) {
+  const placeholderMap = isRu ? RU_TOKEN_PLACEHOLDER : EN_TOKEN_PLACEHOLDER;
+  const separators = [];
+  let digitCount = 0;
+  let format4 = "";
+  let placeholder = "";
+  let pendingSep = "";
+  for (const part of parts) {
+    if (part.kind === "sep") {
+      pendingSep += part.char;
+      format4 += part.char;
+      placeholder += part.char;
+      continue;
+    }
+    if (pendingSep) {
+      separators.push({ afterDigit: digitCount, chars: pendingSep });
+      pendingSep = "";
+    }
+    digitCount += TOKEN_LENGTH[part.token];
+    format4 += part.token;
+    placeholder += placeholderMap[part.token];
+  }
+  return { format: format4, digitCount, separators, placeholder };
+}
+function isRuLocale(locale) {
+  if (!locale) return true;
+  return locale.code === "ru";
+}
+function buildFormatSchema(dateFormat, timeFormat, locale) {
+  const dateParts = tokenize(dateFormat, false);
+  validateDateParts(dateParts);
+  const parts = [...dateParts];
+  if (timeFormat) {
+    parts.push({ kind: "sep", char: " " });
+    parts.push(...tokenize(timeFormat, true));
+  }
+  return buildSchemaFromParts(parts, isRuLocale(locale));
+}
+function applySchemaMask(digits, schema) {
+  const d = digits.slice(0, schema.digitCount);
+  let result = "";
+  let sepIdx = 0;
+  for (let i = 0; i < d.length; i++) {
+    while (sepIdx < schema.separators.length && schema.separators[sepIdx].afterDigit === i) {
+      result += schema.separators[sepIdx].chars;
+      sepIdx++;
+    }
+    result += d[i];
+  }
+  return result;
+}
+
+// src/utils/date-mask.ts
+var DEFAULT_DATE_FORMAT = "dd.MM.yyyy";
 function resolveTimeFormat(showTime) {
   if (!showTime) return null;
   if (showTime === true) return "HH:mm:ss";
   return showTime.format;
 }
-function buildDateFormat(timeFormat) {
-  return timeFormat ? `${DATE_FORMAT} ${timeFormat}` : DATE_FORMAT;
-}
-function buildMaxDigits(timeFormat) {
-  if (!timeFormat) return 8;
-  return timeFormat === "HH:mm" ? 12 : 14;
-}
-function buildPlaceholder(timeFormat) {
-  if (!timeFormat) return "\u0434\u0434.\u043C\u043C.\u0433\u0433\u0433\u0433";
-  return timeFormat === "HH:mm" ? "\u0434\u0434.\u043C\u043C.\u0433\u0433\u0433\u0433 \u0447\u0447:\u043C\u043C" : "\u0434\u0434.\u043C\u043C.\u0433\u0433\u0433\u0433 \u0447\u0447:\u043C\u043C:\u0441\u0441";
-}
-function applyMask(digits, maxDigits) {
-  const d = digits.slice(0, maxDigits);
-  let result = "";
-  for (let i = 0; i < d.length; i++) {
-    if (i === 2 || i === 4) result += ".";
-    else if (i === 8) result += " ";
-    else if (i === 10 || i === 12) result += ":";
-    result += d[i];
-  }
-  return result;
+function applyMask(digits, schema) {
+  return applySchemaMask(digits, schema);
 }
 function getCursorPos(masked, digitCount) {
   if (digitCount === 0) return 0;
@@ -160,11 +263,11 @@ function getCursorPos(masked, digitCount) {
 function toDateOnly(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
 }
-function parseDateTime(masked, dateFormat, maxDigits) {
-  if (masked.replace(/\D/g, "").length !== maxDigits) return void 0;
-  const date = (0, import_date_fns.parse)(masked, dateFormat, /* @__PURE__ */ new Date());
-  if (!(0, import_date_fns.isValid)(date) || (0, import_date_fns.format)(date, dateFormat) !== masked) return void 0;
-  return maxDigits === 8 ? toDateOnly(date) : date;
+function parseDateTime(masked, schema) {
+  if (masked.replace(/\D/g, "").length !== schema.digitCount) return void 0;
+  const date = (0, import_date_fns.parse)(masked, schema.format, /* @__PURE__ */ new Date());
+  if (!(0, import_date_fns.isValid)(date) || (0, import_date_fns.format)(date, schema.format) !== masked) return void 0;
+  return schema.digitCount === 8 ? toDateOnly(date) : date;
 }
 
 // src/components/DatePicker/DatePicker.tsx
@@ -187,12 +290,18 @@ function DatePicker({
   iconPosition = "end",
   className,
   renderInput,
-  customTrigger
+  customTrigger,
+  locale = import_locale.ru,
+  dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT
 }) {
   const timeFormat = resolveTimeFormat(showTime);
-  const dateFormat = buildDateFormat(timeFormat);
-  const maxDigits = buildMaxDigits(timeFormat);
-  const defaultPlaceholder = placeholder != null ? placeholder : buildPlaceholder(timeFormat);
+  const schema = (0, import_react3.useMemo)(
+    () => buildFormatSchema(dateFormatProp, timeFormat, locale),
+    [dateFormatProp, timeFormat, locale]
+  );
+  const dateFormat = schema.format;
+  const maxDigits = schema.digitCount;
+  const defaultPlaceholder = placeholder != null ? placeholder : schema.placeholder;
   const showSeconds = timeFormat === "HH:mm:ss";
   const fromDay = fromDate ? (0, import_date_fns2.startOfDay)(fromDate) : void 0;
   const toDay = toDate ? (0, import_date_fns2.startOfDay)(toDate) : void 0;
@@ -256,7 +365,7 @@ function DatePicker({
       if (!isControlled) setInternalDate(void 0);
       onChange == null ? void 0 : onChange(void 0);
     } else if (digits.length === maxDigits) {
-      const date = parseDateTime(masked, dateFormat, maxDigits);
+      const date = parseDateTime(masked, schema);
       lastEmittedRef.current = date;
       if (date) lastValidRef.current = masked;
       setInputInvalid(!date);
@@ -280,7 +389,7 @@ function DatePicker({
     const cursorPos = (_a = input.selectionStart) != null ? _a : 0;
     const raw = input.value;
     const digits = raw.replace(/\D/g, "").slice(0, maxDigits);
-    const masked = applyMask(digits, maxDigits);
+    const masked = applyMask(digits, schema);
     const digitsBeforeCursor = raw.slice(0, cursorPos).replace(/\D/g, "").length;
     const newCursorPos = getCursorPos(masked, digitsBeforeCursor);
     setInputValue(masked);
@@ -298,10 +407,14 @@ function DatePicker({
       e.preventDefault();
       return;
     }
-    if (e.key === "Backspace" && pos > 0 && /[.: ]/.test(input.value[pos - 1])) {
+    const separatorChars = /* @__PURE__ */ new Set();
+    schema.separators.forEach((s) => {
+      for (const ch of s.chars) separatorChars.add(ch);
+    });
+    if (e.key === "Backspace" && pos > 0 && separatorChars.has(input.value[pos - 1])) {
       e.preventDefault();
       const val = input.value;
-      const masked = applyMask((val.slice(0, pos - 2) + val.slice(pos)).replace(/\D/g, ""), maxDigits);
+      const masked = applyMask((val.slice(0, pos - 2) + val.slice(pos)).replace(/\D/g, ""), schema);
       setInputValue(masked);
       commit(masked);
       requestAnimationFrame(() => input.setSelectionRange(pos - 2, pos - 2));
@@ -309,7 +422,7 @@ function DatePicker({
   }
   function handlePaste(e) {
     e.preventDefault();
-    const masked = applyMask(e.clipboardData.getData("text").replace(/\D/g, ""), maxDigits);
+    const masked = applyMask(e.clipboardData.getData("text").replace(/\D/g, ""), schema);
     setInputValue(masked);
     commit(masked);
     requestAnimationFrame(() => {
@@ -423,7 +536,7 @@ function DatePicker({
                     endMonth: toDay,
                     disabled: disabledDays.length ? disabledDays : void 0,
                     navLayout: "around",
-                    locale: import_locale.ru
+                    locale
                   }
                 ) }),
                 /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "datepicker__time-separator" }),
@@ -457,7 +570,7 @@ function DatePicker({
                 endMonth: toDay,
                 disabled: disabledDays.length ? disabledDays : void 0,
                 navLayout: "around",
-                locale: import_locale.ru
+                locale
               }
             )
           }
@@ -495,22 +608,16 @@ var import_locale2 = require("date-fns/locale");
 
 // src/utils/range-mask.ts
 var import_date_fns3 = require("date-fns");
-var DATE_FORMAT2 = "dd.MM.yyyy";
-function applyDateMask(digits) {
-  const d = digits.slice(0, 8);
-  let result = "";
-  for (let i = 0; i < d.length; i++) {
-    if (i === 2 || i === 4) result += ".";
-    result += d[i];
-  }
-  return result;
+function applyDateMask(digits, schema) {
+  return applySchemaMask(digits, schema);
 }
-function applyRangeMask(digits) {
-  const all = digits.slice(0, 16);
-  const fromMasked = applyDateMask(all.slice(0, 8));
-  const toDigits = all.slice(8);
+function applyRangeMask(digits, schema) {
+  const total = schema.digitCount * 2;
+  const all = digits.slice(0, total);
+  const fromMasked = applyDateMask(all.slice(0, schema.digitCount), schema);
+  const toDigits = all.slice(schema.digitCount);
   if (toDigits.length === 0) return fromMasked;
-  return `${fromMasked} \u2014 ${applyDateMask(toDigits)}`;
+  return `${fromMasked} \u2014 ${applyDateMask(toDigits, schema)}`;
 }
 function getRangeCursorPos(masked, digitCount) {
   if (digitCount === 0) return 0;
@@ -526,17 +633,17 @@ function getRangeCursorPos(masked, digitCount) {
 function toDateOnly2(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
 }
-function parseDate(masked) {
-  if (masked.replace(/\D/g, "").length !== 8) return void 0;
-  const date = (0, import_date_fns3.parse)(masked, DATE_FORMAT2, /* @__PURE__ */ new Date());
-  if (!(0, import_date_fns3.isValid)(date) || (0, import_date_fns3.format)(date, DATE_FORMAT2) !== masked) return void 0;
+function parseDate(masked, schema) {
+  if (masked.replace(/\D/g, "").length !== schema.digitCount) return void 0;
+  const date = (0, import_date_fns3.parse)(masked, schema.format, /* @__PURE__ */ new Date());
+  if (!(0, import_date_fns3.isValid)(date) || (0, import_date_fns3.format)(date, schema.format) !== masked) return void 0;
   return toDateOnly2(date);
 }
-function formatRange(from, to) {
+function formatRange(from, to, schema) {
   if (!from) return "";
-  const fromStr = (0, import_date_fns3.format)(from, DATE_FORMAT2);
+  const fromStr = (0, import_date_fns3.format)(from, schema.format);
   if (!to) return fromStr;
-  return `${fromStr} \u2014 ${(0, import_date_fns3.format)(to, DATE_FORMAT2)}`;
+  return `${fromStr} \u2014 ${(0, import_date_fns3.format)(to, schema.format)}`;
 }
 function resolveShowSeconds(showTime) {
   if (!showTime) return false;
@@ -561,8 +668,16 @@ function DateRangePicker({
   showTime,
   icon,
   iconPosition = "end",
-  className
+  className,
+  locale = import_locale2.ru,
+  dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT
 }) {
+  const schema = (0, import_react4.useMemo)(
+    () => buildFormatSchema(dateFormatProp, null, locale),
+    [dateFormatProp, locale]
+  );
+  const maxDigits = schema.digitCount;
+  const totalDigits = maxDigits * 2;
   const resolvedIcon = loading ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Spinner, {}) : icon === false ? null : icon != null ? icon : /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CalendarIcon, {});
   const isControlled = value !== void 0;
   const showSeconds = resolveShowSeconds(showTime);
@@ -580,7 +695,7 @@ function DateRangePicker({
   );
   const [inputValue, setInputValue] = (0, import_react4.useState)(() => {
     const initial = value != null ? value : defaultValue;
-    return formatRange(initial == null ? void 0 : initial.from, initial == null ? void 0 : initial.to);
+    return formatRange(initial == null ? void 0 : initial.from, initial == null ? void 0 : initial.to, schema);
   });
   const [inputInvalid, setInputInvalid] = (0, import_react4.useState)(false);
   const [open, setOpen] = (0, import_react4.useState)(false);
@@ -624,7 +739,7 @@ function DateRangePicker({
     const lastToTime = (_f = (_e = lastEmittedToRef.current) == null ? void 0 : _e.getTime()) != null ? _f : null;
     if (fromTime === lastFromTime && toTime === lastToTime) return;
     if (!wasControlledRef.current && value === void 0) return;
-    setInputValue(formatRange(newFrom, newTo));
+    setInputValue(formatRange(newFrom, newTo, schema));
     setInputInvalid(false);
     if (!isControlled) {
       setInternalFrom(newFrom);
@@ -652,7 +767,7 @@ function DateRangePicker({
         setInternalFrom(from);
         setInternalTo(void 0);
       }
-      setInputValue(formatRange(from, void 0));
+      setInputValue(formatRange(from, void 0, schema));
       setInputInvalid(false);
       lastEmittedFromRef.current = from;
       lastEmittedToRef.current = void 0;
@@ -675,7 +790,7 @@ function DateRangePicker({
         setInternalFrom(from);
         setInternalTo(to);
       }
-      setInputValue(formatRange(from, to));
+      setInputValue(formatRange(from, to, schema));
       setInputInvalid(false);
       lastEmittedFromRef.current = from;
       lastEmittedToRef.current = to;
@@ -720,18 +835,18 @@ function DateRangePicker({
     const input = e.target;
     const cursorPos = (_a = input.selectionStart) != null ? _a : 0;
     const raw = input.value;
-    const digits = raw.replace(/\D/g, "").slice(0, 16);
-    const masked = applyRangeMask(digits);
+    const digits = raw.replace(/\D/g, "").slice(0, totalDigits);
+    const masked = applyRangeMask(digits, schema);
     const digitsBeforeCursor = raw.slice(0, cursorPos).replace(/\D/g, "").length;
     setInputValue(masked);
     setAnchorDate(void 0);
     setHoveredDate(void 0);
-    const fromDigits = digits.slice(0, 8);
-    const toDigits = digits.slice(8);
-    const parsedFrom = fromDigits.length === 8 ? parseDate(applyDateMask(fromDigits)) : void 0;
-    const parsedTo = toDigits.length === 8 ? parseDate(applyDateMask(toDigits)) : void 0;
-    const fromComplete = fromDigits.length === 8;
-    const toComplete = toDigits.length === 8;
+    const fromDigits = digits.slice(0, maxDigits);
+    const toDigits = digits.slice(maxDigits);
+    const parsedFrom = fromDigits.length === maxDigits ? parseDate(applyDateMask(fromDigits, schema), schema) : void 0;
+    const parsedTo = toDigits.length === maxDigits ? parseDate(applyDateMask(toDigits, schema), schema) : void 0;
+    const fromComplete = fromDigits.length === maxDigits;
+    const toComplete = toDigits.length === maxDigits;
     setInputInvalid(fromComplete && !parsedFrom || toComplete && !parsedTo);
     if (!isControlled) {
       setInternalFrom(parsedFrom);
@@ -760,13 +875,18 @@ function DateRangePicker({
       e.preventDefault();
       return;
     }
-    if (e.key === "Backspace" && pos > 0 && /[\s—]/.test(input.value[pos - 1])) {
+    const separatorChars = /* @__PURE__ */ new Set([" ", "\u2014"]);
+    schema.separators.forEach((s) => {
+      for (const ch of s.chars) separatorChars.add(ch);
+    });
+    if (e.key === "Backspace" && pos > 0 && separatorChars.has(input.value[pos - 1])) {
       e.preventDefault();
       const val = input.value;
       const charsToSkip = (_c = (_b = val.slice(0, pos).match(/[\s—]+$/)) == null ? void 0 : _b[0].length) != null ? _c : 1;
       const newPos = pos - charsToSkip;
       const masked = applyRangeMask(
-        (val.slice(0, newPos - 1) + val.slice(newPos)).replace(/\D/g, "")
+        (val.slice(0, newPos - 1) + val.slice(newPos)).replace(/\D/g, ""),
+        schema
       );
       setInputValue(masked);
       requestAnimationFrame(
@@ -777,15 +897,18 @@ function DateRangePicker({
   function handlePaste(e) {
     e.preventDefault();
     const text = e.clipboardData.getData("text");
-    const digits = text.replace(/\D/g, "").slice(0, 16);
-    const masked = applyRangeMask(digits);
+    const digits = text.replace(/\D/g, "").slice(0, totalDigits);
+    const masked = applyRangeMask(digits, schema);
     setInputValue(masked);
     setAnchorDate(void 0);
     setHoveredDate(void 0);
-    const parsedFrom = digits.length >= 8 ? parseDate(applyDateMask(digits.slice(0, 8))) : void 0;
-    const parsedTo = digits.length >= 16 ? parseDate(applyDateMask(digits.slice(8, 16))) : void 0;
+    const parsedFrom = digits.length >= maxDigits ? parseDate(applyDateMask(digits.slice(0, maxDigits), schema), schema) : void 0;
+    const parsedTo = digits.length >= totalDigits ? parseDate(
+      applyDateMask(digits.slice(maxDigits, totalDigits), schema),
+      schema
+    ) : void 0;
     setInputInvalid(
-      digits.length >= 8 && !parsedFrom || digits.length >= 16 && !parsedTo
+      digits.length >= maxDigits && !parsedFrom || digits.length >= totalDigits && !parsedTo
     );
     if (!isControlled) {
       setInternalFrom(parsedFrom);
@@ -803,7 +926,7 @@ function DateRangePicker({
       }
     );
   }
-  const placeholder = label && !focused && !filled ? void 0 : "\u0434\u0434.\u043C\u043C.\u0433\u0433\u0433\u0433 \u2014 \u0434\u0434.\u043C\u043C.\u0433\u0433\u0433\u0433";
+  const placeholder = label && !focused && !filled ? void 0 : `${schema.placeholder} \u2014 ${schema.placeholder}`;
   const interactive = !disabled && !loading;
   return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
     "div",
@@ -889,7 +1012,7 @@ function DateRangePicker({
                   endMonth: toDay,
                   disabled: disabledDays.length ? disabledDays : void 0,
                   numberOfMonths: 2,
-                  locale: import_locale2.ru
+                  locale
                 }
               ) }) }),
               /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "datepicker__time-row", children: [
@@ -941,7 +1064,7 @@ function DateRangePicker({
                 startMonth: fromConstraint,
                 endMonth: toConstraint,
                 numberOfMonths: 2,
-                locale: import_locale2.ru
+                locale
               }
             )
           }

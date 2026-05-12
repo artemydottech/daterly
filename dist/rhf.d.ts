@@ -1,7 +1,8 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { FieldValues, Path, RegisterOptions } from 'react-hook-form';
-import { b as DatePickerProps, e as DateRangePickerProps } from './DateRangePicker-C8_RSTkZ.js';
+import { b as DatePickerProps, e as DateRangePickerProps } from './DateRangePicker-DMprhiDL.js';
 import 'react';
+import 'date-fns/locale';
 import 'react-day-picker';
 
 interface RHFDatePickerProps<T extends FieldValues> extends Omit<DatePickerProps, 'value' | 'onChange' | 'failed'> {
