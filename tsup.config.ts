@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup'
+import { cp, mkdir } from 'node:fs/promises'
 
 export default defineConfig({
   entry: {
@@ -10,4 +11,8 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   external: ['react', 'react-dom', 'react-hook-form', 'date-fns'],
+  async onSuccess() {
+    await mkdir('dist/styles', { recursive: true })
+    await cp('src/styles/variables.css', 'dist/styles/variables.css')
+  },
 })
