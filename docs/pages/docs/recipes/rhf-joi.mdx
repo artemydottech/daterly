@@ -1,0 +1,88 @@
+# react-hook-form + Joi
+
+Joi проверяет данные на уровне runtime, а `@hookform/resolvers/joi` подключает её к react-hook-form. Полезен в legacy-проектах, где Joi уже используется на бэкенде.
+
+## Установка
+
+```bash npm2yarn
+npm install react-hook-form joi @hookform/resolvers
+```
+
+## Схема валидации
+
+```ts filename="filters-form.validation.ts"
+import Joi from 'joi'
+
+export const filtersFormSchema = Joi.object({
+  status: Joi.string().allow(''),
+  policyTitle: Joi.string().allow(''),
+  signedAfter: Joi.date().optional(),
+  signedBefore: Joi.date().optional(),
+})
+
+export interface FiltersFormValues {
+  status: string
+  policyTitle: string
+  signedAfter?: Date
+  signedBefore?: Date
+}
+```
+
+## Поля
+
+```tsx filename="filters-form.fields.tsx"
+import { RHFDatePicker } from '@artemy-tech/datepicker/rhf'
+import type { FiltersFormValues } from './filters-form.validation'
+
+export const FiltersFormFields = () => (
+  <>
+    <RHFDatePicker<FiltersFormValues>
+      name="signedAfter"
+      label="Подписан после"
+    />
+    <RHFDatePicker<FiltersFormValues>
+      name="signedBefore"
+      label="Подписан до"
+    />
+  </>
+)
+```
+
+## Форма
+
+```tsx filename="filters-form.tsx"
+import { joiResolver } from '@hookform/resolvers/joi'
+import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form'
+import {
+  filtersFormSchema,
+  type FiltersFormValues,
+} from './filters-form.validation'
+import { FiltersFormFields } from './filters-form.fields'
+
+export const FiltersForm = () => {
+  const methods = useForm<FiltersFormValues>({
+    resolver: joiResolver(filtersFormSchema),
+    defaultValues: {
+      status: '',
+      policyTitle: '',
+    },
+  })
+
+  const onSubmit: SubmitHandler<FiltersFormValues> = (values) => {
+    console.log(values)
+  }
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <FiltersFormFields />
+        <button type="submit">Показать</button>
+      </form>
+    </FormProvider>
+  )
+}
+```
+
+## Отличие от Zod-рецепта
+
+Тип `FiltersFormValues` объявляется вручную — Joi не выводит TypeScript-типы из схемы (в отличие от Zod). Это единственное практическое различие на стороне UI-компонентов.

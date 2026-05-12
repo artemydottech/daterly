@@ -1,0 +1,140 @@
+# DatePicker
+
+Поле ввода с маской `дд.мм.гггг` и попапом-календарём. Контролируемый и неконтролируемый режимы.
+
+## Базовый пример
+
+```tsx
+import { DatePicker } from '@artemy-tech/datepicker'
+
+<DatePicker label="Дата рождения" />
+```
+
+## Контролируемый
+
+```tsx
+import { useState } from 'react'
+import { DatePicker } from '@artemy-tech/datepicker'
+
+const [date, setDate] = useState<Date | undefined>()
+
+<DatePicker label="Дата" value={date} onChange={setDate} />
+```
+
+Если передан `value` (даже `undefined`) — компонент считает себя контролируемым. Используй `defaultValue` для неконтролируемого режима.
+
+## С выбором времени
+
+```tsx
+<DatePicker label="Дата и время" showTime={{ format: 'HH:mm' }} />
+
+// или с секундами
+<DatePicker label="Тайм-штамп" showTime />
+```
+
+`showTime={true}` эквивалентно `{ format: 'HH:mm:ss' }`.
+
+## Ограничение диапазона
+
+```tsx
+<DatePicker
+  label="Дата заезда"
+  fromDate={new Date()}                // не раньше сегодня
+  toDate={new Date(2027, 11, 31)}      // не позже 31.12.2027
+/>
+```
+
+## Состояния
+
+```tsx
+<DatePicker label="Ошибка" failed />
+<DatePicker label="Загрузка" loading />
+<DatePicker label="Отключено" disabled />
+```
+
+`failed` рисует красную рамку. `loading` заменяет иконку на спиннер и блокирует ввод. `disabled` блокирует и инпут, и попап.
+
+## Размеры
+
+```tsx
+<DatePicker size="s" />
+<DatePicker size="m" />  {/* по умолчанию */}
+<DatePicker size="l" />
+```
+
+## Без календаря
+
+Только инпут с маской, без попапа:
+
+```tsx
+<DatePicker noCalendar label="Дата (без календаря)" />
+```
+
+## Иконка
+
+```tsx
+<DatePicker icon={false} />                    // спрятать
+<DatePicker icon={<MyIcon />} />               // заменить
+<DatePicker iconPosition="start" />            // слева вместо справа
+```
+
+## Кастомный триггер
+
+Заменить весь инпут на собственный элемент:
+
+```tsx
+<DatePicker
+  customTrigger={(value, onClick) => (
+    <button type="button" onClick={onClick}>
+      {value || 'Выбрать дату'}
+    </button>
+  )}
+/>
+```
+
+В этом случае ввода с маской нет — только клик по триггеру открывает попап.
+
+## Кастомный инпут
+
+Сохранить логику маски, но заменить сам `<input>` на компонент из UI-кита:
+
+```tsx
+import { Input } from 'antd'
+
+<DatePicker
+  renderInput={({ ref, className, ...props }) => (
+    <Input ref={ref as any} {...props} />
+  )}
+/>
+```
+
+Все обработчики (`onChange`, `onKeyDown`, `onPaste`, …) уже включены в `props`.
+
+## Локаль и формат
+
+См. отдельную страницу [Локали и форматы](/docs/locales).
+
+## Пропсы
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|--------------|----------|
+| `value` | `Date` | — | Контролируемое значение |
+| `defaultValue` | `Date` | — | Неконтролируемое начальное значение |
+| `onChange` | `(date: Date \| undefined) => void` | — | Колбэк при изменении |
+| `label` | `string` | — | Плавающий лейбл |
+| `placeholder` | `string` | из формата | Плейсхолдер |
+| `locale` | `Locale` (`date-fns`) | `ru` | Локаль |
+| `dateFormat` | `string` | `'dd.MM.yyyy'` | Формат даты |
+| `fromDate` | `Date` | — | Минимально допустимая |
+| `toDate` | `Date` | — | Максимально допустимая |
+| `showTime` | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | — | Включить выбор времени |
+| `noCalendar` | `boolean` | `false` | Только инпут, без попапа |
+| `size` | `'s' \| 'm' \| 'l'` | `'m'` | Размер |
+| `disabled` | `boolean` | `false` | Отключено |
+| `failed` | `boolean` | `false` | Состояние ошибки |
+| `loading` | `boolean` | `false` | Загрузка |
+| `icon` | `ReactNode \| false` | календарь | Иконка |
+| `iconPosition` | `'start' \| 'end'` | `'end'` | Позиция иконки |
+| `renderInput` | `(props) => ReactNode` | — | Заменить `<input>` |
+| `customTrigger` | `(value, onClick) => ReactNode` | — | Заменить весь триггер |
+| `className` | `string` | — | CSS-класс на корне |

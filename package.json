@@ -35,6 +35,9 @@
   "files": [
     "dist"
   ],
+  "workspaces": [
+    "docs"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

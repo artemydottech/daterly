@@ -1,0 +1,89 @@
+# shadcn/ui Form
+
+[shadcn/ui Form](https://ui.shadcn.com/docs/components/form) — это набор компонентов поверх react-hook-form + Zod. Если он уже подключён в проекте, можно использовать наш `DatePicker` напрямую через `FormField` — без `RHFDatePicker`-обёртки.
+
+## Установка
+
+```bash
+npx shadcn@latest add form
+```
+
+И обычная установка пикера:
+
+```bash npm2yarn
+npm install @artemy-tech/datepicker zod react-hook-form @hookform/resolvers
+```
+
+## Схема
+
+```ts filename="event-form.validation.ts"
+import { z } from 'zod'
+
+export const eventFormSchema = z.object({
+  title: z.string().min(1, 'Введите название'),
+  startsAt: z.date({ message: 'Выберите дату начала' }),
+})
+
+export type EventFormValues = z.infer<typeof eventFormSchema>
+```
+
+## Форма
+
+```tsx filename="event-form.tsx"
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Button } from '@/components/ui/button'
+import { DatePicker } from '@artemy-tech/datepicker'
+import { eventFormSchema, type EventFormValues } from './event-form.validation'
+
+export const EventForm = () => {
+  const form = useForm<EventFormValues>({
+    resolver: zodResolver(eventFormSchema),
+    defaultValues: { title: '', startsAt: undefined },
+  })
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(console.log)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="startsAt"
+          render={({ field, fieldState }) => (
+            <FormItem>
+              <FormLabel>Дата начала</FormLabel>
+              <FormControl>
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  failed={Boolean(fieldState.error)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Создать</Button>
+      </form>
+    </Form>
+  )
+}
+```
+
+## Что происходит
+
+- `FormField` управляет регистрацией через `control` — это аналог нашего `RHFDatePicker` под капотом.
+- `field.value` и `field.onChange` пробрасываются в `DatePicker` напрямую.
+- `failed={Boolean(fieldState.error)}` рисует ошибочную рамку, а текст ошибки выводит `<FormMessage />`.
+
+Когда применять этот рецепт vs `RHFDatePicker`:
+
+- **Используй `RHFDatePicker`**, если хочешь меньше кода. Обёртка делает то же самое автоматически.
+- **Используй `FormField` + `DatePicker`**, если в проекте уже принят shadcn-стиль и важна визуальная согласованность с другими полями формы.

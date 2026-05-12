@@ -1,0 +1,84 @@
+# react-hook-form
+
+Обёртки `RHFDatePicker` и `RHFDateRangePicker` живут в отдельном entry-point — если RHF не используешь, они не попадут в бандл.
+
+```tsx
+import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/datepicker/rhf'
+```
+
+## Базовый пример
+
+```tsx
+import { FormProvider, useForm } from 'react-hook-form'
+import { RHFDatePicker } from '@artemy-tech/datepicker/rhf'
+
+interface FormValues {
+  birthDate: Date | undefined
+}
+
+const MyForm = () => {
+  const methods = useForm<FormValues>({
+    defaultValues: { birthDate: undefined },
+  })
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFDatePicker<FormValues>
+          name="birthDate"
+          label="Дата рождения"
+        />
+        <button type="submit">Отправить</button>
+      </form>
+    </FormProvider>
+  )
+}
+```
+
+## Дженерик-параметр
+
+Передавай тип значений формы как дженерик — это даёт автокомплит и типобезопасность для `name`:
+
+```tsx
+<RHFDatePicker<FormValues> name="birthDate" />
+//                          ^ автокомплит из ключей FormValues
+//                            ошибка, если имя поля не существует
+```
+
+Без дженерика `name` принимает любую строку — и опечатка не поймается компилятором.
+
+## Правила валидации
+
+`rules` — стандартные опции `react-hook-form`:
+
+```tsx
+<RHFDatePicker<FormValues>
+  name="birthDate"
+  label="Дата рождения"
+  rules={{
+    required: 'Выберите дату',
+    validate: (date) => {
+      if (!date) return 'Выберите дату'
+      if (date > new Date()) return 'Дата не может быть в будущем'
+      return true
+    },
+  }}
+/>
+```
+
+Сообщение об ошибке отрисовывается под полем автоматически, плюс на корень компонента выставляется `failed`.
+
+## Все пропсы
+
+Принимаются **все** пропсы базового `DatePicker` / `DateRangePicker` (включая `locale`, `dateFormat`, `showTime` и т.д.), плюс:
+
+| Prop | Тип | Описание |
+|------|-----|----------|
+| `name` | `Path<T>` | Имя поля (типобезопасное при использовании дженерика) |
+| `rules` | `RegisterOptions` | Правила валидации react-hook-form |
+
+## Готовые рецепты
+
+- [С Zod](/docs/recipes/rhf-zod) — рекомендованный стек
+- [С Joi](/docs/recipes/rhf-joi) — для legacy-проектов
+- [С shadcn/ui Form](/docs/recipes/shadcn-form) — встраивание в shadcn `<FormField>`

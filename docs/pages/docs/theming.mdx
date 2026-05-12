@@ -1,0 +1,78 @@
+# Стилизация
+
+Вся визуальная настройка — через CSS-переменные с префиксом `--datepicker-*`. Никакого CSS-in-JS, никаких className-инъекций.
+
+## Подключение
+
+```tsx
+import '@artemy-tech/datepicker/styles'
+```
+
+Этот импорт подгружает базовые переменные и стили `react-day-picker`. После этого переопределяй нужные токены через `:root` или scope-селектор.
+
+## Основные токены
+
+```css
+:root {
+  /* Цвета */
+  --datepicker-color-accent: #7c83ff;
+  --datepicker-color-text: #1a1a1a;
+  --datepicker-color-placeholder: #9e9e9e;
+  --datepicker-bg: #ffffff;
+
+  /* Рамки */
+  --datepicker-border-color: #e0e0e0;
+  --datepicker-border-color-focus: var(--datepicker-color-accent);
+  --datepicker-border-color-failed: #ef4444;
+  --datepicker-radius: 8px;
+
+  /* Типографика */
+  --datepicker-font-family: inherit;
+  --datepicker-font-size: 14px;
+
+  /* Календарь */
+  --datepicker-day-bg-selected: var(--datepicker-color-accent);
+  --datepicker-day-bg-hover: rgba(124, 131, 255, 0.1);
+  --datepicker-day-bg-range: rgba(124, 131, 255, 0.15);
+}
+```
+
+## Состояния через `data-*`
+
+Состояния не задаются классами — они выражены через `data-*` атрибуты на корневом элементе:
+
+```css
+.datepicker[data-focused]  { /* в фокусе или попап открыт */ }
+.datepicker[data-filled]   { /* в инпуте есть значение */ }
+.datepicker[data-failed]   { /* состояние ошибки */ }
+.datepicker[data-disabled] { /* disabled или loading */ }
+```
+
+Это позволяет стилизовать состояния без JS-классов и без `aria-*` костылей.
+
+## Скоуп
+
+Если нужны разные темы для разных частей приложения — задавай переменные на конкретном предке:
+
+```css
+.dark-section {
+  --datepicker-bg: #1a1a1a;
+  --datepicker-color-text: #e0e0e0;
+  --datepicker-border-color: #333;
+}
+```
+
+## Тёмная тема
+
+Готовой `[data-theme="dark"]` темы в пакете нет — задаётся пользователем через переопределение переменных. Минимальный пример:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    --datepicker-bg: #0a0a0f;
+    --datepicker-color-text: #e6e7ee;
+    --datepicker-color-placeholder: #6a6e80;
+    --datepicker-border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+```

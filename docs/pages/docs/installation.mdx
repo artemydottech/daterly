@@ -1,0 +1,38 @@
+# Установка
+
+## Сам пакет
+
+```bash npm2yarn
+npm install @artemy-tech/datepicker
+```
+
+## Peer-зависимости
+
+```text
+react >= 17.0.0
+react-hook-form >= 7.0.0  # опционально, только если используете /rhf
+```
+
+Если RHF-обёртки не нужны — устанавливать `react-hook-form` не обязательно.
+
+## Подключение стилей
+
+В корневом компоненте приложения (или в `_app.tsx` для Next.js, `main.tsx` для Vite):
+
+```tsx
+import '@artemy-tech/datepicker/styles'
+```
+
+Этот импорт подтягивает базовые CSS-переменные и стили `react-day-picker`. Без него календарь будет выглядеть «голым».
+
+## Что экспортируется
+
+| Точка входа | Что внутри |
+|-------------|------------|
+| `@artemy-tech/datepicker` | `DatePicker`, `DateRangePicker`, `Calendar`, типы `DateRange`, `DatePickerProps` |
+| `@artemy-tech/datepicker/rhf` | `RHFDatePicker`, `RHFDateRangePicker` |
+| `@artemy-tech/datepicker/styles` | Базовые CSS-переменные и стили календаря |
+
+## TypeScript
+
+Типы поставляются в пакете — отдельный `@types/*` не нужен. Все компоненты экспортируют свои `*Props` интерфейсы.

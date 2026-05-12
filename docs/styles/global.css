@@ -1,0 +1,9 @@
+:root {
+  --landing-bg: #0a0a0f;
+  --landing-bg-soft: #11121a;
+  --landing-fg: #e6e7ee;
+  --landing-fg-muted: #9ca0b4;
+  --landing-accent: #7c83ff;
+  --landing-accent-soft: rgba(124, 131, 255, 0.12);
+  --landing-border: rgba(255, 255, 255, 0.08);
+}

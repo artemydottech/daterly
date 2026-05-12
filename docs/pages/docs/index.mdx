@@ -1,0 +1,29 @@
+# Введение
+
+`@artemy-tech/datepicker` — React-библиотека для ввода дат с маской, поддержкой произвольных локалей и форматов, выбора диапазона и времени. Опциональная интеграция с react-hook-form через отдельный entry-point.
+
+Под капотом — [react-day-picker v9](https://daypicker.dev/) (headless-календарь) и [date-fns v4](https://date-fns.org/) (форматирование и парсинг).
+
+## Зачем
+
+Большинство DatePicker-библиотек либо тащат собственный UI и стилизацию, которую сложно подчинить дизайн-системе, либо требуют десятка форматтер/локаль-обёрток. Здесь:
+
+- **Headless по своей сути** — стилизация только через CSS-переменные и `data-*` атрибуты.
+- **Маска ввода из коробки** — не нужен `imask` или `react-input-mask`.
+- **Любая локаль и формат** — два пропса, остальное выводится автоматически.
+- **RHF — опционален** — `react-hook-form` в `peerDependencies` как optional. Если не используете — он не попадёт в бандл.
+
+## Быстрый старт
+
+```bash
+npm install @artemy-tech/datepicker
+```
+
+```tsx
+import '@artemy-tech/datepicker/styles'
+import { DatePicker } from '@artemy-tech/datepicker'
+
+export const Example = () => <DatePicker label="Дата рождения" />
+```
+
+Дальше — [Установка](/docs/installation) и [DatePicker](/docs/datepicker).

@@ -1,0 +1,80 @@
+# react-hook-form + Zod
+
+Рекомендованный стек. Zod даёт типобезопасную схему, react-hook-form — управление полями, обёртка `RHFDatePicker` — связку с инпутом и календарём.
+
+## Установка
+
+```bash npm2yarn
+npm install react-hook-form zod @hookform/resolvers
+```
+
+## Схема валидации
+
+```ts filename="booking-form.validation.ts"
+import { z } from 'zod'
+
+export const bookingFormSchema = z.object({
+  checkIn: z.date({ message: 'Выберите дату заезда' }),
+  period: z.object({
+    from: z.date({ message: 'Выберите начало периода' }),
+    to: z.date({ message: 'Выберите конец периода' }),
+  }),
+})
+
+export type BookingFormValues = z.infer<typeof bookingFormSchema>
+```
+
+## Поля формы
+
+```tsx filename="booking-form.fields.tsx"
+import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/datepicker/rhf'
+import type { BookingFormValues } from './booking-form.validation'
+
+export const BookingFormFields = () => (
+  <>
+    <RHFDatePicker<BookingFormValues>
+      name="checkIn"
+      label="Дата заезда"
+      fromDate={new Date()}
+    />
+    <RHFDateRangePicker<BookingFormValues>
+      name="period"
+      label="Период проживания"
+    />
+  </>
+)
+```
+
+## Форма
+
+```tsx filename="booking-form.tsx"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form'
+import { bookingFormSchema, type BookingFormValues } from './booking-form.validation'
+import { BookingFormFields } from './booking-form.fields'
+
+export const BookingForm = () => {
+  const methods = useForm<BookingFormValues>({
+    resolver: zodResolver(bookingFormSchema),
+  })
+
+  const onSubmit: SubmitHandler<BookingFormValues> = (values) => {
+    console.log(values)
+  }
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <BookingFormFields />
+        <button type="submit">Забронировать</button>
+      </form>
+    </FormProvider>
+  )
+}
+```
+
+## Что важно
+
+- **`BookingFormValues` выводится из схемы** (`z.infer`) — нет ручного дублирования типа.
+- **Дженерик-параметр** `<RHFDatePicker<BookingFormValues>` — даёт автокомплит на `name` и ловит опечатки.
+- **Резолвер сам форматирует ошибки** — обёртка показывает их под полем без дополнительной логики.

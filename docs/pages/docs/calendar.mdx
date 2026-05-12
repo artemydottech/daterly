@@ -1,0 +1,28 @@
+# Calendar
+
+Базовый календарь без инпута и попапа. Используй как строительный блок или когда нужен inline-выбор на странице.
+
+```tsx
+import { useState } from 'react'
+import { Calendar } from '@artemy-tech/datepicker'
+
+const [date, setDate] = useState<Date | undefined>()
+
+<Calendar mode="single" selected={date} onSelect={setDate} />
+```
+
+Диапазон:
+
+```tsx
+import type { DateRange } from '@artemy-tech/datepicker'
+
+const [range, setRange] = useState<DateRange | undefined>()
+
+<Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2} />
+```
+
+## Под капотом
+
+`Calendar` — тонкая обёртка над `<DayPicker>` из `react-day-picker`. Принимает **все** пропсы DayPicker (`mode`, `selected`, `onSelect`, `disabled`, `locale`, `numberOfMonths`, `startMonth`, `endMonth`, `fromDate`, `toDate`, `navLayout` и т.д.).
+
+Документация по полному API: [daypicker.dev](https://daypicker.dev/api).

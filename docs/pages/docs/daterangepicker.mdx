@@ -1,0 +1,68 @@
+# DateRangePicker
+
+Поле ввода для диапазона дат. Маска `дд.мм.гггг — дд.мм.гггг`, попап с двумя месяцами, двухфазный клик в календаре.
+
+## Базовый пример
+
+```tsx
+import { useState } from 'react'
+import { DateRangePicker, type DateRange } from '@artemy-tech/datepicker'
+
+const [range, setRange] = useState<DateRange | undefined>()
+
+<DateRangePicker
+  label="Период проживания"
+  value={range}
+  onChange={setRange}
+/>
+```
+
+## Двухфазный выбор
+
+Первый клик в календаре — устанавливает начало диапазона (anchor). Второй клик — фиксирует конец и закрывает попап. При движении мыши между кликами подсвечивается потенциальный диапазон.
+
+Если кликнуть на дату _раньше_ anchor — она автоматически станет началом, а первоначальный anchor — концом.
+
+## Расположение календаря
+
+```tsx
+<DateRangePicker calendarLayout="horizontal" />   {/* по умолчанию */}
+<DateRangePicker calendarLayout="vertical" />     {/* в стек */}
+```
+
+## С выбором времени
+
+```tsx
+<DateRangePicker
+  label="Период с точностью до минуты"
+  showTime={{ format: 'HH:mm' }}
+/>
+```
+
+В режиме `showTime` под календарём появляются два `TimePanel` — для начала и конца. Попап в этом режиме не закрывается автоматически — закрытие по кнопке OK.
+
+## Ограничение
+
+```tsx
+<DateRangePicker
+  fromDate={new Date()}
+  toDate={new Date(2027, 11, 31)}
+/>
+```
+
+## Все пропсы
+
+Те же, что и у [DatePicker](/docs/datepicker), плюс:
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|--------------|----------|
+| `value` | `DateRange` | — | `{ from, to }` |
+| `defaultValue` | `DateRange` | — | Начальный диапазон |
+| `onChange` | `(range: DateRange \| undefined) => void` | — | Колбэк |
+| `calendarLayout` | `'horizontal' \| 'vertical'` | `'horizontal'` | Расположение двух месяцев |
+
+`DateRange` импортируется из основного entry-point:
+
+```tsx
+import type { DateRange } from '@artemy-tech/datepicker'
+```

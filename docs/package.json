@@ -1,0 +1,25 @@
+{
+  "name": "@artemy-tech/datepicker-docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@artemy-tech/datepicker": "*",
+    "date-fns": "^4.0.0",
+    "next": "^14.2.5",
+    "nextra": "^3.0.0",
+    "nextra-theme-docs": "^3.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.3.1",
+    "typescript": "^5.0.0"
+  }
+}
