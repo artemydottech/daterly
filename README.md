@@ -4,8 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/@artemy-tech/datepicker?color=green)](https://www.npmjs.com/package/@artemy-tech/datepicker)
 [![CI](https://github.com/artemydottech/datepicker/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/datepicker/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/artemydottech/datepicker/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/datepicker)
-[![bundle size](https://deno.bundlejs.com/badge?q=@artemy-tech/datepicker)](https://bundlejs.com/?q=@artemy-tech/datepicker)
-[![license](https://img.shields.io/npm/l/@artemy-tech/datepicker)](https://github.com/artemydottech/datepicker/blob/main/LICENSE)
+[![publish size](https://badgen.net/packagephobia/publish/@artemy-tech/datepicker)](https://packagephobia.com/result?p=@artemy-tech/datepicker)
 
 React DatePicker с опциональной поддержкой react-hook-form. Построен на базе [react-day-picker v9](https://daypicker.dev/) (headless) и [date-fns v4](https://date-fns.org/).
 
@@ -95,7 +94,7 @@ import { DatePicker } from '@artemy-tech/datepicker';
       {value || 'Выбрать дату'}
     </button>
   )}
-/>
+/>;
 ```
 
 ### Кастомный инпут (`renderInput`)
@@ -157,26 +156,26 @@ function BookingForm() {
 
 ### DatePicker — пропсы
 
-| Prop           | Тип                                             | По умолчанию       | Описание                                            |
-| -------------- | ----------------------------------------------- | ------------------ | --------------------------------------------------- |
-| `value`        | `Date`                                          | —                  | Контролируемое значение                             |
-| `defaultValue` | `Date`                                          | —                  | Значение по умолчанию (неконтролируемый режим)      |
-| `onChange`     | `(date: Date \| undefined) => void`             | —                  | Callback при изменении                              |
-| `label`        | `string`                                        | —                  | Плавающий лейбл                                     |
-| `placeholder`  | `string`                                        | `дд.мм.гггг`       | Плейсхолдер                                         |
-| `fromDate`     | `Date`                                          | —                  | Минимально допустимая дата                          |
-| `toDate`       | `Date`                                          | —                  | Максимально допустимая дата                         |
-| `showTime`     | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —                  | Включить выбор времени                              |
-| `noCalendar`   | `boolean`                                       | `false`            | Только ввод, без попапа                             |
-| `size`         | `'s' \| 'm' \| 'l'`                             | `'m'`              | Размер                                              |
-| `disabled`     | `boolean`                                       | `false`            |                                                     |
-| `failed`       | `boolean`                                       | `false`            | Состояние ошибки                                    |
-| `loading`      | `boolean`                                       | `false`            | Состояние загрузки                                  |
-| `icon`         | `ReactNode \| false`                            | `<CalendarIcon />` | Иконка (`false` — скрыть)                           |
-| `iconPosition` | `'start' \| 'end'`                              | `'end'`            | Позиция иконки                                      |
-| `renderInput`    | `(props: DatePickerInputProps) => ReactNode`              | —                  | Кастомный `<input>`; маска и попап сохраняются      |
-| `customTrigger`  | `(value: string, onClick: () => void) => ReactNode`       | —                  | Render-функция для произвольного триггера            |
-| `className`    | `string`                                        | —                  | CSS-класс на корневом элементе                      |
+| Prop            | Тип                                                 | По умолчанию       | Описание                                       |
+| --------------- | --------------------------------------------------- | ------------------ | ---------------------------------------------- |
+| `value`         | `Date`                                              | —                  | Контролируемое значение                        |
+| `defaultValue`  | `Date`                                              | —                  | Значение по умолчанию (неконтролируемый режим) |
+| `onChange`      | `(date: Date \| undefined) => void`                 | —                  | Callback при изменении                         |
+| `label`         | `string`                                            | —                  | Плавающий лейбл                                |
+| `placeholder`   | `string`                                            | `дд.мм.гггг`       | Плейсхолдер                                    |
+| `fromDate`      | `Date`                                              | —                  | Минимально допустимая дата                     |
+| `toDate`        | `Date`                                              | —                  | Максимально допустимая дата                    |
+| `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }`      | —                  | Включить выбор времени                         |
+| `noCalendar`    | `boolean`                                           | `false`            | Только ввод, без попапа                        |
+| `size`          | `'s' \| 'm' \| 'l'`                                 | `'m'`              | Размер                                         |
+| `disabled`      | `boolean`                                           | `false`            |                                                |
+| `failed`        | `boolean`                                           | `false`            | Состояние ошибки                               |
+| `loading`       | `boolean`                                           | `false`            | Состояние загрузки                             |
+| `icon`          | `ReactNode \| false`                                | `<CalendarIcon />` | Иконка (`false` — скрыть)                      |
+| `iconPosition`  | `'start' \| 'end'`                                  | `'end'`            | Позиция иконки                                 |
+| `renderInput`   | `(props: DatePickerInputProps) => ReactNode`        | —                  | Кастомный `<input>`; маска и попап сохраняются |
+| `customTrigger` | `(value: string, onClick: () => void) => ReactNode` | —                  | Render-функция для произвольного триггера      |
+| `className`     | `string`                                            | —                  | CSS-класс на корневом элементе                 |
 
 ### DateRangePicker — пропсы
 

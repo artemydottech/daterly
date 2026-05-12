@@ -173,5 +173,109 @@ describe('DatePicker', () => {
       await user.type(screen.getByRole('textbox'), '150320241430')
       expect(screen.getByRole('textbox')).toHaveValue('15.03.2024 14:30')
     })
+
+    it('updates value when a time slot is clicked in the TimePanel', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      const { container } = render(
+        <DatePicker
+          defaultValue={new Date(2024, 2, 15, 10, 0, 0)}
+          showTime={{ format: 'HH:mm' }}
+          onChange={onChange}
+        />,
+      )
+      await user.click(screen.getByRole('textbox'))
+      const hoursCol = container.querySelectorAll('.time-panel__column')[0]
+      const hour15 = Array.from(hoursCol.querySelectorAll('.time-panel__item')).find(
+        (el) => el.textContent === '15',
+      ) as HTMLButtonElement
+      await user.click(hour15)
+      const date = onChange.mock.calls.at(-1)?.[0] as Date
+      expect(date.getHours()).toBe(15)
+      expect(date.getMinutes()).toBe(0)
+    })
+
+    it('keeps popover open after time selection and closes on OK', async () => {
+      const user = userEvent.setup()
+      render(<DatePicker defaultValue={new Date(2024, 2, 15, 10, 0, 0)} showTime={{ format: 'HH:mm' }} />)
+      await user.click(screen.getByRole('textbox'))
+      const okBtn = screen.getByRole('button', { name: 'OK' })
+      expect(okBtn).toBeInTheDocument()
+      await user.click(okBtn)
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    })
+  })
+
+  it('opens calendar via customTrigger click', async () => {
+    const user = userEvent.setup()
+    render(
+      <DatePicker
+        customTrigger={(value, onClick) => (
+          <button type="button" onClick={onClick}>
+            {value || 'Выбрать дату'}
+          </button>
+        )}
+      />,
+    )
+    await user.click(screen.getByRole('button', { name: 'Выбрать дату' }))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('renders icon at the start when iconPosition="start"', () => {
+    const { container } = render(<DatePicker iconPosition="start" />)
+    expect(container.querySelector('.datepicker__icon--start')).toBeInTheDocument()
+  })
+
+  it('pastes a date string and applies mask', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<DatePicker onChange={onChange} />)
+    const input = screen.getByRole('textbox')
+    input.focus()
+    await user.paste('15/03/2024')
+    expect(input).toHaveValue('15.03.2024')
+    const date = onChange.mock.calls.at(-1)?.[0] as Date
+    expect(date.getDate()).toBe(15)
+  })
+
+  it('Backspace right after a separator removes the separator and the preceding digit', async () => {
+    const user = userEvent.setup()
+    render(<DatePicker defaultValue={new Date(2024, 0, 15, 12, 0, 0)} />)
+    const input = screen.getByRole('textbox') as HTMLInputElement
+    expect(input.value).toBe('15.01.2024')
+    input.focus()
+    input.setSelectionRange(3, 3) // right after the first dot
+    await user.keyboard('{Backspace}')
+    // "15.01.2024" -> drop "5." -> "101.2024" digits -> remasked "10.12.024"
+    expect(input.value).toBe('10.12.024')
+  })
+
+  it('restores last valid value on blur when input is partial', async () => {
+    const user = userEvent.setup()
+    render(<DatePicker defaultValue={new Date(2024, 0, 15, 12, 0, 0)} />)
+    const input = screen.getByRole('textbox')
+    await user.click(input)
+    await user.clear(input)
+    await user.type(input, '1503')
+    expect(input).toHaveValue('15.03')
+    await user.tab()
+    // after blur, partial is rolled back to last valid (which is '' after clear)
+    expect(input).toHaveValue('')
+  })
+
+  it('selects a day from the calendar', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<DatePicker defaultValue={new Date(2024, 2, 15, 12, 0, 0)} onChange={onChange} />)
+    await user.click(screen.getByRole('textbox'))
+    const dialog = screen.getByRole('dialog')
+    const day20 = await Promise.resolve(
+      Array.from(dialog.querySelectorAll('button')).find((b) => b.textContent?.trim() === '20'),
+    )
+    if (!day20) throw new Error('day 20 not found')
+    await user.click(day20)
+    const last = onChange.mock.calls.at(-1)?.[0] as Date
+    expect(last.getDate()).toBe(20)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 })

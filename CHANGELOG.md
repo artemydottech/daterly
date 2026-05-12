@@ -1,5 +1,11 @@
 # @artemy-tech/datepicker
 
+## 0.6.1
+
+### Patch Changes
+
+- chore: raise unit-test coverage from ~69% to ~95%. Added tests for `Button`, `RHFDatePicker`, `RHFDateRangePicker`, `DatePicker` time-panel interactions, paste handling, separator-Backspace behaviour, and `DateRangePicker` showTime path. No public-API changes.
+
 ## 0.6.0
 
 ### Minor Changes

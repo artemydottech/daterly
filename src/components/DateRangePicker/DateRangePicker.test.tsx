@@ -135,4 +135,128 @@ describe('DateRangePicker', () => {
     )
     expect(container.querySelector('[data-filled]')).toBeInTheDocument()
   })
+
+  it('renders icon at the start when iconPosition="start"', () => {
+    const { container } = render(<DateRangePicker iconPosition="start" />)
+    expect(container.querySelector('.datepicker__icon--start')).toBeInTheDocument()
+  })
+
+  it('hides icon when icon is false', () => {
+    const { container } = render(<DateRangePicker icon={false} />)
+    expect(container.querySelector('.datepicker__icon')).not.toBeInTheDocument()
+  })
+
+  it('pastes a full range string and parses both dates', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<DateRangePicker onChange={onChange} />)
+    const input = screen.getByRole('textbox')
+    input.focus()
+    await user.paste('01/01/2024 — 31/12/2024')
+    expect(input).toHaveValue('01.01.2024 — 31.12.2024')
+    const last = onChange.mock.calls.at(-1)?.[0]
+    expect(last?.from?.getDate()).toBe(1)
+    expect(last?.to?.getDate()).toBe(31)
+  })
+
+  it('Backspace inside the range separator collapses it', async () => {
+    const user = userEvent.setup()
+    render(
+      <DateRangePicker
+        defaultValue={{
+          from: new Date(2024, 0, 1, 12, 0, 0),
+          to: new Date(2024, 11, 31, 12, 0, 0),
+        }}
+      />,
+    )
+    const input = screen.getByRole('textbox') as HTMLInputElement
+    expect(input.value).toBe('01.01.2024 — 31.12.2024')
+    input.focus()
+    input.setSelectionRange(13, 13) // inside the " — " separator
+    await user.keyboard('{Backspace}')
+    expect(input.value.length).toBeLessThan('01.01.2024 — 31.12.2024'.length)
+  })
+
+  it('selects a range from the calendar with two clicks', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(
+      <DateRangePicker
+        defaultValue={{
+          from: new Date(2024, 2, 1, 12, 0, 0),
+          to: undefined,
+        }}
+        onChange={onChange}
+      />,
+    )
+    await user.click(screen.getByRole('textbox'))
+    const dialog = screen.getByRole('dialog')
+    const days = Array.from(dialog.querySelectorAll('button.rdp-day_button')) as HTMLButtonElement[]
+    const day5 = days.find((b) => b.textContent?.trim() === '5')!
+    const day10 = days.find((b) => b.textContent?.trim() === '10')!
+    await user.click(day5)
+    await user.click(day10)
+    const last = onChange.mock.calls.at(-1)?.[0]
+    expect(last?.from).toBeInstanceOf(Date)
+    expect(last?.to).toBeInstanceOf(Date)
+    expect(last.from.getDate()).toBe(5)
+    expect(last.to.getDate()).toBe(10)
+  })
+
+  describe('showTime', () => {
+    it('renders TimePanel for both ends when showTime is set', async () => {
+      const user = userEvent.setup()
+      render(
+        <DateRangePicker
+          defaultValue={{
+            from: new Date(2024, 2, 1, 10, 0, 0),
+            to: new Date(2024, 2, 10, 18, 0, 0),
+          }}
+          showTime={{ format: 'HH:mm' }}
+        />,
+      )
+      await user.click(screen.getByRole('textbox'))
+      expect(screen.getByText('Начало')).toBeInTheDocument()
+      expect(screen.getByText('Конец')).toBeInTheDocument()
+    })
+
+    it('updates the from-time when a slot is clicked', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      const { container } = render(
+        <DateRangePicker
+          defaultValue={{
+            from: new Date(2024, 2, 1, 10, 0, 0),
+            to: new Date(2024, 2, 10, 18, 0, 0),
+          }}
+          showTime={{ format: 'HH:mm' }}
+          onChange={onChange}
+        />,
+      )
+      await user.click(screen.getByRole('textbox'))
+      const fromPanel = container.querySelectorAll('.time-panel')[0]
+      const hour15 = Array.from(fromPanel.querySelectorAll('.time-panel__item')).find(
+        (el) => el.textContent === '15',
+      ) as HTMLButtonElement
+      await user.click(hour15)
+      const last = onChange.mock.calls.at(-1)?.[0]
+      expect(last?.from?.getHours()).toBe(15)
+    })
+
+    it('closes the popover on OK', async () => {
+      const user = userEvent.setup()
+      render(
+        <DateRangePicker
+          defaultValue={{
+            from: new Date(2024, 2, 1, 10, 0, 0),
+            to: new Date(2024, 2, 10, 18, 0, 0),
+          }}
+          showTime={{ format: 'HH:mm' }}
+        />,
+      )
+      await user.click(screen.getByRole('textbox'))
+      await user.click(screen.getByRole('button', { name: 'OK' }))
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    })
+  })
 })
