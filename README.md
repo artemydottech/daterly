@@ -6,18 +6,21 @@
 [![codecov](https://codecov.io/gh/artemydottech/datepicker/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/datepicker)
 [![publish size](https://badgen.net/packagephobia/publish/@artemy-tech/datepicker)](https://packagephobia.com/result?p=@artemy-tech/datepicker)
 
-React DatePicker с опциональной поддержкой react-hook-form. Построен на базе [react-day-picker v9](https://daypicker.dev/) (headless) и [date-fns v4](https://date-fns.org/).
+React DatePicker с маской ввода, поддержкой произвольных локалей и форматов даты, выбором диапазона и времени, опциональной интеграцией с react-hook-form. Построен на [react-day-picker v9](https://daypicker.dev/) и [date-fns v4](https://date-fns.org/).
+
+**📚 [Документация и примеры →](https://artemydottech.github.io/datepicker)**
 
 ## Возможности
 
-- Выбор одиночной даты и диапазона дат
+- Одиночная дата и диапазон
 - Контролируемый и неконтролируемый режимы
 - Выбор времени (`showTime`)
-- Кастомный триггер через `customTrigger` — render-функция, получает текущее значение и `onClick`
-- Кастомный инпут через `renderInput` — интеграция с любой UI-библиотекой (Ant Design, MUI, shadcn и др.)
+- **Произвольная локаль** через проп `locale` (любая локаль `date-fns`)
+- **Произвольный формат даты** через проп `dateFormat` (`dd.MM.yyyy`, `MM/dd/yyyy`, `yyyy-MM-dd`, …) — маска ввода генерится автоматически
+- Кастомный триггер (`customTrigger`) и кастомный инпут (`renderInput`) — интеграция с Ant Design, MUI, shadcn/ui и др.
 - Интеграция с react-hook-form (нулевые издержки если не используется)
-- Стилизация через CSS-переменные (`--datepicker-*`)
-- Полная поддержка TypeScript
+- Стилизация через CSS-переменные `--datepicker-*`
+- Полная поддержка TypeScript, в т.ч. дженерики для RHF-компонентов
 
 ## Установка
 
@@ -25,37 +28,34 @@ React DatePicker с опциональной поддержкой react-hook-for
 npm install @artemy-tech/datepicker
 ```
 
-Для интеграции с react-hook-form:
+Для интеграции с react-hook-form установите его как peer-зависимость:
 
 ```bash
-npm install @artemy-tech/datepicker react-hook-form
+npm install react-hook-form
 ```
 
-## Peer-зависимости
-
-```text
-react >= 17.0.0
-react-hook-form >= 7.0.0  # опционально
-```
-
-## Использование
-
-### Подключение стилей
+## Quick start
 
 ```tsx
 import '@artemy-tech/datepicker/styles';
+import { DatePicker } from '@artemy-tech/datepicker';
+
+export const Example = () => <DatePicker label="Дата рождения" />;
 ```
+
+## Примеры
 
 ### DatePicker
 
 ```tsx
-import { DatePicker } from '@artemy-tech/datepicker'
+import { useState } from 'react';
+import { DatePicker } from '@artemy-tech/datepicker';
 
 // Неконтролируемый
 <DatePicker label="Дата рождения" />
 
 // Контролируемый
-const [date, setDate] = useState<Date | undefined>()
+const [date, setDate] = useState<Date | undefined>();
 <DatePicker label="Дата" value={date} onChange={setDate} />
 
 // С выбором времени
@@ -68,147 +68,92 @@ const [date, setDate] = useState<Date | undefined>()
 ### DateRangePicker
 
 ```tsx
-import { DateRangePicker } from '@artemy-tech/datepicker'
-import type { DateRange } from '@artemy-tech/datepicker'
+import { useState } from 'react';
+import { DateRangePicker, type DateRange } from '@artemy-tech/datepicker';
 
-const [range, setRange] = useState<DateRange | undefined>()
+const [range, setRange] = useState<DateRange | undefined>();
 
 <DateRangePicker
   label="Период проживания"
   value={range}
   onChange={setRange}
   calendarLayout="horizontal"
+/>;
+```
+
+### Локали и форматы
+
+По умолчанию: `locale = ru`, `dateFormat = 'dd.MM.yyyy'`. Любую локаль `date-fns` можно подключить точечно — маска и плейсхолдер пересчитаются автоматически.
+
+```tsx
+import { enUS, de } from 'date-fns/locale';
+import { DatePicker, DateRangePicker } from '@artemy-tech/datepicker';
+
+<DatePicker
+  locale={enUS}
+  dateFormat="MM/dd/yyyy"
+  label="Birth date"
+/>
+
+<DatePicker
+  locale={enUS}
+  dateFormat="yyyy-MM-dd"
+  label="ISO date"
+/>
+
+<DateRangePicker
+  locale={de}
+  dateFormat="dd.MM.yyyy"
+  label="Zeitraum"
 />
 ```
 
-### Кастомный триггер (`customTrigger`)
-
-Через `customTrigger` можно передать render-функцию, которая получает отформатированное значение и обработчик клика.
-
-```tsx
-import { DatePicker } from '@artemy-tech/datepicker';
-
-<DatePicker
-  customTrigger={(value, onClick) => (
-    <button type="button" onClick={onClick}>
-      {value || 'Выбрать дату'}
-    </button>
-  )}
-/>;
-```
-
-### Кастомный инпут (`renderInput`)
-
-Через `renderInput` можно заменить встроенный `<input>` на компонент из любой UI-библиотеки. Вся логика маски, валидации и попапа остаётся внутри `DatePicker`.
-
-```tsx
-import { Input } from 'antd';
-import type { InputRef } from 'antd';
-import { DatePicker } from '@artemy-tech/datepicker';
-
-<DatePicker
-  renderInput={({ ref, className, ...props }) => (
-    <Input ref={ref as React.Ref<InputRef>} {...props} />
-  )}
-/>;
-```
+Поддерживаемые токены в `dateFormat`: `dd`, `MM`, `yyyy`. Разделители — любые одиночные символы (`.`, `/`, `-`, ` `). Время добавляется через проп `showTime`, а не через `dateFormat`.
 
 ### С react-hook-form
+
+`RHFDatePicker` и `RHFDateRangePicker` принимают дженерик-параметр — тип значений формы. Это даёт автокомплит и типобезопасность для `name`:
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
 import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/datepicker/rhf';
 import type { DateRange } from '@artemy-tech/datepicker';
 
-interface FormValues {
+interface BookingFormValues {
   checkIn: Date | undefined;
   period: DateRange | undefined;
 }
 
-function BookingForm() {
-  const methods = useForm<FormValues>({
+const BookingForm = () => {
+  const methods = useForm<BookingFormValues>({
     defaultValues: { checkIn: undefined, period: undefined },
   });
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(console.log)}>
-        <RHFDatePicker
+        <RHFDatePicker<BookingFormValues>
           name="checkIn"
           label="Дата заезда"
           rules={{ validate: (v) => v !== undefined || 'Выберите дату' }}
         />
-        <RHFDateRangePicker
+        <RHFDateRangePicker<BookingFormValues>
           name="period"
           label="Период"
-          rules={{
-            validate: (v) => v?.from !== undefined || 'Выберите период',
-          }}
+          rules={{ validate: (v) => v?.from !== undefined || 'Выберите период' }}
         />
         <button type="submit">Отправить</button>
       </form>
     </FormProvider>
   );
-}
+};
 ```
 
-## Props
-
-### DatePicker — пропсы
-
-| Prop            | Тип                                                 | По умолчанию       | Описание                                       |
-| --------------- | --------------------------------------------------- | ------------------ | ---------------------------------------------- |
-| `value`         | `Date`                                              | —                  | Контролируемое значение                        |
-| `defaultValue`  | `Date`                                              | —                  | Значение по умолчанию (неконтролируемый режим) |
-| `onChange`      | `(date: Date \| undefined) => void`                 | —                  | Callback при изменении                         |
-| `label`         | `string`                                            | —                  | Плавающий лейбл                                |
-| `placeholder`   | `string`                                            | `дд.мм.гггг`       | Плейсхолдер                                    |
-| `fromDate`      | `Date`                                              | —                  | Минимально допустимая дата                     |
-| `toDate`        | `Date`                                              | —                  | Максимально допустимая дата                    |
-| `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }`      | —                  | Включить выбор времени                         |
-| `noCalendar`    | `boolean`                                           | `false`            | Только ввод, без попапа                        |
-| `size`          | `'s' \| 'm' \| 'l'`                                 | `'m'`              | Размер                                         |
-| `disabled`      | `boolean`                                           | `false`            |                                                |
-| `failed`        | `boolean`                                           | `false`            | Состояние ошибки                               |
-| `loading`       | `boolean`                                           | `false`            | Состояние загрузки                             |
-| `icon`          | `ReactNode \| false`                                | `<CalendarIcon />` | Иконка (`false` — скрыть)                      |
-| `iconPosition`  | `'start' \| 'end'`                                  | `'end'`            | Позиция иконки                                 |
-| `renderInput`   | `(props: DatePickerInputProps) => ReactNode`        | —                  | Кастомный `<input>`; маска и попап сохраняются |
-| `customTrigger` | `(value: string, onClick: () => void) => ReactNode` | —                  | Render-функция для произвольного триггера      |
-| `className`     | `string`                                            | —                  | CSS-класс на корневом элементе                 |
-
-### DateRangePicker — пропсы
-
-| Prop             | Тип                                            | По умолчанию       | Описание                    |
-| ---------------- | ---------------------------------------------- | ------------------ | --------------------------- |
-| `value`          | `DateRange`                                    | —                  | Контролируемое значение     |
-| `defaultValue`   | `DateRange`                                    | —                  | Значение по умолчанию       |
-| `onChange`       | `(range: DateRange \| undefined) => void`      | —                  | Callback при изменении      |
-| `label`          | `string`                                       | —                  | Плавающий лейбл             |
-| `fromDate`       | `Date`                                         | —                  | Минимально допустимая дата  |
-| `toDate`         | `Date`                                         | —                  | Максимально допустимая дата |
-| `calendarLayout` | `'vertical' \| 'horizontal'`                   | `'horizontal'`     | Расположение двух месяцев   |
-| `showTime`       | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —                  | Включить выбор времени      |
-| `size`           | `'s' \| 'm' \| 'l'`                            | `'m'`              | Размер                      |
-| `disabled`       | `boolean`                                      | `false`            |                             |
-| `failed`         | `boolean`                                      | `false`            |                             |
-| `loading`        | `boolean`                                      | `false`            |                             |
-| `icon`           | `ReactNode \| false`                           | `<CalendarIcon />` | Иконка                      |
-| `iconPosition`   | `'start' \| 'end'`                             | `'end'`            |                             |
-| `className`      | `string`                                       | —                  |                             |
-
-### RHFDatePicker / RHFDateRangePicker — пропсы
-
-Принимают все пропсы соответствующего компонента, плюс:
-
-| Prop    | Тип               | Описание                          |
-| ------- | ----------------- | --------------------------------- |
-| `name`  | `string`          | Имя поля в форме                  |
-| `rules` | `RegisterOptions` | Правила валидации react-hook-form |
+> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/datepicker/recipes).
 
 ## Стилизация
 
-Подключите базовые стили и переопределите нужные токены:
+Подключите базовые стили и переопределите нужные CSS-переменные:
 
 ```css
 @import '@artemy-tech/datepicker/styles';
@@ -216,31 +161,17 @@ function BookingForm() {
 :root {
   --datepicker-color-accent: #6366f1;
   --datepicker-radius: 8px;
-  --datepicker-font-size: 14px;
-  --datepicker-border-color: #e0e0e0;
   --datepicker-border-color-focus: #6366f1;
-  --datepicker-bg: #ffffff;
-  --datepicker-color-text: #1a1a1a;
-  --datepicker-color-placeholder: #9e9e9e;
 }
 ```
 
-Состояния задаются через `data-*`-атрибуты на корневом элементе, что позволяет стилизовать их без JS:
+Состояния задаются через `data-*`-атрибуты на корневом элементе (`data-focused`, `data-filled`, `data-failed`, `data-disabled`) — стилизуются без JS.
 
-```css
-.datepicker[data-focused] {
-  ...;
-}
-.datepicker[data-filled] {
-  ...;
-}
-.datepicker[data-failed] {
-  ...;
-}
-.datepicker[data-disabled] {
-  ...;
-}
-```
+Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/datepicker/theming).
+
+## API
+
+Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/datepicker).
 
 ## Лицензия
 

@@ -1,14 +1,19 @@
 import { describe, it, expect } from 'vitest'
+import { enUS } from 'date-fns/locale'
 import {
   applyMask,
-  buildDateFormat,
-  buildMaxDigits,
-  buildPlaceholder,
   getCursorPos,
   parseDateTime,
   resolveTimeFormat,
   toDateOnly,
 } from './date-mask'
+import { buildFormatSchema } from './format-schema'
+
+const ruSchema = buildFormatSchema('dd.MM.yyyy', null)
+const ruSchemaHM = buildFormatSchema('dd.MM.yyyy', 'HH:mm')
+const ruSchemaHMS = buildFormatSchema('dd.MM.yyyy', 'HH:mm:ss')
+const usSchema = buildFormatSchema('MM/dd/yyyy', null, enUS)
+const isoSchema = buildFormatSchema('yyyy-MM-dd', null, enUS)
 
 describe('resolveTimeFormat', () => {
   it('returns null when showTime is falsy', () => {
@@ -26,71 +31,40 @@ describe('resolveTimeFormat', () => {
   })
 })
 
-describe('buildDateFormat', () => {
-  it('returns date-only format when no time', () => {
-    expect(buildDateFormat(null)).toBe('dd.MM.yyyy')
-  })
-
-  it('appends time format', () => {
-    expect(buildDateFormat('HH:mm')).toBe('dd.MM.yyyy HH:mm')
-    expect(buildDateFormat('HH:mm:ss')).toBe('dd.MM.yyyy HH:mm:ss')
-  })
-})
-
-describe('buildMaxDigits', () => {
-  it('returns 8 for date only', () => {
-    expect(buildMaxDigits(null)).toBe(8)
-  })
-
-  it('returns 12 for HH:mm', () => {
-    expect(buildMaxDigits('HH:mm')).toBe(12)
-  })
-
-  it('returns 14 for HH:mm:ss', () => {
-    expect(buildMaxDigits('HH:mm:ss')).toBe(14)
-  })
-})
-
-describe('buildPlaceholder', () => {
-  it('returns date placeholder', () => {
-    expect(buildPlaceholder(null)).toBe('дд.мм.гггг')
-  })
-
-  it('returns datetime placeholder for HH:mm', () => {
-    expect(buildPlaceholder('HH:mm')).toBe('дд.мм.гггг чч:мм')
-  })
-
-  it('returns datetime placeholder for HH:mm:ss', () => {
-    expect(buildPlaceholder('HH:mm:ss')).toBe('дд.мм.гггг чч:мм:сс')
-  })
-})
-
 describe('applyMask', () => {
   it('returns empty string for no digits', () => {
-    expect(applyMask('', 8)).toBe('')
+    expect(applyMask('', ruSchema)).toBe('')
   })
 
   it('builds partial mask without separators yet', () => {
-    expect(applyMask('01', 8)).toBe('01')
-    expect(applyMask('010', 8)).toBe('01.0')
-    expect(applyMask('0101', 8)).toBe('01.01')
-    expect(applyMask('01011', 8)).toBe('01.01.1')
+    expect(applyMask('01', ruSchema)).toBe('01')
+    expect(applyMask('010', ruSchema)).toBe('01.0')
+    expect(applyMask('0101', ruSchema)).toBe('01.01')
+    expect(applyMask('01011', ruSchema)).toBe('01.01.1')
   })
 
   it('produces a full date mask', () => {
-    expect(applyMask('01012024', 8)).toBe('01.01.2024')
+    expect(applyMask('01012024', ruSchema)).toBe('01.01.2024')
+  })
+
+  it('produces full mask for MM/dd/yyyy', () => {
+    expect(applyMask('01152024', usSchema)).toBe('01/15/2024')
+  })
+
+  it('produces full mask for yyyy-MM-dd', () => {
+    expect(applyMask('20240115', isoSchema)).toBe('2024-01-15')
   })
 
   it('inserts space and colons for HH:mm', () => {
-    expect(applyMask('010120241430', 12)).toBe('01.01.2024 14:30')
+    expect(applyMask('010120241430', ruSchemaHM)).toBe('01.01.2024 14:30')
   })
 
   it('inserts seconds separator for HH:mm:ss', () => {
-    expect(applyMask('01012024143045', 14)).toBe('01.01.2024 14:30:45')
+    expect(applyMask('01012024143045', ruSchemaHMS)).toBe('01.01.2024 14:30:45')
   })
 
-  it('respects maxDigits by truncating', () => {
-    expect(applyMask('010120241430459999', 12)).toBe('01.01.2024 14:30')
+  it('respects digitCount by truncating', () => {
+    expect(applyMask('010120241430459999', ruSchemaHM)).toBe('01.01.2024 14:30')
   })
 })
 
@@ -134,20 +108,20 @@ describe('toDateOnly', () => {
 
 describe('parseDateTime', () => {
   it('returns undefined for incomplete input', () => {
-    expect(parseDateTime('01.01', 'dd.MM.yyyy', 8)).toBeUndefined()
-    expect(parseDateTime('', 'dd.MM.yyyy', 8)).toBeUndefined()
+    expect(parseDateTime('01.01', ruSchema)).toBeUndefined()
+    expect(parseDateTime('', ruSchema)).toBeUndefined()
   })
 
   it('returns undefined for invalid day', () => {
-    expect(parseDateTime('32.01.2024', 'dd.MM.yyyy', 8)).toBeUndefined()
+    expect(parseDateTime('32.01.2024', ruSchema)).toBeUndefined()
   })
 
   it('returns undefined for invalid month', () => {
-    expect(parseDateTime('01.13.2024', 'dd.MM.yyyy', 8)).toBeUndefined()
+    expect(parseDateTime('01.13.2024', ruSchema)).toBeUndefined()
   })
 
   it('parses a valid date and normalizes to noon', () => {
-    const result = parseDateTime('15.03.2024', 'dd.MM.yyyy', 8)
+    const result = parseDateTime('15.03.2024', ruSchema)
     expect(result).toBeDefined()
     expect(result?.getDate()).toBe(15)
     expect(result?.getMonth()).toBe(2)
@@ -156,19 +130,33 @@ describe('parseDateTime', () => {
   })
 
   it('parses datetime with HH:mm', () => {
-    const result = parseDateTime('15.03.2024 14:30', 'dd.MM.yyyy HH:mm', 12)
+    const result = parseDateTime('15.03.2024 14:30', ruSchemaHM)
     expect(result).toBeDefined()
     expect(result?.getHours()).toBe(14)
     expect(result?.getMinutes()).toBe(30)
   })
 
   it('parses datetime with HH:mm:ss', () => {
-    const result = parseDateTime('15.03.2024 14:30:45', 'dd.MM.yyyy HH:mm:ss', 14)
+    const result = parseDateTime('15.03.2024 14:30:45', ruSchemaHMS)
     expect(result).toBeDefined()
     expect(result?.getSeconds()).toBe(45)
   })
 
   it('returns undefined for impossible date like Feb 30', () => {
-    expect(parseDateTime('30.02.2024', 'dd.MM.yyyy', 8)).toBeUndefined()
+    expect(parseDateTime('30.02.2024', ruSchema)).toBeUndefined()
+  })
+
+  it('parses MM/dd/yyyy format', () => {
+    const result = parseDateTime('03/15/2024', usSchema)
+    expect(result).toBeDefined()
+    expect(result?.getDate()).toBe(15)
+    expect(result?.getMonth()).toBe(2)
+  })
+
+  it('parses yyyy-MM-dd format', () => {
+    const result = parseDateTime('2024-03-15', isoSchema)
+    expect(result).toBeDefined()
+    expect(result?.getDate()).toBe(15)
+    expect(result?.getMonth()).toBe(2)
   })
 })

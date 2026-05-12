@@ -1,12 +1,13 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
 } from 'react';
 import { isValid, startOfDay } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { ru, type Locale } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 import type { DatePickerShowTime } from '../DatePicker/DatePicker';
 import { useClickOutside } from '../../hooks/useClickOutside';
@@ -23,6 +24,8 @@ import {
   resolveShowSeconds,
   toDateOnly,
 } from '../../utils/range-mask';
+import { DEFAULT_DATE_FORMAT } from '../../utils/date-mask';
+import { buildFormatSchema } from '../../utils/format-schema';
 
 export type { DateRange };
 export type { DatePickerShowTime };
@@ -46,6 +49,8 @@ export interface DateRangePickerProps {
   icon?: ReactNode | false;
   iconPosition?: 'start' | 'end';
   className?: string;
+  locale?: Locale;
+  dateFormat?: string;
 }
 
 export function DateRangePicker({
@@ -64,7 +69,15 @@ export function DateRangePicker({
   icon,
   iconPosition = 'end',
   className,
+  locale = ru,
+  dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT,
 }: DateRangePickerProps) {
+  const schema = useMemo(
+    () => buildFormatSchema(dateFormatProp, null, locale),
+    [dateFormatProp, locale],
+  );
+  const maxDigits = schema.digitCount;
+  const totalDigits = maxDigits * 2;
   const resolvedIcon = loading ? (
     <Spinner />
   ) : icon === false ? null : (
@@ -89,7 +102,7 @@ export function DateRangePicker({
   );
   const [inputValue, setInputValue] = useState(() => {
     const initial = value ?? defaultValue;
-    return formatRange(initial?.from, initial?.to);
+    return formatRange(initial?.from, initial?.to, schema);
   });
   const [inputInvalid, setInputInvalid] = useState(false);
   const [open, setOpen] = useState(false);
@@ -141,7 +154,7 @@ export function DateRangePicker({
     if (fromTime === lastFromTime && toTime === lastToTime) return;
     if (!wasControlledRef.current && value === undefined) return;
 
-    setInputValue(formatRange(newFrom, newTo));
+    setInputValue(formatRange(newFrom, newTo, schema));
     setInputInvalid(false);
     if (!isControlled) {
       setInternalFrom(newFrom);
@@ -178,7 +191,7 @@ export function DateRangePicker({
         setInternalFrom(from);
         setInternalTo(undefined);
       }
-      setInputValue(formatRange(from, undefined));
+      setInputValue(formatRange(from, undefined, schema));
       setInputInvalid(false);
       lastEmittedFromRef.current = from;
       lastEmittedToRef.current = undefined;
@@ -204,7 +217,7 @@ export function DateRangePicker({
         setInternalFrom(from);
         setInternalTo(to);
       }
-      setInputValue(formatRange(from, to));
+      setInputValue(formatRange(from, to, schema));
       setInputInvalid(false);
       lastEmittedFromRef.current = from;
       lastEmittedToRef.current = to;
@@ -252,8 +265,8 @@ export function DateRangePicker({
     const input = e.target;
     const cursorPos = input.selectionStart ?? 0;
     const raw = input.value;
-    const digits = raw.replace(/\D/g, '').slice(0, 16);
-    const masked = applyRangeMask(digits);
+    const digits = raw.replace(/\D/g, '').slice(0, totalDigits);
+    const masked = applyRangeMask(digits, schema);
     const digitsBeforeCursor = raw
       .slice(0, cursorPos)
       .replace(/\D/g, '').length;
@@ -262,16 +275,18 @@ export function DateRangePicker({
     setAnchorDate(undefined);
     setHoveredDate(undefined);
 
-    const fromDigits = digits.slice(0, 8);
-    const toDigits = digits.slice(8);
+    const fromDigits = digits.slice(0, maxDigits);
+    const toDigits = digits.slice(maxDigits);
     const parsedFrom =
-      fromDigits.length === 8
-        ? parseDate(applyDateMask(fromDigits))
+      fromDigits.length === maxDigits
+        ? parseDate(applyDateMask(fromDigits, schema), schema)
         : undefined;
     const parsedTo =
-      toDigits.length === 8 ? parseDate(applyDateMask(toDigits)) : undefined;
-    const fromComplete = fromDigits.length === 8;
-    const toComplete = toDigits.length === 8;
+      toDigits.length === maxDigits
+        ? parseDate(applyDateMask(toDigits, schema), schema)
+        : undefined;
+    const fromComplete = fromDigits.length === maxDigits;
+    const toComplete = toDigits.length === maxDigits;
     setInputInvalid((fromComplete && !parsedFrom) || (toComplete && !parsedTo));
 
     if (!isControlled) {
@@ -300,17 +315,23 @@ export function DateRangePicker({
       e.preventDefault();
       return;
     }
+    const separatorChars = new Set<string>([' ', '—']);
+    schema.separators.forEach((s) => {
+      for (const ch of s.chars) separatorChars.add(ch);
+    });
     if (
       e.key === 'Backspace' &&
       pos > 0 &&
-      /[\s—]/.test(input.value[pos - 1])
+      separatorChars.has(input.value[pos - 1])
     ) {
       e.preventDefault();
       const val = input.value;
-      const charsToSkip = val.slice(0, pos).match(/[\s—]+$/)?.[0].length ?? 1;
+      const charsToSkip =
+        val.slice(0, pos).match(/[\s—]+$/)?.[0].length ?? 1;
       const newPos = pos - charsToSkip;
       const masked = applyRangeMask(
         (val.slice(0, newPos - 1) + val.slice(newPos)).replace(/\D/g, ''),
+        schema,
       );
       setInputValue(masked);
       requestAnimationFrame(() =>
@@ -322,22 +343,26 @@ export function DateRangePicker({
   function handlePaste(e: React.ClipboardEvent<HTMLInputElement>) {
     e.preventDefault();
     const text = e.clipboardData.getData('text');
-    const digits = text.replace(/\D/g, '').slice(0, 16);
-    const masked = applyRangeMask(digits);
+    const digits = text.replace(/\D/g, '').slice(0, totalDigits);
+    const masked = applyRangeMask(digits, schema);
     setInputValue(masked);
     setAnchorDate(undefined);
     setHoveredDate(undefined);
 
     const parsedFrom =
-      digits.length >= 8
-        ? parseDate(applyDateMask(digits.slice(0, 8)))
+      digits.length >= maxDigits
+        ? parseDate(applyDateMask(digits.slice(0, maxDigits), schema), schema)
         : undefined;
     const parsedTo =
-      digits.length >= 16
-        ? parseDate(applyDateMask(digits.slice(8, 16)))
+      digits.length >= totalDigits
+        ? parseDate(
+            applyDateMask(digits.slice(maxDigits, totalDigits), schema),
+            schema,
+          )
         : undefined;
     setInputInvalid(
-      (digits.length >= 8 && !parsedFrom) || (digits.length >= 16 && !parsedTo),
+      (digits.length >= maxDigits && !parsedFrom) ||
+        (digits.length >= totalDigits && !parsedTo),
     );
     if (!isControlled) {
       setInternalFrom(parsedFrom);
@@ -355,7 +380,9 @@ export function DateRangePicker({
   }
 
   const placeholder =
-    label && !focused && !filled ? undefined : 'дд.мм.гггг — дд.мм.гггг';
+    label && !focused && !filled
+      ? undefined
+      : `${schema.placeholder} — ${schema.placeholder}`;
   const interactive = !disabled && !loading;
 
   return (
@@ -448,7 +475,7 @@ export function DateRangePicker({
                     endMonth={toDay}
                     disabled={disabledDays.length ? disabledDays : undefined}
                     numberOfMonths={2}
-                    locale={ru}
+                    locale={locale}
                   />
                 </div>
               </div>
@@ -494,7 +521,7 @@ export function DateRangePicker({
               startMonth={fromConstraint}
               endMonth={toConstraint}
               numberOfMonths={2}
-              locale={ru}
+              locale={locale}
             />
           )}
         </div>

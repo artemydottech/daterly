@@ -1,24 +1,18 @@
 import { format, isValid, parse } from 'date-fns'
 import type { DatePickerShowTime } from '../components/DatePicker/DatePicker'
+import { applySchemaMask, type FormatSchema } from './format-schema'
 
-const DATE_FORMAT = 'dd.MM.yyyy'
-
-export function applyDateMask(digits: string): string {
-  const d = digits.slice(0, 8)
-  let result = ''
-  for (let i = 0; i < d.length; i++) {
-    if (i === 2 || i === 4) result += '.'
-    result += d[i]
-  }
-  return result
+export function applyDateMask(digits: string, schema: FormatSchema): string {
+  return applySchemaMask(digits, schema)
 }
 
-export function applyRangeMask(digits: string): string {
-  const all = digits.slice(0, 16)
-  const fromMasked = applyDateMask(all.slice(0, 8))
-  const toDigits = all.slice(8)
+export function applyRangeMask(digits: string, schema: FormatSchema): string {
+  const total = schema.digitCount * 2
+  const all = digits.slice(0, total)
+  const fromMasked = applyDateMask(all.slice(0, schema.digitCount), schema)
+  const toDigits = all.slice(schema.digitCount)
   if (toDigits.length === 0) return fromMasked
-  return `${fromMasked} — ${applyDateMask(toDigits)}`
+  return `${fromMasked} — ${applyDateMask(toDigits, schema)}`
 }
 
 export function getRangeCursorPos(masked: string, digitCount: number): number {
@@ -37,18 +31,22 @@ export function toDateOnly(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0)
 }
 
-export function parseDate(masked: string): Date | undefined {
-  if (masked.replace(/\D/g, '').length !== 8) return undefined
-  const date = parse(masked, DATE_FORMAT, new Date())
-  if (!isValid(date) || format(date, DATE_FORMAT) !== masked) return undefined
+export function parseDate(masked: string, schema: FormatSchema): Date | undefined {
+  if (masked.replace(/\D/g, '').length !== schema.digitCount) return undefined
+  const date = parse(masked, schema.format, new Date())
+  if (!isValid(date) || format(date, schema.format) !== masked) return undefined
   return toDateOnly(date)
 }
 
-export function formatRange(from: Date | undefined, to: Date | undefined): string {
+export function formatRange(
+  from: Date | undefined,
+  to: Date | undefined,
+  schema: FormatSchema,
+): string {
   if (!from) return ''
-  const fromStr = format(from, DATE_FORMAT)
+  const fromStr = format(from, schema.format)
   if (!to) return fromStr
-  return `${fromStr} — ${format(to, DATE_FORMAT)}`
+  return `${fromStr} — ${format(to, schema.format)}`
 }
 
 export function resolveShowSeconds(showTime?: DatePickerShowTime): boolean {

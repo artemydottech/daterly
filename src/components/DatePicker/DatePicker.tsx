@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { format, isValid, startOfDay } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import { ru, type Locale } from 'date-fns/locale'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { Calendar } from '../Calendar'
 import { TimePanel } from '../TimePanel'
@@ -8,14 +8,13 @@ import { CalendarIcon } from '../icons/CalendarIcon'
 import { Spinner } from '../icons/Spinner'
 import {
   applyMask,
-  buildDateFormat,
-  buildMaxDigits,
-  buildPlaceholder,
+  DEFAULT_DATE_FORMAT,
   getCursorPos,
   parseDateTime,
   resolveTimeFormat,
   toDateOnly,
 } from '../../utils/date-mask'
+import { buildFormatSchema } from '../../utils/format-schema'
 
 export type DatePickerSize = 's' | 'm' | 'l'
 export type DatePickerShowTime = boolean | { format: 'HH:mm' | 'HH:mm:ss' }
@@ -58,6 +57,8 @@ export interface DatePickerProps {
   className?: string
   renderInput?: (props: DatePickerInputProps) => ReactNode
   customTrigger?: (value: string, onClick: () => void) => ReactNode
+  locale?: Locale
+  dateFormat?: string
 }
 
 export function DatePicker({
@@ -79,11 +80,17 @@ export function DatePicker({
   className,
   renderInput,
   customTrigger,
+  locale = ru,
+  dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT,
 }: DatePickerProps) {
   const timeFormat = resolveTimeFormat(showTime)
-  const dateFormat = buildDateFormat(timeFormat)
-  const maxDigits = buildMaxDigits(timeFormat)
-  const defaultPlaceholder = placeholder ?? buildPlaceholder(timeFormat)
+  const schema = useMemo(
+    () => buildFormatSchema(dateFormatProp, timeFormat, locale),
+    [dateFormatProp, timeFormat, locale],
+  )
+  const dateFormat = schema.format
+  const maxDigits = schema.digitCount
+  const defaultPlaceholder = placeholder ?? schema.placeholder
   const showSeconds = timeFormat === 'HH:mm:ss'
 
   const fromDay = fromDate ? startOfDay(fromDate) : undefined
@@ -160,7 +167,7 @@ export function DatePicker({
       if (!isControlled) setInternalDate(undefined)
       onChange?.(undefined)
     } else if (digits.length === maxDigits) {
-      const date = parseDateTime(masked, dateFormat, maxDigits)
+      const date = parseDateTime(masked, schema)
       lastEmittedRef.current = date
       if (date) lastValidRef.current = masked
       setInputInvalid(!date)
@@ -185,7 +192,7 @@ export function DatePicker({
     const cursorPos = input.selectionStart ?? 0
     const raw = input.value
     const digits = raw.replace(/\D/g, '').slice(0, maxDigits)
-    const masked = applyMask(digits, maxDigits)
+    const masked = applyMask(digits, schema)
     const digitsBeforeCursor = raw.slice(0, cursorPos).replace(/\D/g, '').length
     const newCursorPos = getCursorPos(masked, digitsBeforeCursor)
     setInputValue(masked)
@@ -202,10 +209,14 @@ export function DatePicker({
       return
     }
 
-    if (e.key === 'Backspace' && pos > 0 && /[.: ]/.test(input.value[pos - 1])) {
+    const separatorChars = new Set<string>()
+    schema.separators.forEach((s) => {
+      for (const ch of s.chars) separatorChars.add(ch)
+    })
+    if (e.key === 'Backspace' && pos > 0 && separatorChars.has(input.value[pos - 1])) {
       e.preventDefault()
       const val = input.value
-      const masked = applyMask((val.slice(0, pos - 2) + val.slice(pos)).replace(/\D/g, ''), maxDigits)
+      const masked = applyMask((val.slice(0, pos - 2) + val.slice(pos)).replace(/\D/g, ''), schema)
       setInputValue(masked)
       commit(masked)
       requestAnimationFrame(() => input.setSelectionRange(pos - 2, pos - 2))
@@ -214,7 +225,7 @@ export function DatePicker({
 
   function handlePaste(e: React.ClipboardEvent<HTMLInputElement>) {
     e.preventDefault()
-    const masked = applyMask(e.clipboardData.getData('text').replace(/\D/g, ''), maxDigits)
+    const masked = applyMask(e.clipboardData.getData('text').replace(/\D/g, ''), schema)
     setInputValue(masked)
     commit(masked)
     requestAnimationFrame(() => inputRef.current?.setSelectionRange(masked.length, masked.length))
@@ -325,7 +336,7 @@ export function DatePicker({
                     endMonth={toDay}
                     disabled={disabledDays.length ? disabledDays : undefined}
                     navLayout="around"
-                    locale={ru}
+                    locale={locale}
                   />
                 </div>
                 <div className="datepicker__time-separator" />
@@ -358,7 +369,7 @@ export function DatePicker({
               endMonth={toDay}
               disabled={disabledDays.length ? disabledDays : undefined}
               navLayout="around"
-              locale={ru}
+              locale={locale}
             />
           )}
         </div>
