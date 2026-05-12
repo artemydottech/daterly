@@ -15,7 +15,7 @@ npm run release        # build + changeset publish
 
 ## Architecture
 
-This is a React component library (`@artemy-tech/datepicker`) built on top of **react-day-picker v9** (headless) and **date-fns v3**, targeting the Russian market (locale `ru`, date format `dd.MM.yyyy`).
+This is a React component library (`@artemy-tech/datepicker`) built on top of **react-day-picker v9** (headless) and **date-fns v4**, targeting the Russian market (locale `ru`, date format `dd.MM.yyyy`).
 
 ### Package exports
 

@@ -4,10 +4,10 @@
 [![npm downloads](https://img.shields.io/npm/dm/@artemy-tech/datepicker?color=green)](https://www.npmjs.com/package/@artemy-tech/datepicker)
 [![CI](https://github.com/artemydottech/datepicker/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/datepicker/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/artemydottech/datepicker/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/datepicker)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/@artemy-tech/datepicker)](https://bundlephobia.com/package/@artemy-tech/datepicker)
+[![bundle size](https://deno.bundlejs.com/badge?q=@artemy-tech/datepicker)](https://bundlejs.com/?q=@artemy-tech/datepicker)
 [![license](https://img.shields.io/npm/l/@artemy-tech/datepicker)](https://github.com/artemydottech/datepicker/blob/main/LICENSE)
 
-React DatePicker с опциональной поддержкой react-hook-form. Построен на базе [react-day-picker v9](https://daypicker.dev/) (headless) и [date-fns v3](https://date-fns.org/).
+React DatePicker с опциональной поддержкой react-hook-form. Построен на базе [react-day-picker v9](https://daypicker.dev/) (headless) и [date-fns v4](https://date-fns.org/).
 
 ## Возможности
 
@@ -36,7 +36,6 @@ npm install @artemy-tech/datepicker react-hook-form
 
 ```text
 react >= 17.0.0
-react-dom >= 17.0.0
 react-hook-form >= 7.0.0  # опционально
 ```
 

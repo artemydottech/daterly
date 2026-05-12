@@ -114,7 +114,14 @@ export function DatePicker({
   const wasControlledRef = useRef(value !== undefined)
 
   const selected = isControlled ? value : internalDate
+  const [month, setMonth] = useState<Date>(
+    () => (selected && isValid(selected) ? selected : new Date()),
+  )
   const filled = inputValue.length > 0
+
+  useEffect(() => {
+    if (selected && isValid(selected)) setMonth(selected)
+  }, [selected?.getFullYear(), selected?.getMonth()]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const close = useCallback(() => setOpen(false), [])
   useClickOutside(containerRef, close)
@@ -311,6 +318,8 @@ export function DatePicker({
                   <Calendar
                     mode="single"
                     selected={selected}
+                    month={month}
+                    onMonthChange={setMonth}
                     onSelect={handleCalendarSelect}
                     startMonth={fromDay}
                     endMonth={toDay}
@@ -342,6 +351,8 @@ export function DatePicker({
             <Calendar
               mode="single"
               selected={selected}
+              month={month}
+              onMonthChange={setMonth}
               onSelect={handleCalendarSelect}
               startMonth={fromDay}
               endMonth={toDay}

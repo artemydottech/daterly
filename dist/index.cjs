@@ -215,7 +215,13 @@ function DatePicker({
   const lastEmittedRef = (0, import_react3.useRef)(value !== void 0 ? value : defaultValue);
   const wasControlledRef = (0, import_react3.useRef)(value !== void 0);
   const selected = isControlled ? value : internalDate;
+  const [month, setMonth] = (0, import_react3.useState)(
+    () => selected && (0, import_date_fns2.isValid)(selected) ? selected : /* @__PURE__ */ new Date()
+  );
   const filled = inputValue.length > 0;
+  (0, import_react3.useEffect)(() => {
+    if (selected && (0, import_date_fns2.isValid)(selected)) setMonth(selected);
+  }, [selected == null ? void 0 : selected.getFullYear(), selected == null ? void 0 : selected.getMonth()]);
   const close = (0, import_react3.useCallback)(() => setOpen(false), []);
   useClickOutside(containerRef, close);
   (0, import_react3.useEffect)(() => {
@@ -409,6 +415,8 @@ function DatePicker({
                   {
                     mode: "single",
                     selected,
+                    month,
+                    onMonthChange: setMonth,
                     onSelect: handleCalendarSelect,
                     startMonth: fromDay,
                     endMonth: toDay,
@@ -441,6 +449,8 @@ function DatePicker({
               {
                 mode: "single",
                 selected,
+                month,
+                onMonthChange: setMonth,
                 onSelect: handleCalendarSelect,
                 startMonth: fromDay,
                 endMonth: toDay,
@@ -567,6 +577,14 @@ function DateRangePicker({
   const confirmedFrom = isControlled ? value == null ? void 0 : value.from : internalFrom;
   const confirmedTo = isControlled ? value == null ? void 0 : value.to : internalTo;
   const filled = inputValue.length > 0;
+  const [month, setMonth] = (0, import_react4.useState)(() => {
+    const init = confirmedFrom != null ? confirmedFrom : confirmedTo;
+    return init && (0, import_date_fns4.isValid)(init) ? init : /* @__PURE__ */ new Date();
+  });
+  const monthAnchor = confirmedFrom != null ? confirmedFrom : confirmedTo;
+  (0, import_react4.useEffect)(() => {
+    if (monthAnchor && (0, import_date_fns4.isValid)(monthAnchor)) setMonth(monthAnchor);
+  }, [monthAnchor == null ? void 0 : monthAnchor.getFullYear(), monthAnchor == null ? void 0 : monthAnchor.getMonth()]);
   const close = (0, import_react4.useCallback)(() => {
     setOpen(false);
     setAnchorDate(void 0);
@@ -838,6 +856,8 @@ function DateRangePicker({
                 {
                   mode: "range",
                   selected: calendarSelected,
+                  month,
+                  onMonthChange: setMonth,
                   onSelect: () => {
                   },
                   onDayClick: handleDayClick,
@@ -889,6 +909,8 @@ function DateRangePicker({
               {
                 mode: "range",
                 selected: calendarSelected,
+                month,
+                onMonthChange: setMonth,
                 onSelect: () => {
                 },
                 onDayClick: handleDayClick,

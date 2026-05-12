@@ -5,7 +5,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { startOfDay } from 'date-fns';
+import { isValid, startOfDay } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 import type { DatePickerShowTime } from '../DatePicker/DatePicker';
@@ -112,6 +112,15 @@ export function DateRangePicker({
   const confirmedFrom = isControlled ? value?.from : internalFrom;
   const confirmedTo = isControlled ? value?.to : internalTo;
   const filled = inputValue.length > 0;
+
+  const [month, setMonth] = useState<Date>(() => {
+    const init = confirmedFrom ?? confirmedTo;
+    return init && isValid(init) ? init : new Date();
+  });
+  const monthAnchor = confirmedFrom ?? confirmedTo;
+  useEffect(() => {
+    if (monthAnchor && isValid(monthAnchor)) setMonth(monthAnchor);
+  }, [monthAnchor?.getFullYear(), monthAnchor?.getMonth()]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const close = useCallback(() => {
     setOpen(false);
@@ -429,6 +438,8 @@ export function DateRangePicker({
                   <Calendar
                     mode="range"
                     selected={calendarSelected}
+                    month={month}
+                    onMonthChange={setMonth}
                     onSelect={() => {}}
                     onDayClick={handleDayClick}
                     onDayMouseEnter={handleDayMouseEnter}
@@ -474,6 +485,8 @@ export function DateRangePicker({
             <Calendar
               mode="range"
               selected={calendarSelected}
+              month={month}
+              onMonthChange={setMonth}
               onSelect={() => {}}
               onDayClick={handleDayClick}
               onDayMouseEnter={handleDayMouseEnter}

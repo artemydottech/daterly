@@ -1,6 +1,6 @@
 {
   "name": "@artemy-tech/datepicker",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "type": "module",
   "description": "React DatePicker with react-hook-form support",
   "keywords": [
@@ -50,12 +50,11 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "date-fns": "^3.0.0",
+    "date-fns": "^4.0.0",
     "react-day-picker": "^9.0.0"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
-    "react-dom": ">=17.0.0",
     "react-hook-form": ">=7.0.0"
   },
   "peerDependenciesMeta": {

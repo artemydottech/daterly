@@ -1,5 +1,14 @@
 # @artemy-tech/datepicker
 
+## 0.6.0
+
+### Minor Changes
+
+- fix(DatePicker, DateRangePicker): the calendar now follows the selected date as the user types into the masked input (controlled `month`/`onMonthChange`) — previously the popover had to be closed and reopened to see the month change.
+- chore(deps): bump `date-fns` to `^4.0.0` to deduplicate it with the copy pulled in by `react-day-picker` (was shipping both `date-fns@3` and `date-fns@4`).
+- chore: drop `react-dom` from `peerDependencies` — it is never imported by the package and any React consumer already has it installed.
+- docs: replace the bundle-size badge with bundlejs.com (pkg-size.dev's build pipeline was failing).
+
 ## 0.5.0
 
 ### Minor Changes
