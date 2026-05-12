@@ -1,0 +1,98 @@
+/* Nextra theme polish — purple accent and slightly richer dark mode */
+
+html.dark {
+  --nextra-primary-hue: 270deg;
+  --nextra-primary-saturation: 90%;
+  --nextra-bg: 10, 10, 20;
+}
+
+html.dark body {
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 50% -10%,
+      rgba(124, 92, 255, 0.08),
+      transparent 60%
+    ),
+    rgb(var(--nextra-bg));
+}
+
+html {
+  --nextra-primary-hue: 270deg;
+  --nextra-primary-saturation: 90%;
+}
+
+/* Inline code in purple */
+html.dark code:not([class*='language-']) {
+  background: rgba(176, 107, 255, 0.12);
+  border-color: rgba(176, 107, 255, 0.2);
+  color: #c89bff;
+}
+
+/* Code blocks — slightly darker base */
+html.dark .nextra-code pre {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Sidebar active link */
+html.dark .nextra-sidebar-container .nx-text-primary-600,
+html.dark a.nx-text-primary-600 {
+  color: #c89bff !important;
+}
+
+html.dark .nextra-sidebar-container a:hover {
+  color: #d8b8ff;
+}
+
+/* Active sidebar item background */
+html.dark
+  .nextra-sidebar-container
+  .nx-bg-primary-100,
+html.dark .nx-bg-primary-100 {
+  background: rgba(176, 107, 255, 0.12) !important;
+}
+
+/* Top navbar border + bg */
+html.dark .nextra-nav-container nav,
+html.dark .nextra-nav-container-blur {
+  background: rgba(10, 10, 20, 0.7) !important;
+  backdrop-filter: blur(12px);
+}
+
+/* Headings — slight letter-spacing */
+.nextra-content h1,
+.nextra-content h2,
+.nextra-content h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Buttons / primary links accent */
+html.dark .nx-text-primary-600,
+html.dark .nx-text-primary-500 {
+  color: #c89bff !important;
+}
+
+html.dark .nx-bg-primary-600 {
+  background: linear-gradient(135deg, #7c5cff, #b06bff) !important;
+}
+
+/* Tables in docs — subtle border */
+html.dark .nextra-content table {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .nextra-content table th,
+html.dark .nextra-content table td {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Callouts */
+html.dark .nextra-callout {
+  border-color: rgba(176, 107, 255, 0.25);
+  background: rgba(176, 107, 255, 0.06);
+}
+
+/* Focus ring */
+html.dark *:focus-visible {
+  outline-color: #b06bff;
+}

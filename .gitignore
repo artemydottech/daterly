@@ -11,6 +11,10 @@ playwright-report
 # Logs
 *.log
 
+# macOS
+.DS_Store
+**/.DS_Store
+
 # AI tools
 .claude/
 .cursor/
