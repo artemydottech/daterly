@@ -5,7 +5,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { format, isValid, parse, startOfDay } from 'date-fns';
+import { startOfDay } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 import type { DatePickerShowTime } from '../DatePicker/DatePicker';
@@ -14,62 +14,15 @@ import { Calendar } from '../Calendar';
 import { TimePanel } from '../TimePanel';
 import { CalendarIcon } from '../icons/CalendarIcon';
 import { Spinner } from '../icons/Spinner';
-
-const DATE_FORMAT = 'dd.MM.yyyy';
-
-function applyDateMask(digits: string): string {
-  const d = digits.slice(0, 8);
-  let result = '';
-  for (let i = 0; i < d.length; i++) {
-    if (i === 2 || i === 4) result += '.';
-    result += d[i];
-  }
-  return result;
-}
-
-function applyRangeMask(digits: string): string {
-  const all = digits.slice(0, 16);
-  const fromMasked = applyDateMask(all.slice(0, 8));
-  const toDigits = all.slice(8);
-  if (toDigits.length === 0) return fromMasked;
-  return `${fromMasked} — ${applyDateMask(toDigits)}`;
-}
-
-function getRangeCursorPos(masked: string, digitCount: number): number {
-  if (digitCount === 0) return 0;
-  let count = 0;
-  for (let i = 0; i < masked.length; i++) {
-    if (/\d/.test(masked[i])) {
-      count++;
-      if (count === digitCount) return i + 1;
-    }
-  }
-  return masked.length;
-}
-
-function toDateOnly(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
-}
-
-function parseDate(masked: string): Date | undefined {
-  if (masked.replace(/\D/g, '').length !== 8) return undefined;
-  const date = parse(masked, DATE_FORMAT, new Date());
-  if (!isValid(date) || format(date, DATE_FORMAT) !== masked) return undefined;
-  return toDateOnly(date);
-}
-
-function formatRange(from: Date | undefined, to: Date | undefined): string {
-  if (!from) return '';
-  const fromStr = format(from, DATE_FORMAT);
-  if (!to) return fromStr;
-  return `${fromStr} — ${format(to, DATE_FORMAT)}`;
-}
-
-function resolveShowSeconds(showTime?: DatePickerShowTime): boolean {
-  if (!showTime) return false;
-  if (showTime === true) return true;
-  return showTime.format === 'HH:mm:ss';
-}
+import {
+  applyDateMask,
+  applyRangeMask,
+  formatRange,
+  getRangeCursorPos,
+  parseDate,
+  resolveShowSeconds,
+  toDateOnly,
+} from '../../utils/range-mask';
 
 export type { DateRange };
 export type { DatePickerShowTime };
@@ -134,9 +87,10 @@ export function DateRangePicker({
   const [internalTo, setInternalTo] = useState<Date | undefined>(
     defaultValue?.to,
   );
-  const [inputValue, setInputValue] = useState(() =>
-    formatRange(defaultValue?.from, defaultValue?.to),
-  );
+  const [inputValue, setInputValue] = useState(() => {
+    const initial = value ?? defaultValue;
+    return formatRange(initial?.from, initial?.to);
+  });
   const [inputInvalid, setInputInvalid] = useState(false);
   const [open, setOpen] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -215,7 +169,7 @@ export function DateRangePicker({
         setInternalFrom(from);
         setInternalTo(undefined);
       }
-      setInputValue(format(day, DATE_FORMAT));
+      setInputValue(formatRange(from, undefined));
       setInputInvalid(false);
       lastEmittedFromRef.current = from;
       lastEmittedToRef.current = undefined;

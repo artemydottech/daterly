@@ -1,5 +1,11 @@
 # @artemy-tech/datepicker
 
+## 0.5.0
+
+### Minor Changes
+
+- Добавлены unit/component тесты (Vitest + Testing Library), запуск тестов в CI (GitHub Actions) и pre-commit хук (Husky), который прогоняет тесты перед коммитом. Внутренний рефакторинг: логика маски ввода вынесена в `src/utils/date-mask` и `src/utils/range-mask`. `DatePicker` и `DateRangePicker` теперь корректно инициализируют отображаемое значение из `value` (а не только из `defaultValue`) при первом рендере в controlled-режиме.
+
 ## 0.4.3
 
 ### Patch Changes

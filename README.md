@@ -1,5 +1,12 @@
 # [@artemy-tech/datepicker](https://www.npmjs.com/package/@artemy-tech/datepicker)
 
+[![npm version](https://img.shields.io/npm/v/@artemy-tech/datepicker?color=blue)](https://www.npmjs.com/package/@artemy-tech/datepicker)
+[![npm downloads](https://img.shields.io/npm/dm/@artemy-tech/datepicker?color=green)](https://www.npmjs.com/package/@artemy-tech/datepicker)
+[![CI](https://github.com/artemydottech/datepicker/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/datepicker/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/artemydottech/datepicker/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/datepicker)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@artemy-tech/datepicker)](https://bundlephobia.com/package/@artemy-tech/datepicker)
+[![license](https://img.shields.io/npm/l/@artemy-tech/datepicker)](https://github.com/artemydottech/datepicker/blob/main/LICENSE)
+
 React DatePicker с опциональной поддержкой react-hook-form. Построен на базе [react-day-picker v9](https://daypicker.dev/) (headless) и [date-fns v3](https://date-fns.org/).
 
 ## Возможности

@@ -1,71 +1,24 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { format, isValid, parse, startOfDay } from 'date-fns'
+import { format, isValid, startOfDay } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { Calendar } from '../Calendar'
 import { TimePanel } from '../TimePanel'
 import { CalendarIcon } from '../icons/CalendarIcon'
 import { Spinner } from '../icons/Spinner'
+import {
+  applyMask,
+  buildDateFormat,
+  buildMaxDigits,
+  buildPlaceholder,
+  getCursorPos,
+  parseDateTime,
+  resolveTimeFormat,
+  toDateOnly,
+} from '../../utils/date-mask'
 
 export type DatePickerSize = 's' | 'm' | 'l'
 export type DatePickerShowTime = boolean | { format: 'HH:mm' | 'HH:mm:ss' }
-
-const DATE_FORMAT = 'dd.MM.yyyy'
-
-function resolveTimeFormat(showTime?: DatePickerShowTime): 'HH:mm' | 'HH:mm:ss' | null {
-  if (!showTime) return null
-  if (showTime === true) return 'HH:mm:ss'
-  return showTime.format
-}
-
-function buildDateFormat(timeFormat: string | null) {
-  return timeFormat ? `${DATE_FORMAT} ${timeFormat}` : DATE_FORMAT
-}
-
-function buildMaxDigits(timeFormat: string | null) {
-  if (!timeFormat) return 8
-  return timeFormat === 'HH:mm' ? 12 : 14
-}
-
-function buildPlaceholder(timeFormat: string | null) {
-  if (!timeFormat) return 'дд.мм.гггг'
-  return timeFormat === 'HH:mm' ? 'дд.мм.гггг чч:мм' : 'дд.мм.гггг чч:мм:сс'
-}
-
-function applyMask(digits: string, maxDigits: number): string {
-  const d = digits.slice(0, maxDigits)
-  let result = ''
-  for (let i = 0; i < d.length; i++) {
-    if (i === 2 || i === 4) result += '.'
-    else if (i === 8) result += ' '
-    else if (i === 10 || i === 12) result += ':'
-    result += d[i]
-  }
-  return result
-}
-
-function getCursorPos(masked: string, digitCount: number): number {
-  if (digitCount === 0) return 0
-  let count = 0
-  for (let i = 0; i < masked.length; i++) {
-    if (/\d/.test(masked[i])) {
-      count++
-      if (count === digitCount) return i + 1
-    }
-  }
-  return masked.length
-}
-
-function toDateOnly(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0)
-}
-
-function parseDateTime(masked: string, dateFormat: string, maxDigits: number): Date | undefined {
-  if (masked.replace(/\D/g, '').length !== maxDigits) return undefined
-  const date = parse(masked, dateFormat, new Date())
-  if (!isValid(date) || format(date, dateFormat) !== masked) return undefined
-  return maxDigits === 8 ? toDateOnly(date) : date
-}
 
 export interface DatePickerInputProps {
   ref: React.Ref<HTMLInputElement>
@@ -146,9 +99,10 @@ export function DatePicker({
   const [internalDate, setInternalDate] = useState<Date | undefined>(defaultValue)
   const [open, setOpen] = useState(false)
   const [focused, setFocused] = useState(false)
-  const [inputValue, setInputValue] = useState(() =>
-    defaultValue && isValid(defaultValue) ? format(defaultValue, dateFormat) : '',
-  )
+  const [inputValue, setInputValue] = useState(() => {
+    const initial = value ?? defaultValue
+    return initial && isValid(initial) ? format(initial, dateFormat) : ''
+  })
   const [inputInvalid, setInputInvalid] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
