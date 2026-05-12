@@ -1,5 +1,11 @@
 # @artemy-tech/datepicker
 
+## 0.7.1
+
+### Patch Changes
+
+- 95bb262: Файл `dist/styles/variables.css` теперь действительно включается в публикуемый пакет. Раньше `package.json` экспортировал `./styles`, но tsup не копировал CSS из `src/styles/` в `dist/` — импорт `@artemy-tech/datepicker/styles` падал у потребителей. Сборка теперь копирует CSS на шаге `onSuccess`.
+
 ## 0.7.0
 
 ### Minor Changes
