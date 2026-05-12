@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- Добавлены unit/component тесты (Vitest + Testing Library), запуск тестов в CI (GitHub Actions) и pre-commit хук (Husky), который прогоняет тесты перед коммитом. Внутренний рефакторинг: логика маски ввода вынесена в `src/utils/date-mask` и `src/utils/range-mask`. `DatePicker` и `DateRangePicker` теперь корректно инициализируют отображаемое значение из `value` (а не только из `defaultValue`) при первом рендере в controlled-режиме.
+- Add unit and component tests (Vitest + Testing Library), wire them into CI (GitHub Actions), and add a Husky pre-commit hook that runs the test suite. Upgrade Vitest stack to v3 to fix a v8 coverage-provider race. Internal refactor: input-mask logic extracted to `src/utils/date-mask` and `src/utils/range-mask`. Fix: `DatePicker` and `DateRangePicker` now correctly initialise the displayed string from `value` (not only `defaultValue`) on first render in controlled mode.
 
 ## 0.4.3
 

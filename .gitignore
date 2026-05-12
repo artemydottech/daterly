@@ -3,6 +3,11 @@ node_modules
 # Build output
 dist
 
+# Tests
+coverage
+test-results
+playwright-report
+
 # Logs
 *.log
 

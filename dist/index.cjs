@@ -42,7 +42,7 @@ function Calendar({ className, ...props }) {
 
 // src/components/DatePicker/DatePicker.tsx
 var import_react3 = require("react");
-var import_date_fns = require("date-fns");
+var import_date_fns2 = require("date-fns");
 var import_locale = require("date-fns/locale");
 
 // src/hooks/useClickOutside.ts
@@ -115,8 +115,8 @@ function Spinner() {
   return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "datepicker-spinner", "aria-hidden": "true" });
 }
 
-// src/components/DatePicker/DatePicker.tsx
-var import_jsx_runtime5 = require("react/jsx-runtime");
+// src/utils/date-mask.ts
+var import_date_fns = require("date-fns");
 var DATE_FORMAT = "dd.MM.yyyy";
 function resolveTimeFormat(showTime) {
   if (!showTime) return null;
@@ -165,6 +165,9 @@ function parseDateTime(masked, dateFormat, maxDigits) {
   if (!(0, import_date_fns.isValid)(date) || (0, import_date_fns.format)(date, dateFormat) !== masked) return void 0;
   return maxDigits === 8 ? toDateOnly(date) : date;
 }
+
+// src/components/DatePicker/DatePicker.tsx
+var import_jsx_runtime5 = require("react/jsx-runtime");
 function DatePicker({
   value,
   defaultValue,
@@ -190,8 +193,8 @@ function DatePicker({
   const maxDigits = buildMaxDigits(timeFormat);
   const defaultPlaceholder = placeholder != null ? placeholder : buildPlaceholder(timeFormat);
   const showSeconds = timeFormat === "HH:mm:ss";
-  const fromDay = fromDate ? (0, import_date_fns.startOfDay)(fromDate) : void 0;
-  const toDay = toDate ? (0, import_date_fns.startOfDay)(toDate) : void 0;
+  const fromDay = fromDate ? (0, import_date_fns2.startOfDay)(fromDate) : void 0;
+  const toDay = toDate ? (0, import_date_fns2.startOfDay)(toDate) : void 0;
   const disabledDays = [
     ...fromDay ? [{ before: fromDay }] : [],
     ...toDay ? [{ after: toDay }] : []
@@ -201,9 +204,10 @@ function DatePicker({
   const [internalDate, setInternalDate] = (0, import_react3.useState)(defaultValue);
   const [open, setOpen] = (0, import_react3.useState)(false);
   const [focused, setFocused] = (0, import_react3.useState)(false);
-  const [inputValue, setInputValue] = (0, import_react3.useState)(
-    () => defaultValue && (0, import_date_fns.isValid)(defaultValue) ? (0, import_date_fns.format)(defaultValue, dateFormat) : ""
-  );
+  const [inputValue, setInputValue] = (0, import_react3.useState)(() => {
+    const initial = value != null ? value : defaultValue;
+    return initial && (0, import_date_fns2.isValid)(initial) ? (0, import_date_fns2.format)(initial, dateFormat) : "";
+  });
   const [inputInvalid, setInputInvalid] = (0, import_react3.useState)(false);
   const inputRef = (0, import_react3.useRef)(null);
   const containerRef = (0, import_react3.useRef)(null);
@@ -221,7 +225,7 @@ function DatePicker({
     const valueTime = (_c = value == null ? void 0 : value.getTime()) != null ? _c : null;
     if (valueTime === lastTime) return;
     if (!wasControlledRef.current && value === void 0) return;
-    const formatted = value && (0, import_date_fns.isValid)(value) ? (0, import_date_fns.format)(value, dateFormat) : "";
+    const formatted = value && (0, import_date_fns2.isValid)(value) ? (0, import_date_fns2.format)(value, dateFormat) : "";
     setInputValue(formatted);
     lastValidRef.current = formatted;
     setInputInvalid(false);
@@ -307,14 +311,14 @@ function DatePicker({
     });
   }
   function handleCalendarSelect(date) {
-    if (!date || !(0, import_date_fns.isValid)(date)) {
+    if (!date || !(0, import_date_fns2.isValid)(date)) {
       applyValid("", void 0);
       if (!timeFormat) setOpen(false);
       return;
     }
     let dateToCommit;
     if (timeFormat) {
-      const base = selected && (0, import_date_fns.isValid)(selected) ? selected : /* @__PURE__ */ new Date(0);
+      const base = selected && (0, import_date_fns2.isValid)(selected) ? selected : /* @__PURE__ */ new Date(0);
       dateToCommit = new Date(
         date.getFullYear(),
         date.getMonth(),
@@ -326,13 +330,13 @@ function DatePicker({
     } else {
       dateToCommit = toDateOnly(date);
     }
-    applyValid((0, import_date_fns.format)(dateToCommit, dateFormat), dateToCommit);
+    applyValid((0, import_date_fns2.format)(dateToCommit, dateFormat), dateToCommit);
     if (!timeFormat) setOpen(false);
   }
   function handleTimeChange(h, m, s) {
-    const base = selected && (0, import_date_fns.isValid)(selected) ? selected : /* @__PURE__ */ new Date();
+    const base = selected && (0, import_date_fns2.isValid)(selected) ? selected : /* @__PURE__ */ new Date();
     const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s);
-    applyValid((0, import_date_fns.format)(newDate, dateFormat), newDate);
+    applyValid((0, import_date_fns2.format)(newDate, dateFormat), newDate);
   }
   const interactive = !disabled && !loading;
   return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
@@ -454,9 +458,11 @@ function DatePicker({
 
 // src/components/DateRangePicker/DateRangePicker.tsx
 var import_react4 = require("react");
-var import_date_fns2 = require("date-fns");
+var import_date_fns4 = require("date-fns");
 var import_locale2 = require("date-fns/locale");
-var import_jsx_runtime6 = require("react/jsx-runtime");
+
+// src/utils/range-mask.ts
+var import_date_fns3 = require("date-fns");
 var DATE_FORMAT2 = "dd.MM.yyyy";
 function applyDateMask(digits) {
   const d = digits.slice(0, 8);
@@ -490,21 +496,24 @@ function toDateOnly2(date) {
 }
 function parseDate(masked) {
   if (masked.replace(/\D/g, "").length !== 8) return void 0;
-  const date = (0, import_date_fns2.parse)(masked, DATE_FORMAT2, /* @__PURE__ */ new Date());
-  if (!(0, import_date_fns2.isValid)(date) || (0, import_date_fns2.format)(date, DATE_FORMAT2) !== masked) return void 0;
+  const date = (0, import_date_fns3.parse)(masked, DATE_FORMAT2, /* @__PURE__ */ new Date());
+  if (!(0, import_date_fns3.isValid)(date) || (0, import_date_fns3.format)(date, DATE_FORMAT2) !== masked) return void 0;
   return toDateOnly2(date);
 }
 function formatRange(from, to) {
   if (!from) return "";
-  const fromStr = (0, import_date_fns2.format)(from, DATE_FORMAT2);
+  const fromStr = (0, import_date_fns3.format)(from, DATE_FORMAT2);
   if (!to) return fromStr;
-  return `${fromStr} \u2014 ${(0, import_date_fns2.format)(to, DATE_FORMAT2)}`;
+  return `${fromStr} \u2014 ${(0, import_date_fns3.format)(to, DATE_FORMAT2)}`;
 }
 function resolveShowSeconds(showTime) {
   if (!showTime) return false;
   if (showTime === true) return true;
   return showTime.format === "HH:mm:ss";
 }
+
+// src/components/DateRangePicker/DateRangePicker.tsx
+var import_jsx_runtime6 = require("react/jsx-runtime");
 function DateRangePicker({
   value,
   defaultValue,
@@ -525,8 +534,8 @@ function DateRangePicker({
   const resolvedIcon = loading ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Spinner, {}) : icon === false ? null : icon != null ? icon : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(CalendarIcon, {});
   const isControlled = value !== void 0;
   const showSeconds = resolveShowSeconds(showTime);
-  const fromDay = fromConstraint ? (0, import_date_fns2.startOfDay)(fromConstraint) : void 0;
-  const toDay = toConstraint ? (0, import_date_fns2.startOfDay)(toConstraint) : void 0;
+  const fromDay = fromConstraint ? (0, import_date_fns4.startOfDay)(fromConstraint) : void 0;
+  const toDay = toConstraint ? (0, import_date_fns4.startOfDay)(toConstraint) : void 0;
   const disabledDays = [
     ...fromDay ? [{ before: fromDay }] : [],
     ...toDay ? [{ after: toDay }] : []
@@ -537,9 +546,10 @@ function DateRangePicker({
   const [internalTo, setInternalTo] = (0, import_react4.useState)(
     defaultValue == null ? void 0 : defaultValue.to
   );
-  const [inputValue, setInputValue] = (0, import_react4.useState)(
-    () => formatRange(defaultValue == null ? void 0 : defaultValue.from, defaultValue == null ? void 0 : defaultValue.to)
-  );
+  const [inputValue, setInputValue] = (0, import_react4.useState)(() => {
+    const initial = value != null ? value : defaultValue;
+    return formatRange(initial == null ? void 0 : initial.from, initial == null ? void 0 : initial.to);
+  });
   const [inputInvalid, setInputInvalid] = (0, import_react4.useState)(false);
   const [open, setOpen] = (0, import_react4.useState)(false);
   const [focused, setFocused] = (0, import_react4.useState)(false);
@@ -602,7 +612,7 @@ function DateRangePicker({
         setInternalFrom(from);
         setInternalTo(void 0);
       }
-      setInputValue((0, import_date_fns2.format)(day, DATE_FORMAT2));
+      setInputValue(formatRange(from, void 0));
       setInputInvalid(false);
       lastEmittedFromRef.current = from;
       lastEmittedToRef.current = void 0;
