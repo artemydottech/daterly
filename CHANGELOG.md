@@ -1,5 +1,12 @@
 # rtdp
 
+## 1.1.0
+
+### Minor Changes
+
+- 150d851: - Выбранный день в календаре больше не «раздувается»: убраны дефолтные `font-weight: bold` и `font-size: large` от react-day-picker, кружок selected сделан меньше cell — больше не упирается в соседние числа.
+  - Обновлены ссылки в README на актуальные пути документации (`/docs/recipes`, `/docs/theming`, `/docs`).
+
 ## 1.0.0
 
 ### Major Changes — рибренд

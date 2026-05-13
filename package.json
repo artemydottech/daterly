@@ -1,6 +1,6 @@
 {
   "name": "@artemy-tech/rtdp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "rtdp — React date & time picker с маской ввода, диапазонами и опциональной интеграцией react-hook-form.",
   "keywords": [
