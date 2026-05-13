@@ -20,12 +20,12 @@ export default withNextra({
     config.resolve = config.resolve || {}
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      '@artemy-tech/datepicker/styles': path.join(
+      '@artemy-tech/rtdp/styles': path.join(
         libRoot,
         'src/styles/variables.css',
       ),
-      '@artemy-tech/datepicker/rhf': path.join(libRoot, 'dist/rhf.js'),
-      '@artemy-tech/datepicker$': path.join(libRoot, 'dist/index.js'),
+      '@artemy-tech/rtdp/rhf': path.join(libRoot, 'dist/rhf.js'),
+      '@artemy-tech/rtdp$': path.join(libRoot, 'dist/index.js'),
     }
     return config
   },

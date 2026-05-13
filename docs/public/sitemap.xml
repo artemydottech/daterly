@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://artemydottech.github.io/datepicker/</loc>
+    <loc>https://artemydottech.github.io/rtdp/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/installation</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/installation</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/datepicker</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/datepicker</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/daterangepicker</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/daterangepicker</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/calendar</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/calendar</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/rhf</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/rhf</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/locales</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/locales</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/theming</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/theming</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/recipes</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/recipes</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/recipes/rhf-zod</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/recipes/rhf-zod</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/recipes/rhf-joi</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/recipes/rhf-joi</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://artemydottech.github.io/datepicker/docs/recipes/shadcn-form</loc>
+    <loc>https://artemydottech.github.io/rtdp/docs/recipes/shadcn-form</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

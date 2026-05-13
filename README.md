@@ -1,14 +1,14 @@
-# [@artemy-tech/datepicker](https://www.npmjs.com/package/@artemy-tech/datepicker)
+# rtdp — [@artemy-tech/rtdp](https://www.npmjs.com/package/@artemy-tech/rtdp)
 
-[![npm version](https://img.shields.io/npm/v/@artemy-tech/datepicker?color=blue)](https://www.npmjs.com/package/@artemy-tech/datepicker)
-[![npm downloads](https://img.shields.io/npm/dm/@artemy-tech/datepicker?color=green)](https://www.npmjs.com/package/@artemy-tech/datepicker)
-[![CI](https://github.com/artemydottech/datepicker/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/datepicker/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/artemydottech/datepicker/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/datepicker)
-[![publish size](https://badgen.net/packagephobia/publish/@artemy-tech/datepicker)](https://packagephobia.com/result?p=@artemy-tech/datepicker)
+[![npm version](https://img.shields.io/npm/v/@artemy-tech/rtdp?color=blue)](https://www.npmjs.com/package/@artemy-tech/rtdp)
+[![npm downloads](https://img.shields.io/npm/dm/@artemy-tech/rtdp?color=green)](https://www.npmjs.com/package/@artemy-tech/rtdp)
+[![CI](https://github.com/artemydottech/rtdp/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/rtdp/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/artemydottech/rtdp/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/rtdp)
+[![publish size](https://badgen.net/packagephobia/publish/@artemy-tech/rtdp)](https://packagephobia.com/result?p=@artemy-tech/rtdp)
 
 React DatePicker с маской ввода, поддержкой произвольных локалей и форматов даты, выбором диапазона и времени, опциональной интеграцией с react-hook-form. Построен на [react-day-picker v9](https://daypicker.dev/) и [date-fns v4](https://date-fns.org/).
 
-**📚 [Документация и примеры →](https://artemydottech.github.io/datepicker)**
+**📚 [Документация и примеры →](https://artemydottech.github.io/rtdp)**
 
 ## Возможности
 
@@ -19,13 +19,13 @@ React DatePicker с маской ввода, поддержкой произво
 - **Произвольный формат даты** через проп `dateFormat` (`dd.MM.yyyy`, `MM/dd/yyyy`, `yyyy-MM-dd`, …) — маска ввода генерится автоматически
 - Кастомный триггер (`customTrigger`) и кастомный инпут (`renderInput`) — интеграция с Ant Design, MUI, shadcn/ui и др.
 - Интеграция с react-hook-form (нулевые издержки если не используется)
-- Стилизация через CSS-переменные `--datepicker-*`
+- Стилизация через CSS-переменные `--rtdp-*`
 - Полная поддержка TypeScript, в т.ч. дженерики для RHF-компонентов
 
 ## Установка
 
 ```bash
-npm install @artemy-tech/datepicker
+npm install @artemy-tech/rtdp
 ```
 
 Для интеграции с react-hook-form установите его как peer-зависимость:
@@ -37,8 +37,8 @@ npm install react-hook-form
 ## Quick start
 
 ```tsx
-import '@artemy-tech/datepicker/styles';
-import { DatePicker } from '@artemy-tech/datepicker';
+import '@artemy-tech/rtdp/styles';
+import { DatePicker } from '@artemy-tech/rtdp';
 
 export const Example = () => <DatePicker label="Дата рождения" />;
 ```
@@ -49,7 +49,7 @@ export const Example = () => <DatePicker label="Дата рождения" />;
 
 ```tsx
 import { useState } from 'react';
-import { DatePicker } from '@artemy-tech/datepicker';
+import { DatePicker } from '@artemy-tech/rtdp';
 
 // Неконтролируемый
 <DatePicker label="Дата рождения" />
@@ -69,7 +69,7 @@ const [date, setDate] = useState<Date | undefined>();
 
 ```tsx
 import { useState } from 'react';
-import { DateRangePicker, type DateRange } from '@artemy-tech/datepicker';
+import { DateRangePicker, type DateRange } from '@artemy-tech/rtdp';
 
 const [range, setRange] = useState<DateRange | undefined>();
 
@@ -87,7 +87,7 @@ const [range, setRange] = useState<DateRange | undefined>();
 
 ```tsx
 import { enUS, de } from 'date-fns/locale';
-import { DatePicker, DateRangePicker } from '@artemy-tech/datepicker';
+import { DatePicker, DateRangePicker } from '@artemy-tech/rtdp';
 
 <DatePicker
   locale={enUS}
@@ -116,8 +116,8 @@ import { DatePicker, DateRangePicker } from '@artemy-tech/datepicker';
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
-import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/datepicker/rhf';
-import type { DateRange } from '@artemy-tech/datepicker';
+import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/rtdp/rhf';
+import type { DateRange } from '@artemy-tech/rtdp';
 
 interface BookingFormValues {
   checkIn: Date | undefined;
@@ -149,29 +149,29 @@ const BookingForm = () => {
 };
 ```
 
-> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/datepicker/recipes).
+> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/rtdp/recipes).
 
 ## Стилизация
 
 Подключите базовые стили и переопределите нужные CSS-переменные:
 
 ```css
-@import '@artemy-tech/datepicker/styles';
+@import '@artemy-tech/rtdp/styles';
 
 :root {
-  --datepicker-color-accent: #6366f1;
-  --datepicker-radius: 8px;
-  --datepicker-border-color-focus: #6366f1;
+  --rtdp-color-accent: #6366f1;
+  --rtdp-radius: 8px;
+  --rtdp-border-color-focus: #6366f1;
 }
 ```
 
 Состояния задаются через `data-*`-атрибуты на корневом элементе (`data-focused`, `data-filled`, `data-failed`, `data-disabled`) — стилизуются без JS.
 
-Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/datepicker/theming).
+Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/rtdp/theming).
 
 ## API
 
-Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/datepicker).
+Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/rtdp).
 
 ## Лицензия
 

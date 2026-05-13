@@ -1,3 +1,3 @@
 export function Spinner() {
-  return <span className="datepicker-spinner" aria-hidden="true" />
+  return <span className="rtdp-spinner" aria-hidden="true" />
 }

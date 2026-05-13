@@ -17,9 +17,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@artemy-tech/datepicker": ["../dist/index.d.ts"],
-      "@artemy-tech/datepicker/rhf": ["../dist/rhf.d.ts"],
-      "@artemy-tech/datepicker/styles": ["../src/styles/variables.css"]
+      "@artemy-tech/rtdp": ["../dist/index.d.ts"],
+      "@artemy-tech/rtdp/rhf": ["../dist/rhf.d.ts"],
+      "@artemy-tech/rtdp/styles": ["../src/styles/variables.css"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

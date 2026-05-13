@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://artemydottech.github.io/datepicker/sitemap.xml
+Sitemap: https://artemydottech.github.io/rtdp/sitemap.xml

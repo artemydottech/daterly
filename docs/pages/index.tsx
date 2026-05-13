@@ -3,18 +3,18 @@ import Head from 'next/head'
 
 const Landing = dynamic(() => import('../components/Landing'), { ssr: false })
 
-const SITE_URL = 'https://artemydottech.github.io/datepicker'
+const SITE_URL = 'https://artemydottech.github.io/rtdp'
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'SoftwareSourceCode',
-      name: '@artemy-tech/datepicker',
+      name: 'rtdp',
       description:
         'React DatePicker с маской ввода, локалями date-fns, диапазонами, временем и опциональной интеграцией с react-hook-form.',
       url: SITE_URL,
-      codeRepository: 'https://github.com/artemydottech/datepicker',
+      codeRepository: 'https://github.com/artemydottech/rtdp',
       programmingLanguage: 'TypeScript',
       runtimePlatform: 'React',
       license: 'https://opensource.org/licenses/MIT',
@@ -25,7 +25,7 @@ const jsonLd = {
       },
       keywords: [
         'react',
-        'datepicker',
+        'rtdp',
         'date range picker',
         'react-hook-form',
         'date-fns',
@@ -35,7 +35,7 @@ const jsonLd = {
     },
     {
       '@type': 'WebSite',
-      name: '@artemy-tech/datepicker',
+      name: 'rtdp',
       url: SITE_URL,
       inLanguage: 'ru-RU',
       potentialAction: {
@@ -51,7 +51,7 @@ export default function IndexPage() {
   return (
     <>
       <Head>
-        <title>@artemy-tech/datepicker — React DatePicker с маской ввода</title>
+        <title>rtdp — React DatePicker с маской ввода</title>
         <meta
           name="description"
           content="React DatePicker с маской ввода, локалями date-fns, диапазонами, временем и опциональной интеграцией с react-hook-form."

@@ -264,7 +264,7 @@ export function DatePicker({
   return (
     <div
       ref={containerRef}
-      className={['datepicker', `datepicker--${size}`, className].filter(Boolean).join(' ')}
+      className={['rtdp', `rtdp--${size}`, className].filter(Boolean).join(' ')}
       data-focused={focused || open || undefined}
       data-filled={filled || undefined}
       data-failed={failed || inputInvalid || undefined}
@@ -274,21 +274,21 @@ export function DatePicker({
         ? customTrigger(inputValue, () => interactive && setOpen(prev => !prev))
         : (
           <div
-            className={['datepicker__field', renderInput ? 'datepicker__field--custom' : ''].filter(Boolean).join(' ')}
+            className={['rtdp__field', renderInput ? 'rtdp__field--custom' : ''].filter(Boolean).join(' ')}
             data-icon-start={resolvedIcon && iconPosition === 'start' ? true : undefined}
             data-icon-end={resolvedIcon && iconPosition === 'end' ? true : undefined}
             onClick={() => interactive && inputRef.current?.focus()}
           >
             {resolvedIcon && iconPosition === 'start' && (
-              <span className="datepicker__icon datepicker__icon--start">{resolvedIcon}</span>
+              <span className="rtdp__icon rtdp__icon--start">{resolvedIcon}</span>
             )}
-            {label && <span className="datepicker__label">{label}</span>}
+            {label && <span className="rtdp__label">{label}</span>}
             {(() => {
               const inputProps: DatePickerInputProps = {
                 ref: inputRef,
                 type: 'text',
                 inputMode: 'numeric',
-                className: 'datepicker__input',
+                className: 'rtdp__input',
                 value: inputValue,
                 placeholder: label && !focused ? undefined : defaultPlaceholder,
                 disabled: !interactive,
@@ -307,7 +307,7 @@ export function DatePicker({
               return <input ref={ref as React.RefObject<HTMLInputElement>} {...rest} />
             })()}
             {resolvedIcon && iconPosition === 'end' && (
-              <span className="datepicker__icon datepicker__icon--end">{resolvedIcon}</span>
+              <span className="rtdp__icon rtdp__icon--end">{resolvedIcon}</span>
             )}
           </div>
         )
@@ -315,17 +315,17 @@ export function DatePicker({
       {!noCalendar && open && (
         <div
           className={[
-            'datepicker__popover',
-            `datepicker__popover--${size}`,
-            timeFormat && 'datepicker__popover--with-time',
+            'rtdp__popover',
+            `rtdp__popover--${size}`,
+            timeFormat && 'rtdp__popover--with-time',
           ].filter(Boolean).join(' ')}
           role="dialog"
           aria-label="Календарь"
         >
           {timeFormat ? (
             <>
-              <div className="datepicker__popover-body">
-                <div className="datepicker__popover-calendar">
+              <div className="rtdp__popover-body">
+                <div className="rtdp__popover-calendar">
                   <Calendar
                     mode="single"
                     selected={selected}
@@ -339,8 +339,8 @@ export function DatePicker({
                     locale={locale}
                   />
                 </div>
-                <div className="datepicker__time-separator" />
-                <div className="datepicker__popover-time">
+                <div className="rtdp__time-separator" />
+                <div className="rtdp__popover-time">
                   <TimePanel
                     value={selected}
                     showSeconds={showSeconds}
@@ -348,9 +348,9 @@ export function DatePicker({
                   />
                 </div>
               </div>
-              <div className="datepicker__popover-footer">
+              <div className="rtdp__popover-footer">
                 <button
-                  className="datepicker__ok-btn"
+                  className="rtdp__ok-btn"
                   type="button"
                   onClick={() => setOpen(false)}
                 >

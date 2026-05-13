@@ -389,9 +389,9 @@ export function DateRangePicker({
     <div
       ref={containerRef}
       className={[
-        'datepicker',
-        'daterangepicker',
-        `datepicker--${size}`,
+        'rtdp',
+        'rtdp-range',
+        `rtdp--${size}`,
         className,
       ]
         .filter(Boolean)
@@ -402,7 +402,7 @@ export function DateRangePicker({
       data-disabled={!interactive || undefined}
     >
       <div
-        className="datepicker__field"
+        className="rtdp__field"
         data-icon-start={
           resolvedIcon && iconPosition === 'start' ? true : undefined
         }
@@ -412,16 +412,16 @@ export function DateRangePicker({
         onClick={() => interactive && inputRef.current?.focus()}
       >
         {resolvedIcon && iconPosition === 'start' && (
-          <span className="datepicker__icon datepicker__icon--start">
+          <span className="rtdp__icon rtdp__icon--start">
             {resolvedIcon}
           </span>
         )}
-        {label && <span className="datepicker__label">{label}</span>}
+        {label && <span className="rtdp__label">{label}</span>}
         <input
           ref={inputRef}
           type="text"
           inputMode="numeric"
-          className="datepicker__input"
+          className="rtdp__input"
           value={inputValue}
           placeholder={placeholder}
           disabled={!interactive}
@@ -439,7 +439,7 @@ export function DateRangePicker({
           aria-invalid={inputInvalid || undefined}
         />
         {resolvedIcon && iconPosition === 'end' && (
-          <span className="datepicker__icon datepicker__icon--end">
+          <span className="rtdp__icon rtdp__icon--end">
             {resolvedIcon}
           </span>
         )}
@@ -447,11 +447,11 @@ export function DateRangePicker({
       {open && (
         <div
           className={[
-            'datepicker__popover',
-            `datepicker__popover--${size}`,
+            'rtdp__popover',
+            `rtdp__popover--${size}`,
             calendarLayout === 'horizontal' &&
-              'datepicker__popover--horizontal',
-            showTime && 'datepicker__popover--with-time',
+              'rtdp__popover--horizontal',
+            showTime && 'rtdp__popover--with-time',
           ]
             .filter(Boolean)
             .join(' ')}
@@ -460,8 +460,8 @@ export function DateRangePicker({
         >
           {showTime ? (
             <>
-              <div className="datepicker__popover-body">
-                <div className="datepicker__popover-calendar">
+              <div className="rtdp__popover-body">
+                <div className="rtdp__popover-calendar">
                   <Calendar
                     mode="range"
                     selected={calendarSelected}
@@ -479,18 +479,18 @@ export function DateRangePicker({
                   />
                 </div>
               </div>
-              <div className="datepicker__time-row">
-                <div className="datepicker__time-col">
-                  <span className="datepicker__time-label">Начало</span>
+              <div className="rtdp__time-row">
+                <div className="rtdp__time-col">
+                  <span className="rtdp__time-label">Начало</span>
                   <TimePanel
                     value={confirmedFrom}
                     showSeconds={showSeconds}
                     onChange={handleFromTimeChange}
                   />
                 </div>
-                <div className="datepicker__time-separator" />
-                <div className="datepicker__time-col">
-                  <span className="datepicker__time-label">Конец</span>
+                <div className="rtdp__time-separator" />
+                <div className="rtdp__time-col">
+                  <span className="rtdp__time-label">Конец</span>
                   <TimePanel
                     value={confirmedTo}
                     showSeconds={showSeconds}
@@ -498,9 +498,9 @@ export function DateRangePicker({
                   />
                 </div>
               </div>
-              <div className="datepicker__popover-footer">
+              <div className="rtdp__popover-footer">
                 <button
-                  className="datepicker__ok-btn"
+                  className="rtdp__ok-btn"
                   type="button"
                   onClick={close}
                 >

@@ -3,7 +3,7 @@
 ## Сам пакет
 
 ```bash npm2yarn
-npm install @artemy-tech/datepicker
+npm install @artemy-tech/rtdp
 ```
 
 ## Peer-зависимости
@@ -20,7 +20,7 @@ react-hook-form >= 7.0.0  # опционально, только если исп
 В корневом компоненте приложения (или в `_app.tsx` для Next.js, `main.tsx` для Vite):
 
 ```tsx
-import '@artemy-tech/datepicker/styles'
+import '@artemy-tech/rtdp/styles'
 ```
 
 Этот импорт подтягивает базовые CSS-переменные и стили `react-day-picker`. Без него календарь будет выглядеть «голым».
@@ -29,9 +29,9 @@ import '@artemy-tech/datepicker/styles'
 
 | Точка входа | Что внутри |
 |-------------|------------|
-| `@artemy-tech/datepicker` | `DatePicker`, `DateRangePicker`, `Calendar`, типы `DateRange`, `DatePickerProps` |
-| `@artemy-tech/datepicker/rhf` | `RHFDatePicker`, `RHFDateRangePicker` |
-| `@artemy-tech/datepicker/styles` | Базовые CSS-переменные и стили календаря |
+| `rtdp` | `DatePicker`, `DateRangePicker`, `Calendar`, типы `DateRange`, `DatePickerProps` |
+| `rtdp/rhf` | `RHFDatePicker`, `RHFDateRangePicker` |
+| `rtdp/styles` | Базовые CSS-переменные и стили календаря |
 
 ## TypeScript
 

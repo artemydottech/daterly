@@ -1,10 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import {
-  DatePicker,
-  DateRangePicker,
-  type DateRange,
-} from '@artemy-tech/datepicker';
+import { useTheme } from 'next-themes';
+import { DatePicker, DateRangePicker, type DateRange } from '@artemy-tech/rtdp';
 import {
   Globe,
   Ruler,
@@ -14,20 +11,26 @@ import {
   Palette,
   Puzzle,
   Package,
+  Tag,
+  FileType2,
   Copy,
   Check,
   Heart,
   ArrowRight,
   ChevronDown,
+  Sun,
+  Moon,
   type LucideIcon,
 } from 'lucide-react';
 import Aurora from './aurora/Aurora';
 import FormExample from './FormExample';
+import LogoMark from './LogoMark';
+import pkg from '../../package.json';
 import styles from './Landing.module.css';
 
 type Demo = 'single' | 'range' | 'time';
 
-const INSTALL_COMMAND = 'npm install @artemy-tech/datepicker';
+const INSTALL_COMMAND = 'npm install @artemy-tech/rtdp';
 
 function formatValue(
   demo: Demo,
@@ -50,6 +53,10 @@ export default function Landing() {
   const [range, setRange] = useState<DateRange | undefined>();
   const [dateTime, setDateTime] = useState<Date | undefined>();
   const [copied, setCopied] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === 'dark';
 
   const handleCopy = async () => {
     try {
@@ -63,33 +70,23 @@ export default function Landing() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.auroraWrap}>
-        <Aurora
-          colorStops={['#5227FF', '#B06BFF', '#5227FF']}
-          amplitude={1.2}
-          blend={0.6}
-          speed={0.6}
-        />
-      </div>
+      {isDark && (
+        <div className={styles.auroraWrap}>
+          <Aurora
+            colorStops={['#5227FF', '#B06BFF', '#5227FF']}
+            amplitude={1.2}
+            blend={0.6}
+            speed={0.6}
+          />
+        </div>
+      )}
 
       <header className={styles.nav}>
         <Link href="/" className={styles.logo}>
           <span className={styles.logoMark} aria-hidden>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="4" width="18" height="18" rx="3" />
-              <path d="M16 2v4M8 2v4M3 10h18" />
-            </svg>
+            <LogoMark size={16} variant="dashes" />
           </span>
-          @artemy-tech/datepicker
+          rtdp
         </Link>
         <nav className={styles.navRight}>
           <Link className={styles.navLink} href="/docs">
@@ -99,7 +96,7 @@ export default function Landing() {
             className={styles.navLink}
             target="_blank"
             rel="noreferrer"
-            href="https://github.com/artemydottech/datepicker"
+            href="https://github.com/artemydottech/rtdp"
             aria-label="GitHub"
           >
             <IconGithub size={16} />
@@ -107,7 +104,7 @@ export default function Landing() {
           </a>
           <a
             className={styles.navLink}
-            href="https://www.npmjs.com/package/@artemy-tech/datepicker"
+            href="https://www.npmjs.com/package/@artemy-tech/rtdp"
             target="_blank"
             rel="noreferrer"
             aria-label="npm"
@@ -115,14 +112,29 @@ export default function Landing() {
             <IconNpm size={16} />
             <span className={styles.navLinkLabel}>npm</span>
           </a>
+          <button
+            type="button"
+            className={styles.navLink}
+            onClick={() => setTheme(isDark ? 'light' : 'dark')}
+            aria-label={isDark ? 'Светлая тема' : 'Тёмная тема'}
+            suppressHydrationWarning
+          >
+            {mounted &&
+              (isDark ? (
+                <Sun size={16} strokeWidth={2} />
+              ) : (
+                <Moon size={16} strokeWidth={2} />
+              ))}
+          </button>
         </nav>
       </header>
 
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>
-            <span className={styles.eyebrowDot} />
-            v0.7 — любые локали и форматы даты
+            <span className={styles.eyebrowDot} />v
+            {pkg.version.split('.').slice(0, 3).join('.')} — любые локали и
+            форматы даты
           </div>
           <h1 className={styles.title}>
             <span className={styles.titleIcon} aria-hidden>
@@ -144,7 +156,7 @@ export default function Landing() {
             </Link>
             <a
               className={styles.btnSecondary}
-              href="https://github.com/artemydottech/datepicker"
+              href="https://github.com/artemydottech/rtdp"
               target="_blank"
               rel="noreferrer"
             >
@@ -170,22 +182,34 @@ export default function Landing() {
               <span className={styles.installCopied}>Скопировано</span>
             )}
           </button>
-          <ul className={styles.stats}>
-            <li>
-              <span className={styles.statValue}>2</span>
-              <span className={styles.statLabel}>зависимости</span>
+          <ul className={styles.badges}>
+            <li className={styles.badge}>
+              <Package size={13} strokeWidth={2} />
+              <span className={styles.badgeText}>
+                <span className={styles.badgeValue}>~8 KB</span>
+                <span className={styles.badgeLabel}>gzip</span>
+              </span>
             </li>
-            <li>
-              <span className={styles.statValue}>ESM</span>
-              <span className={styles.statLabel}>+ CJS</span>
+            <li className={styles.badge}>
+              <Tag size={13} strokeWidth={2} />
+              <span className={styles.badgeText}>
+                <span className={styles.badgeValue}>v{pkg.version}</span>
+                <span className={styles.badgeLabel}>npm</span>
+              </span>
             </li>
-            <li>
-              <span className={styles.statValue}>TS</span>
-              <span className={styles.statLabel}>типы в комплекте</span>
+            <li className={styles.badge}>
+              <FileType2 size={13} strokeWidth={2} />
+              <span className={styles.badgeText}>
+                <span className={styles.badgeValue}>TypeScript</span>
+                <span className={styles.badgeLabel}>типы из коробки</span>
+              </span>
             </li>
-            <li>
-              <span className={styles.statValue}>RHF</span>
-              <span className={styles.statLabel}>опционально</span>
+            <li className={styles.badge}>
+              <Webhook size={13} strokeWidth={2} />
+              <span className={styles.badgeText}>
+                <span className={styles.badgeValue}>react-hook-form</span>
+                <span className={styles.badgeLabel}>опционально</span>
+              </span>
             </li>
           </ul>
         </div>
@@ -310,12 +334,12 @@ export default function Landing() {
           <Feature
             icon={Webhook}
             title="react-hook-form"
-            text="Отдельный entry-point @artemy-tech/datepicker/rhf. Типобезопасный name через дженерик."
+            text="Отдельный entry-point rtdp/rhf. Типобезопасный name через дженерик."
           />
           <Feature
             icon={Palette}
             title="CSS-переменные"
-            text="Всё через --datepicker-*. Состояния — через data-атрибуты. Без CSS-in-JS."
+            text="Всё через --rtdp-*. Состояния — через data-атрибуты. Без CSS-in-JS."
           />
           <Feature
             icon={Puzzle}
@@ -351,14 +375,14 @@ export default function Landing() {
           <div className={styles.footerLinks}>
             <Link href="/docs">Документация</Link>
             <a
-              href="https://github.com/artemydottech/datepicker"
+              href="https://github.com/artemydottech/rtdp"
               target="_blank"
               rel="noreferrer"
             >
               GitHub
             </a>
             <a
-              href="https://www.npmjs.com/package/@artemy-tech/datepicker"
+              href="https://www.npmjs.com/package/@artemy-tech/rtdp"
               target="_blank"
               rel="noreferrer"
             >

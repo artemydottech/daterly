@@ -126,7 +126,7 @@ describe('DateRangePicker', () => {
 
   it('shows spinner icon when loading', () => {
     const { container } = render(<DateRangePicker loading />)
-    expect(container.querySelector('.datepicker__icon')).toBeInTheDocument()
+    expect(container.querySelector('.rtdp__icon')).toBeInTheDocument()
   })
 
   it('sets data-filled attribute when value is present', () => {
@@ -138,12 +138,12 @@ describe('DateRangePicker', () => {
 
   it('renders icon at the start when iconPosition="start"', () => {
     const { container } = render(<DateRangePicker iconPosition="start" />)
-    expect(container.querySelector('.datepicker__icon--start')).toBeInTheDocument()
+    expect(container.querySelector('.rtdp__icon--start')).toBeInTheDocument()
   })
 
   it('hides icon when icon is false', () => {
     const { container } = render(<DateRangePicker icon={false} />)
-    expect(container.querySelector('.datepicker__icon')).not.toBeInTheDocument()
+    expect(container.querySelector('.rtdp__icon')).not.toBeInTheDocument()
   })
 
   it('pastes a full range string and parses both dates', async () => {

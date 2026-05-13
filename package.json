@@ -1,20 +1,23 @@
 {
-  "name": "@artemy-tech/datepicker",
-  "version": "0.7.1",
+  "name": "@artemy-tech/rtdp",
+  "version": "1.0.0",
   "type": "module",
-  "description": "React DatePicker with react-hook-form support",
+  "description": "rtdp — React date & time picker с маской ввода, диапазонами и опциональной интеграцией react-hook-form.",
   "keywords": [
+    "rtdp",
     "react",
     "datepicker",
+    "date-picker",
+    "time-picker",
     "react-hook-form",
     "date-range"
   ],
   "author": "Artemy",
   "license": "MIT",
-  "homepage": "https://artemydottech.github.io/datepicker",
+  "homepage": "https://artemydottech.github.io/rtdp",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/artemydottech/datepicker.git"
+    "url": "git+https://github.com/artemydottech/rtdp.git"
   },
   "publishConfig": {
     "access": "public"

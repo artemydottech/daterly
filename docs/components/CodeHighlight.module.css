@@ -1,0 +1,60 @@
+/* Light theme — one-light inspired */
+.keyword {
+  color: #a626a4;
+}
+.string {
+  color: #50a14f;
+}
+.component {
+  color: #c18401;
+}
+.htmlTag {
+  color: #e45649;
+}
+.tag {
+  color: #abb2bf;
+}
+.prop {
+  color: #986801;
+}
+.fn {
+  color: #4078f2;
+}
+.punct {
+  color: #4f525c;
+}
+.comment {
+  color: #a0a1a7;
+  font-style: italic;
+}
+.default {
+  color: inherit;
+}
+
+:global(html.dark) .keyword {
+  color: #c678dd;
+}
+:global(html.dark) .string {
+  color: #98c379;
+}
+:global(html.dark) .component {
+  color: #e5c07b;
+}
+:global(html.dark) .htmlTag {
+  color: #e06c75;
+}
+:global(html.dark) .tag {
+  color: #abb2bf;
+}
+:global(html.dark) .prop {
+  color: #d19a66;
+}
+:global(html.dark) .fn {
+  color: #61afef;
+}
+:global(html.dark) .punct {
+  color: #abb2bf;
+}
+:global(html.dark) .comment {
+  color: #5c6370;
+}

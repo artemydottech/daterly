@@ -1,11 +1,19 @@
+import ThemePresets from '../../components/ThemePresets'
+
 # Стилизация
 
-Вся визуальная настройка — через CSS-переменные с префиксом `--datepicker-*`. Никакого CSS-in-JS, никаких className-инъекций.
+Вся визуальная настройка — через CSS-переменные с префиксом `--rtdp-*`. Никакого CSS-in-JS, никаких className-инъекций.
+
+## Готовые пресеты
+
+Кликни по пресету слева — справа сразу видно превью и CSS-токены, которые нужно скопировать в свой `:root`.
+
+<ThemePresets />
 
 ## Подключение
 
 ```tsx
-import '@artemy-tech/datepicker/styles'
+import '@artemy-tech/rtdp/styles'
 ```
 
 Этот импорт подгружает базовые переменные и стили `react-day-picker`. После этого переопределяй нужные токены через `:root` или scope-селектор.
@@ -15,25 +23,25 @@ import '@artemy-tech/datepicker/styles'
 ```css
 :root {
   /* Цвета */
-  --datepicker-color-accent: #7c83ff;
-  --datepicker-color-text: #1a1a1a;
-  --datepicker-color-placeholder: #9e9e9e;
-  --datepicker-bg: #ffffff;
+  --rtdp-color-accent: #7c83ff;
+  --rtdp-color-text: #1a1a1a;
+  --rtdp-color-placeholder: #9e9e9e;
+  --rtdp-bg: #ffffff;
 
   /* Рамки */
-  --datepicker-border-color: #e0e0e0;
-  --datepicker-border-color-focus: var(--datepicker-color-accent);
-  --datepicker-border-color-failed: #ef4444;
-  --datepicker-radius: 8px;
+  --rtdp-border-color: #e0e0e0;
+  --rtdp-border-color-focus: var(--rtdp-color-accent);
+  --rtdp-border-color-failed: #ef4444;
+  --rtdp-radius: 8px;
 
   /* Типографика */
-  --datepicker-font-family: inherit;
-  --datepicker-font-size: 14px;
+  --rtdp-font-family: inherit;
+  --rtdp-font-size: 14px;
 
   /* Календарь */
-  --datepicker-day-bg-selected: var(--datepicker-color-accent);
-  --datepicker-day-bg-hover: rgba(124, 131, 255, 0.1);
-  --datepicker-day-bg-range: rgba(124, 131, 255, 0.15);
+  --rtdp-day-bg-selected: var(--rtdp-color-accent);
+  --rtdp-day-bg-hover: rgba(124, 131, 255, 0.1);
+  --rtdp-day-bg-range: rgba(124, 131, 255, 0.15);
 }
 ```
 
@@ -42,10 +50,10 @@ import '@artemy-tech/datepicker/styles'
 Состояния не задаются классами — они выражены через `data-*` атрибуты на корневом элементе:
 
 ```css
-.datepicker[data-focused]  { /* в фокусе или попап открыт */ }
-.datepicker[data-filled]   { /* в инпуте есть значение */ }
-.datepicker[data-failed]   { /* состояние ошибки */ }
-.datepicker[data-disabled] { /* disabled или loading */ }
+.rtdp[data-focused]  { /* в фокусе или попап открыт */ }
+.rtdp[data-filled]   { /* в инпуте есть значение */ }
+.rtdp[data-failed]   { /* состояние ошибки */ }
+.rtdp[data-disabled] { /* disabled или loading */ }
 ```
 
 Это позволяет стилизовать состояния без JS-классов и без `aria-*` костылей.
@@ -56,9 +64,9 @@ import '@artemy-tech/datepicker/styles'
 
 ```css
 .dark-section {
-  --datepicker-bg: #1a1a1a;
-  --datepicker-color-text: #e0e0e0;
-  --datepicker-border-color: #333;
+  --rtdp-bg: #1a1a1a;
+  --rtdp-color-text: #e0e0e0;
+  --rtdp-border-color: #333;
 }
 ```
 
@@ -69,10 +77,10 @@ import '@artemy-tech/datepicker/styles'
 ```css
 @media (prefers-color-scheme: dark) {
   :root {
-    --datepicker-bg: #0a0a0f;
-    --datepicker-color-text: #e6e7ee;
-    --datepicker-color-placeholder: #6a6e80;
-    --datepicker-border-color: rgba(255, 255, 255, 0.1);
+    --rtdp-bg: #0a0a0f;
+    --rtdp-color-text: #e6e7ee;
+    --rtdp-color-placeholder: #6a6e80;
+    --rtdp-border-color: rgba(255, 255, 255, 0.1);
   }
 }
 ```

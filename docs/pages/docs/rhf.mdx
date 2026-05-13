@@ -3,14 +3,14 @@
 Обёртки `RHFDatePicker` и `RHFDateRangePicker` живут в отдельном entry-point — если RHF не используешь, они не попадут в бандл.
 
 ```tsx
-import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/datepicker/rhf'
+import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/rtdp/rhf'
 ```
 
 ## Базовый пример
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form'
-import { RHFDatePicker } from '@artemy-tech/datepicker/rhf'
+import { RHFDatePicker } from '@artemy-tech/rtdp/rhf'
 
 interface FormValues {
   birthDate: Date | undefined

@@ -1,29 +1,23 @@
-import { useState } from 'react'
-import {
-  useForm,
-  FormProvider,
-  type SubmitHandler,
-} from 'react-hook-form'
-import {
-  RHFDatePicker,
-  RHFDateRangePicker,
-} from '@artemy-tech/datepicker/rhf'
-import { ArrowRight } from 'lucide-react'
-import styles from './Landing.module.css'
+import { useState } from 'react';
+import { useForm, FormProvider, type SubmitHandler } from 'react-hook-form';
+import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/rtdp/rhf';
+import { ArrowRight } from 'lucide-react';
+import CodeHighlight from './CodeHighlight';
+import styles from './Landing.module.css';
 
 type FormValues = {
-  name: string
-  birthday: Date | null
-  vacation: { from: Date | undefined; to: Date | undefined } | null
-}
+  name: string;
+  birthday: Date | null;
+  vacation: { from: Date | undefined; to: Date | undefined } | null;
+};
 
 const CODE_SNIPPET = `import { useForm, FormProvider } from 'react-hook-form'
 import {
   RHFDatePicker,
   RHFDateRangePicker,
-} from '@artemy-tech/datepicker/rhf'
+} from '@artemy-tech/rtdp/rhf'
 
-const methods = useForm<FormValues>()
+const methods = useForm()
 
 <FormProvider {...methods}>
   <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -39,25 +33,25 @@ const methods = useForm<FormValues>()
       label="Отпуск"
     />
   </form>
-</FormProvider>`
+</FormProvider>`;
 
 export default function FormExample() {
-  const [submitted, setSubmitted] = useState<FormValues | null>(null)
+  const [submitted, setSubmitted] = useState<FormValues | null>(null);
 
   const methods = useForm<FormValues>({
     defaultValues: { name: '', birthday: null, vacation: null },
-  })
+  });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    setSubmitted(data)
-  }
+    setSubmitted(data);
+  };
 
   return (
     <section className={styles.formSection} id="form-example">
       <div className={styles.formHeader}>
         <h2>В реальной форме</h2>
         <p>
-          Через <code>@artemy-tech/datepicker/rhf</code> — типобезопасный{' '}
+          Через <code>rtdp/rhf</code> — типобезопасный{' '}
           <code>name</code>, валидация, defaultValues, control из{' '}
           <code>useForm</code>.
         </p>
@@ -69,17 +63,24 @@ export default function FormExample() {
             onSubmit={methods.handleSubmit(onSubmit)}
             noValidate
           >
-            <label className={styles.formField}>
-              <span className={styles.formLabel}>Имя</span>
+            <label
+              className={styles.formFieldFloat}
+              data-failed={
+                methods.formState.isSubmitted && methods.formState.errors.name
+                  ? true
+                  : undefined
+              }
+            >
               <input
                 type="text"
-                className={styles.formInput}
-                placeholder="Иван"
+                className={styles.formInputFloat}
+                placeholder=" "
                 {...methods.register('name', { required: true })}
               />
+              <span className={styles.formFloatLabel}>Имя</span>
             </label>
 
-            <div className={styles.formPickerSlot}>
+            <div className={`${styles.formPickerSlot}`}>
               <RHFDatePicker
                 name="birthday"
                 label="Дата рождения"
@@ -87,7 +88,7 @@ export default function FormExample() {
               />
             </div>
 
-            <div className={styles.formPickerSlot}>
+            <div className={`${styles.formPickerSlot}`}>
               <RHFDateRangePicker name="vacation" label="Отпуск" />
             </div>
 
@@ -129,16 +130,18 @@ export default function FormExample() {
               <span className={styles.demoOutputLabel}>пример кода</span>
             </div>
             <pre className={styles.demoOutputBody}>
-              <code>{CODE_SNIPPET}</code>
+              <code>
+                <CodeHighlight code={CODE_SNIPPET} />
+              </code>
             </pre>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 function dateReplacer(_key: string, value: unknown) {
-  if (value instanceof Date) return value.toISOString()
-  return value
+  if (value instanceof Date) return value.toISOString();
+  return value;
 }
