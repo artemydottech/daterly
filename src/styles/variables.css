@@ -316,6 +316,11 @@
   color: var(--rtdp-color-accent);
 }
 
+.rtdp-calendar .rdp-selected {
+  font-weight: inherit;
+  font-size: inherit;
+}
+
 .rtdp-calendar .rdp-selected:not(.rdp-range_middle) .rdp-day_button {
   background-color: var(--rtdp-color-accent);
   color: #fff;
@@ -337,10 +342,10 @@
 
 .rtdp__popover--s .rtdp-calendar {
   font-size: 12px;
-  --rdp-day-height: 28px;
-  --rdp-day-width: 28px;
-  --rdp-day_button-height: 28px;
-  --rdp-day_button-width: 28px;
+  --rdp-day-height: 30px;
+  --rdp-day-width: 30px;
+  --rdp-day_button-height: 26px;
+  --rdp-day_button-width: 26px;
   --rdp-nav_button-height: 1.75rem;
   --rdp-nav_button-width: 1.75rem;
   --rdp-nav-height: 2rem;
@@ -348,10 +353,10 @@
 
 .rtdp__popover--m .rtdp-calendar {
   font-size: 14px;
-  --rdp-day-height: 36px;
-  --rdp-day-width: 36px;
-  --rdp-day_button-height: 36px;
-  --rdp-day_button-width: 36px;
+  --rdp-day-height: 38px;
+  --rdp-day-width: 38px;
+  --rdp-day_button-height: 32px;
+  --rdp-day_button-width: 32px;
   --rdp-nav_button-height: 2rem;
   --rdp-nav_button-width: 2rem;
   --rdp-nav-height: 2.5rem;

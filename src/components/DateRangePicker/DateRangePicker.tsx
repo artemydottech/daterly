@@ -24,7 +24,7 @@ import {
   resolveShowSeconds,
   toDateOnly,
 } from '../../utils/range-mask';
-import { DEFAULT_DATE_FORMAT } from '../../utils/date-mask';
+import { DEFAULT_DATE_FORMAT, resolveTimeFormat } from '../../utils/date-mask';
 import { buildFormatSchema } from '../../utils/format-schema';
 
 export type { DateRange };
@@ -72,9 +72,10 @@ export function DateRangePicker({
   locale = ru,
   dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT,
 }: DateRangePickerProps) {
+  const timeFormat = resolveTimeFormat(showTime);
   const schema = useMemo(
-    () => buildFormatSchema(dateFormatProp, null, locale),
-    [dateFormatProp, locale],
+    () => buildFormatSchema(dateFormatProp, timeFormat, locale),
+    [dateFormatProp, timeFormat, locale],
   );
   const maxDigits = schema.digitCount;
   const totalDigits = maxDigits * 2;
@@ -126,6 +127,17 @@ export function DateRangePicker({
   const confirmedTo = isControlled ? value?.to : internalTo;
   const filled = inputValue.length > 0;
 
+  const [draftFromTime, setDraftFromTime] = useState<Date>(() => new Date());
+  const [draftToTime, setDraftToTime] = useState<Date>(() => new Date());
+
+  useEffect(() => {
+    if (!open) return;
+    const now = new Date();
+    if (!confirmedFrom || !isValid(confirmedFrom)) setDraftFromTime(now);
+    if (!confirmedTo || !isValid(confirmedTo)) setDraftToTime(now);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   const [month, setMonth] = useState<Date>(() => {
     const init = confirmedFrom ?? confirmedTo;
     return init && isValid(init) ? init : new Date();
@@ -176,14 +188,15 @@ export function DateRangePicker({
 
   function handleDayClick(day: Date) {
     if (!anchorDate) {
+      const fromBase = confirmedFrom ?? draftFromTime;
       const from = showTime
         ? new Date(
             day.getFullYear(),
             day.getMonth(),
             day.getDate(),
-            confirmedFrom?.getHours() ?? 0,
-            confirmedFrom?.getMinutes() ?? 0,
-            confirmedFrom?.getSeconds() ?? 0,
+            fromBase.getHours(),
+            fromBase.getMinutes(),
+            fromBase.getSeconds(),
           )
         : toDateOnly(day);
       setAnchorDate(from);
@@ -197,15 +210,16 @@ export function DateRangePicker({
       lastEmittedToRef.current = undefined;
       onChange?.({ from, to: undefined });
     } else {
+      const toBase = confirmedTo ?? draftToTime;
       let from = anchorDate,
         to = showTime
           ? new Date(
               day.getFullYear(),
               day.getMonth(),
               day.getDate(),
-              confirmedTo?.getHours() ?? 0,
-              confirmedTo?.getMinutes() ?? 0,
-              confirmedTo?.getSeconds() ?? 0,
+              toBase.getHours(),
+              toBase.getMinutes(),
+              toBase.getSeconds(),
             )
           : toDateOnly(day);
       if (day < anchorDate) {
@@ -232,7 +246,7 @@ export function DateRangePicker({
   }
 
   function handleFromTimeChange(h: number, m: number, s: number) {
-    const base = confirmedFrom ?? new Date();
+    const base = confirmedFrom ?? draftFromTime;
     const newDate = new Date(
       base.getFullYear(),
       base.getMonth(),
@@ -241,13 +255,18 @@ export function DateRangePicker({
       m,
       s,
     );
-    if (!isControlled) setInternalFrom(newDate);
-    lastEmittedFromRef.current = newDate;
-    onChange?.({ from: newDate, to: confirmedTo });
+    if (confirmedFrom) {
+      if (!isControlled) setInternalFrom(newDate);
+      setInputValue(formatRange(newDate, confirmedTo, schema));
+      lastEmittedFromRef.current = newDate;
+      onChange?.({ from: newDate, to: confirmedTo });
+    } else {
+      setDraftFromTime(newDate);
+    }
   }
 
   function handleToTimeChange(h: number, m: number, s: number) {
-    const base = confirmedTo ?? new Date();
+    const base = confirmedTo ?? draftToTime;
     const newDate = new Date(
       base.getFullYear(),
       base.getMonth(),
@@ -256,9 +275,14 @@ export function DateRangePicker({
       m,
       s,
     );
-    if (!isControlled) setInternalTo(newDate);
-    lastEmittedToRef.current = newDate;
-    onChange?.({ from: confirmedFrom, to: newDate });
+    if (confirmedTo) {
+      if (!isControlled) setInternalTo(newDate);
+      setInputValue(formatRange(confirmedFrom, newDate, schema));
+      lastEmittedToRef.current = newDate;
+      onChange?.({ from: confirmedFrom, to: newDate });
+    } else {
+      setDraftToTime(newDate);
+    }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -483,7 +507,11 @@ export function DateRangePicker({
                 <div className="rtdp__time-col">
                   <span className="rtdp__time-label">Начало</span>
                   <TimePanel
-                    value={confirmedFrom}
+                    value={
+                      confirmedFrom && isValid(confirmedFrom)
+                        ? confirmedFrom
+                        : draftFromTime
+                    }
                     showSeconds={showSeconds}
                     onChange={handleFromTimeChange}
                   />
@@ -492,7 +520,11 @@ export function DateRangePicker({
                 <div className="rtdp__time-col">
                   <span className="rtdp__time-label">Конец</span>
                   <TimePanel
-                    value={confirmedTo}
+                    value={
+                      confirmedTo && isValid(confirmedTo)
+                        ? confirmedTo
+                        : draftToTime
+                    }
                     showSeconds={showSeconds}
                     onChange={handleToTimeChange}
                   />

@@ -140,7 +140,9 @@ const BookingForm = () => {
         <RHFDateRangePicker<BookingFormValues>
           name="period"
           label="Период"
-          rules={{ validate: (v) => v?.from !== undefined || 'Выберите период' }}
+          rules={{
+            validate: (v) => v?.from !== undefined || 'Выберите период',
+          }}
         />
         <button type="submit">Отправить</button>
       </form>
@@ -149,7 +151,7 @@ const BookingForm = () => {
 };
 ```
 
-> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/rtdp/recipes).
+> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/rtdp/docs/recipes).
 
 ## Стилизация
 
@@ -167,11 +169,11 @@ const BookingForm = () => {
 
 Состояния задаются через `data-*`-атрибуты на корневом элементе (`data-focused`, `data-filled`, `data-failed`, `data-disabled`) — стилизуются без JS.
 
-Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/rtdp/theming).
+Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/rtdp/docs/theming).
 
 ## API
 
-Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/rtdp).
+Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/rtdp/docs).
 
 ## Лицензия
 

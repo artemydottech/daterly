@@ -1,6 +1,10 @@
+import ComponentPreview from '../../components/ComponentPreview';
+
 # Calendar
 
 Базовый календарь без инпута и попапа. Используй как строительный блок или когда нужен inline-выбор на странице.
+
+<ComponentPreview title="Calendar" kind="calendar" />
 
 ```tsx
 import { useState } from 'react'
@@ -11,7 +15,9 @@ const [date, setDate] = useState<Date | undefined>()
 <Calendar mode="single" selected={date} onSelect={setDate} />
 ```
 
-Диапазон:
+## Диапазон
+
+<ComponentPreview kind="calendar" mode="range" numberOfMonths={2} title="Calendar mode=range" />
 
 ```tsx
 import type { DateRange } from '@artemy-tech/rtdp'
@@ -19,6 +25,26 @@ import type { DateRange } from '@artemy-tech/rtdp'
 const [range, setRange] = useState<DateRange | undefined>()
 
 <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2} />
+```
+
+## Множественный выбор
+
+<ComponentPreview kind="calendar" mode="multiple" title="Calendar mode=multiple" />
+
+```tsx
+const [days, setDays] = useState<Date[] | undefined>()
+
+<Calendar mode="multiple" selected={days} onSelect={setDays} />
+```
+
+## Другая локаль
+
+<ComponentPreview kind="calendar" locale="en" title="Calendar locale=en-US" />
+
+```tsx
+import { enUS } from 'date-fns/locale'
+
+<Calendar mode="single" locale={enUS} />
 ```
 
 ## Под капотом

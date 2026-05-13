@@ -13,6 +13,7 @@ export default {
     title: 'Настройка',
   },
   locales: 'Локали и форматы',
+  sizes: 'Размеры',
   theming: 'Стилизация',
   rhf: 'react-hook-form',
   '-- recipes': {

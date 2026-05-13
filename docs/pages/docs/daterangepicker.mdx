@@ -1,6 +1,10 @@
+import ComponentPreview from '../../components/ComponentPreview';
+
 # DateRangePicker
 
 Поле ввода для диапазона дат. Маска `дд.мм.гггг — дд.мм.гггг`, попап с двумя месяцами, двухфазный клик в календаре.
+
+<ComponentPreview title="DateRangePicker" kind="range" />
 
 ## Базовый пример
 
@@ -32,6 +36,8 @@ const [range, setRange] = useState<DateRange | undefined>()
 
 ## С выбором времени
 
+<ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} label="Период (HH:mm)" />
+
 ```tsx
 <DateRangePicker
   label="Период с точностью до минуты"
@@ -41,28 +47,35 @@ const [range, setRange] = useState<DateRange | undefined>()
 
 В режиме `showTime` под календарём появляются два `TimePanel` — для начала и конца. Попап в этом режиме не закрывается автоматически — закрытие по кнопке OK.
 
+## Локаль
+
+<ComponentPreview kind="range" locale="en" dateFormat="MM/dd/yyyy" label="Period" />
+
+```tsx
+import { enUS } from 'date-fns/locale'
+
+<DateRangePicker locale={enUS} dateFormat="MM/dd/yyyy" label="Period" />
+```
+
 ## Ограничение
 
 ```tsx
-<DateRangePicker
-  fromDate={new Date()}
-  toDate={new Date(2027, 11, 31)}
-/>
+<DateRangePicker fromDate={new Date()} toDate={new Date(2027, 11, 31)} />
 ```
 
 ## Все пропсы
 
 Те же, что и у [DatePicker](/docs/datepicker), плюс:
 
-| Prop | Тип | По умолчанию | Описание |
-|------|-----|--------------|----------|
-| `value` | `DateRange` | — | `{ from, to }` |
-| `defaultValue` | `DateRange` | — | Начальный диапазон |
-| `onChange` | `(range: DateRange \| undefined) => void` | — | Колбэк |
-| `calendarLayout` | `'horizontal' \| 'vertical'` | `'horizontal'` | Расположение двух месяцев |
+| Prop             | Тип                                       | По умолчанию   | Описание                  |
+| ---------------- | ----------------------------------------- | -------------- | ------------------------- |
+| `value`          | `DateRange`                               | —              | `{ from, to }`            |
+| `defaultValue`   | `DateRange`                               | —              | Начальный диапазон        |
+| `onChange`       | `(range: DateRange \| undefined) => void` | —              | Колбэк                    |
+| `calendarLayout` | `'horizontal' \| 'vertical'`              | `'horizontal'` | Расположение двух месяцев |
 
 `DateRange` импортируется из основного entry-point:
 
 ```tsx
-import type { DateRange } from '@artemy-tech/rtdp'
+import type { DateRange } from '@artemy-tech/rtdp';
 ```

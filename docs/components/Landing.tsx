@@ -3,13 +3,7 @@ import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { DatePicker, DateRangePicker, type DateRange } from '@artemy-tech/rtdp';
 import {
-  Globe,
-  Ruler,
-  Keyboard,
-  CalendarRange,
   Webhook,
-  Palette,
-  Puzzle,
   Package,
   Tag,
   FileType2,
@@ -20,7 +14,6 @@ import {
   ChevronDown,
   Sun,
   Moon,
-  type LucideIcon,
 } from 'lucide-react';
 import Aurora from './aurora/Aurora';
 import FormExample from './FormExample';
@@ -178,9 +171,9 @@ export default function Landing() {
                 <Copy size={14} strokeWidth={2} />
               )}
             </span>
-            {copied && (
+            {/*{copied && (
               <span className={styles.installCopied}>Скопировано</span>
-            )}
+            )}*/}
           </button>
           <ul className={styles.badges}>
             <li className={styles.badge}>
@@ -306,51 +299,140 @@ export default function Landing() {
       <FormExample />
 
       <section className={styles.features}>
-        <div className={styles.featuresHeader}>
-          <h2>Что внутри</h2>
-          <p>Только то, что нужно реальным формам — без лишнего.</p>
+        <div className={styles.bento}>
+          <div className={`${styles.bentoTile} ${styles.bentoMask}`}>
+            <span className={styles.bentoTag}>Маска</span>
+            <h3>Цифры на нужные позиции</h3>
+            <p>
+              Печатай подряд — разделители расставятся сами. Бэкспейс
+              пропускает их, валидность проверяется round-trip&apos;ом.
+            </p>
+            <div className={styles.maskDemo}>
+              <div className={styles.maskField}>
+                <span className={styles.maskFilled}>12.05.20</span>
+                <span className={styles.maskCaret} aria-hidden />
+                <span className={styles.maskRest}>__</span>
+              </div>
+              <div className={styles.maskFormat}>
+                <span className={styles.maskFormatDim}>format=</span>
+                <span>dd.MM.yyyy</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${styles.bentoTile} ${styles.bentoBundle}`}>
+            <span className={styles.bentoTag}>Бандл</span>
+            <div className={styles.bundleSize}>
+              <span className={styles.bundleSizeNumber}>~8</span>
+              <span className={styles.bundleSizeUnit}>KB</span>
+              <span className={styles.bundleSizeGzip}>gzip</span>
+            </div>
+            <p>
+              Без рантайм-зависимостей кроме date-fns и react-day-picker.
+            </p>
+            <ul className={styles.bundleBadges}>
+              <li>ESM</li>
+              <li>CJS</li>
+              <li>.d.ts</li>
+            </ul>
+          </div>
+
+          <div className={`${styles.bentoTile} ${styles.bentoLocale}`}>
+            <span className={styles.bentoTag}>Локали</span>
+            <h3>Любой язык через проп</h3>
+            <ul className={styles.localeRows}>
+              <li>
+                <span className={styles.localeFlag} aria-hidden>
+                  🇷🇺
+                </span>
+                <code>ru</code>
+                <span>12 мая 2026</span>
+              </li>
+              <li>
+                <span className={styles.localeFlag} aria-hidden>
+                  🇺🇸
+                </span>
+                <code>en</code>
+                <span>May 12, 2026</span>
+              </li>
+              <li>
+                <span className={styles.localeFlag} aria-hidden>
+                  🇩🇪
+                </span>
+                <code>de</code>
+                <span>12. Mai 2026</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className={`${styles.bentoTile} ${styles.bentoRange}`}>
+            <span className={styles.bentoTag}>Range + время</span>
+            <h3>Двухфазный клик, опциональный TimePanel</h3>
+            <div className={styles.rangePreview}>
+              <span className={styles.rangeChip}>
+                12.05.2026
+                <em>09:30</em>
+              </span>
+              <span className={styles.rangeDash} aria-hidden />
+              <span className={styles.rangeChip}>
+                19.05.2026
+                <em>18:00</em>
+              </span>
+            </div>
+          </div>
+
+          <div className={`${styles.bentoTile} ${styles.bentoRhf}`}>
+            <span className={styles.bentoTag}>react-hook-form</span>
+            <h3>Опциональная интеграция</h3>
+            <pre className={styles.rhfCode}>
+              <code>
+                <span className={styles.codeKeyword}>import</span>
+                {' { RHFDatePicker }'}
+                {'\n  '}
+                <span className={styles.codeKeyword}>from</span>{' '}
+                <span className={styles.codeString}>
+                  &apos;@artemy-tech/rtdp/rhf&apos;
+                </span>
+                {'\n\n'}
+                {'<'}
+                <span className={styles.codeTag}>RHFDatePicker</span>
+                {'\n  '}
+                <span className={styles.codeAttr}>name</span>=
+                <span className={styles.codeString}>&quot;birthday&quot;</span>
+                {'\n  '}
+                <span className={styles.codeAttr}>label</span>=
+                <span className={styles.codeString}>
+                  &quot;Дата рождения&quot;
+                </span>
+                {'\n/>'}
+              </code>
+            </pre>
+          </div>
         </div>
-        <div className={styles.featureGrid}>
-          <Feature
-            icon={Globe}
-            title="Локали date-fns"
-            text="Любая локаль через проп. Календарь, дни недели, месяцы — на нужном языке."
-          />
-          <Feature
-            icon={Ruler}
-            title="Произвольный формат"
-            text="dd.MM.yyyy, MM/dd/yyyy, yyyy-MM-dd и любые комбинации. Маска генерится автоматически."
-          />
-          <Feature
-            icon={Keyboard}
-            title="Маска ввода"
-            text="Цифры — на нужные позиции, разделители — сами. Бэкспейс пропускает их корректно."
-          />
-          <Feature
-            icon={CalendarRange}
-            title="Диапазоны и время"
-            text="Range-пикер с двухфазным кликом. Опциональный TimePanel с HH:mm или HH:mm:ss."
-          />
-          <Feature
-            icon={Webhook}
-            title="react-hook-form"
-            text="Отдельный entry-point rtdp/rhf. Типобезопасный name через дженерик."
-          />
-          <Feature
-            icon={Palette}
-            title="CSS-переменные"
-            text="Всё через --rtdp-*. Состояния — через data-атрибуты. Без CSS-in-JS."
-          />
-          <Feature
-            icon={Puzzle}
-            title="Любой UI"
-            text="customTrigger и renderInput — встраивай в Ant Design, MUI, shadcn/ui."
-          />
-          <Feature
-            icon={Package}
-            title="Маленький бандл"
-            text="Без зависимостей кроме date-fns и react-day-picker. ESM + CJS, типы из коробки."
-          />
+      </section>
+
+      <section className={styles.endCta}>
+        <div className={styles.endCtaInner}>
+          <h2 className={styles.endCtaTitle}>Готов поставить?</h2>
+          <p className={styles.endCtaSubtitle}>
+            Открой документацию — рецепты, API и примеры под RHF, Zod, Joi,
+            shadcn/ui.
+          </p>
+          <div className={styles.endCtaButtons}>
+            <Link className={styles.btnPrimary} href="/docs">
+              Открыть документацию
+              <ArrowRight size={16} strokeWidth={2.5} />
+            </Link>
+            <a
+              className={styles.btnSecondary}
+              href="https://github.com/artemydottech/rtdp"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <IconGithub size={16} />
+              Исходники
+            </a>
+          </div>
         </div>
       </section>
 
@@ -391,26 +473,6 @@ export default function Landing() {
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function Feature({
-  icon: Icon,
-  title,
-  text,
-}: {
-  icon: LucideIcon;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className={styles.feature}>
-      <div className={styles.featureIcon}>
-        <Icon size={20} strokeWidth={1.75} />
-      </div>
-      <h3>{title}</h3>
-      <p>{text}</p>
     </div>
   );
 }

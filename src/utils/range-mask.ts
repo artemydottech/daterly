@@ -35,7 +35,7 @@ export function parseDate(masked: string, schema: FormatSchema): Date | undefine
   if (masked.replace(/\D/g, '').length !== schema.digitCount) return undefined
   const date = parse(masked, schema.format, new Date())
   if (!isValid(date) || format(date, schema.format) !== masked) return undefined
-  return toDateOnly(date)
+  return /[Hms]/.test(schema.format) ? date : toDateOnly(date)
 }
 
 export function formatRange(

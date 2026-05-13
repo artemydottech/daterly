@@ -12,7 +12,7 @@
   display: grid;
   grid-template-columns: 1fr 1.4fr;
   gap: 16px;
-  align-items: start;
+  align-items: stretch;
 }
 
 :global(html.dark) .root {
@@ -47,6 +47,7 @@
   border: 1px solid var(--tp-border);
   background: var(--tp-bg);
   cursor: pointer;
+  height: 100%;
   text-align: left;
   font-family: inherit;
   color: var(--tp-fg-soft);
@@ -114,6 +115,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  height: 100%;
 }
 
 .stage {
@@ -125,6 +127,7 @@
   border: 1px solid var(--tp-border);
   background: var(--tp-bg);
   min-height: 100px;
+  flex: 1;
 }
 
 .stage :global(.rtdp),

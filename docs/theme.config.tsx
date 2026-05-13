@@ -49,18 +49,13 @@ const config: DocsThemeConfig = {
       </svg>
     ),
   },
-  docsRepositoryBase:
-    'https://github.com/artemydottech/rtdp/tree/main/docs',
+  docsRepositoryBase: 'https://github.com/artemydottech/rtdp/tree/main/docs',
   footer: {
     content: (
       <span>
         MIT {new Date().getFullYear()} ©{' '}
-        <a
-          href="https://github.com/artemydottech"
-          target="_blank"
-          rel="noreferrer"
-        >
-          artemydottech
+        <a href="https://artemy.tech" target="_blank" rel="noreferrer">
+          a.tech
         </a>
       </span>
     ),

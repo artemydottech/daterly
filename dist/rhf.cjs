@@ -328,7 +328,13 @@ function DatePicker({
   const [month, setMonth] = (0, import_react3.useState)(
     () => selected && (0, import_date_fns2.isValid)(selected) ? selected : /* @__PURE__ */ new Date()
   );
+  const [draftTime, setDraftTime] = (0, import_react3.useState)(() => /* @__PURE__ */ new Date());
   const filled = inputValue.length > 0;
+  (0, import_react3.useEffect)(() => {
+    if (open && (!selected || !(0, import_date_fns2.isValid)(selected))) {
+      setDraftTime(/* @__PURE__ */ new Date());
+    }
+  }, [open]);
   (0, import_react3.useEffect)(() => {
     if (selected && (0, import_date_fns2.isValid)(selected)) setMonth(selected);
   }, [selected == null ? void 0 : selected.getFullYear(), selected == null ? void 0 : selected.getMonth()]);
@@ -438,7 +444,7 @@ function DatePicker({
     }
     let dateToCommit;
     if (timeFormat) {
-      const base = selected && (0, import_date_fns2.isValid)(selected) ? selected : /* @__PURE__ */ new Date(0);
+      const base = selected && (0, import_date_fns2.isValid)(selected) ? selected : draftTime;
       dateToCommit = new Date(
         date.getFullYear(),
         date.getMonth(),
@@ -454,7 +460,7 @@ function DatePicker({
     if (!timeFormat) setOpen(false);
   }
   function handleTimeChange(h, m, s) {
-    const base = selected && (0, import_date_fns2.isValid)(selected) ? selected : /* @__PURE__ */ new Date();
+    const base = selected && (0, import_date_fns2.isValid)(selected) ? selected : draftTime;
     const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s);
     applyValid((0, import_date_fns2.format)(newDate, dateFormat), newDate);
   }
@@ -543,7 +549,7 @@ function DatePicker({
                 /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "rtdp__popover-time", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                   TimePanel,
                   {
-                    value: selected,
+                    value: selected && (0, import_date_fns2.isValid)(selected) ? selected : draftTime,
                     showSeconds,
                     onChange: handleTimeChange
                   }
@@ -637,7 +643,7 @@ function parseDate(masked, schema) {
   if (masked.replace(/\D/g, "").length !== schema.digitCount) return void 0;
   const date = (0, import_date_fns3.parse)(masked, schema.format, /* @__PURE__ */ new Date());
   if (!(0, import_date_fns3.isValid)(date) || (0, import_date_fns3.format)(date, schema.format) !== masked) return void 0;
-  return toDateOnly2(date);
+  return /[Hms]/.test(schema.format) ? date : toDateOnly2(date);
 }
 function formatRange(from, to, schema) {
   if (!from) return "";
@@ -672,9 +678,10 @@ function DateRangePicker({
   locale = import_locale2.ru,
   dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT
 }) {
+  const timeFormat = resolveTimeFormat(showTime);
   const schema = (0, import_react4.useMemo)(
-    () => buildFormatSchema(dateFormatProp, null, locale),
-    [dateFormatProp, locale]
+    () => buildFormatSchema(dateFormatProp, timeFormat, locale),
+    [dateFormatProp, timeFormat, locale]
   );
   const maxDigits = schema.digitCount;
   const totalDigits = maxDigits * 2;
@@ -714,6 +721,14 @@ function DateRangePicker({
   const confirmedFrom = isControlled ? value == null ? void 0 : value.from : internalFrom;
   const confirmedTo = isControlled ? value == null ? void 0 : value.to : internalTo;
   const filled = inputValue.length > 0;
+  const [draftFromTime, setDraftFromTime] = (0, import_react4.useState)(() => /* @__PURE__ */ new Date());
+  const [draftToTime, setDraftToTime] = (0, import_react4.useState)(() => /* @__PURE__ */ new Date());
+  (0, import_react4.useEffect)(() => {
+    if (!open) return;
+    const now = /* @__PURE__ */ new Date();
+    if (!confirmedFrom || !(0, import_date_fns4.isValid)(confirmedFrom)) setDraftFromTime(now);
+    if (!confirmedTo || !(0, import_date_fns4.isValid)(confirmedTo)) setDraftToTime(now);
+  }, [open]);
   const [month, setMonth] = (0, import_react4.useState)(() => {
     const init = confirmedFrom != null ? confirmedFrom : confirmedTo;
     return init && (0, import_date_fns4.isValid)(init) ? init : /* @__PURE__ */ new Date();
@@ -752,15 +767,15 @@ function DateRangePicker({
   }, [value]);
   const calendarSelected = anchorDate ? hoveredDate ? anchorDate <= hoveredDate ? { from: anchorDate, to: hoveredDate } : { from: hoveredDate, to: anchorDate } : { from: anchorDate, to: void 0 } : { from: confirmedFrom, to: confirmedTo };
   function handleDayClick(day) {
-    var _a, _b, _c, _d, _e, _f;
     if (!anchorDate) {
+      const fromBase = confirmedFrom != null ? confirmedFrom : draftFromTime;
       const from = showTime ? new Date(
         day.getFullYear(),
         day.getMonth(),
         day.getDate(),
-        (_a = confirmedFrom == null ? void 0 : confirmedFrom.getHours()) != null ? _a : 0,
-        (_b = confirmedFrom == null ? void 0 : confirmedFrom.getMinutes()) != null ? _b : 0,
-        (_c = confirmedFrom == null ? void 0 : confirmedFrom.getSeconds()) != null ? _c : 0
+        fromBase.getHours(),
+        fromBase.getMinutes(),
+        fromBase.getSeconds()
       ) : toDateOnly2(day);
       setAnchorDate(from);
       if (!isControlled) {
@@ -773,13 +788,14 @@ function DateRangePicker({
       lastEmittedToRef.current = void 0;
       onChange == null ? void 0 : onChange({ from, to: void 0 });
     } else {
+      const toBase = confirmedTo != null ? confirmedTo : draftToTime;
       let from = anchorDate, to = showTime ? new Date(
         day.getFullYear(),
         day.getMonth(),
         day.getDate(),
-        (_d = confirmedTo == null ? void 0 : confirmedTo.getHours()) != null ? _d : 0,
-        (_e = confirmedTo == null ? void 0 : confirmedTo.getMinutes()) != null ? _e : 0,
-        (_f = confirmedTo == null ? void 0 : confirmedTo.getSeconds()) != null ? _f : 0
+        toBase.getHours(),
+        toBase.getMinutes(),
+        toBase.getSeconds()
       ) : toDateOnly2(day);
       if (day < anchorDate) {
         const tmp = from;
@@ -803,7 +819,7 @@ function DateRangePicker({
     if (anchorDate) setHoveredDate(day);
   }
   function handleFromTimeChange(h, m, s) {
-    const base = confirmedFrom != null ? confirmedFrom : /* @__PURE__ */ new Date();
+    const base = confirmedFrom != null ? confirmedFrom : draftFromTime;
     const newDate = new Date(
       base.getFullYear(),
       base.getMonth(),
@@ -812,12 +828,17 @@ function DateRangePicker({
       m,
       s
     );
-    if (!isControlled) setInternalFrom(newDate);
-    lastEmittedFromRef.current = newDate;
-    onChange == null ? void 0 : onChange({ from: newDate, to: confirmedTo });
+    if (confirmedFrom) {
+      if (!isControlled) setInternalFrom(newDate);
+      setInputValue(formatRange(newDate, confirmedTo, schema));
+      lastEmittedFromRef.current = newDate;
+      onChange == null ? void 0 : onChange({ from: newDate, to: confirmedTo });
+    } else {
+      setDraftFromTime(newDate);
+    }
   }
   function handleToTimeChange(h, m, s) {
-    const base = confirmedTo != null ? confirmedTo : /* @__PURE__ */ new Date();
+    const base = confirmedTo != null ? confirmedTo : draftToTime;
     const newDate = new Date(
       base.getFullYear(),
       base.getMonth(),
@@ -826,9 +847,14 @@ function DateRangePicker({
       m,
       s
     );
-    if (!isControlled) setInternalTo(newDate);
-    lastEmittedToRef.current = newDate;
-    onChange == null ? void 0 : onChange({ from: confirmedFrom, to: newDate });
+    if (confirmedTo) {
+      if (!isControlled) setInternalTo(newDate);
+      setInputValue(formatRange(confirmedFrom, newDate, schema));
+      lastEmittedToRef.current = newDate;
+      onChange == null ? void 0 : onChange({ from: confirmedFrom, to: newDate });
+    } else {
+      setDraftToTime(newDate);
+    }
   }
   function handleChange(e) {
     var _a;
@@ -1021,7 +1047,7 @@ function DateRangePicker({
                   /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                     TimePanel,
                     {
-                      value: confirmedFrom,
+                      value: confirmedFrom && (0, import_date_fns4.isValid)(confirmedFrom) ? confirmedFrom : draftFromTime,
                       showSeconds,
                       onChange: handleFromTimeChange
                     }
@@ -1033,7 +1059,7 @@ function DateRangePicker({
                   /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                     TimePanel,
                     {
-                      value: confirmedTo,
+                      value: confirmedTo && (0, import_date_fns4.isValid)(confirmedTo) ? confirmedTo : draftToTime,
                       showSeconds,
                       onChange: handleToTimeChange
                     }

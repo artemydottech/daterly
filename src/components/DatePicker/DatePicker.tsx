@@ -124,7 +124,15 @@ export function DatePicker({
   const [month, setMonth] = useState<Date>(
     () => (selected && isValid(selected) ? selected : new Date()),
   )
+  const [draftTime, setDraftTime] = useState<Date>(() => new Date())
   const filled = inputValue.length > 0
+
+  useEffect(() => {
+    if (open && (!selected || !isValid(selected))) {
+      setDraftTime(new Date())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
 
   useEffect(() => {
     if (selected && isValid(selected)) setMonth(selected)
@@ -240,7 +248,7 @@ export function DatePicker({
 
     let dateToCommit: Date
     if (timeFormat) {
-      const base = selected && isValid(selected) ? selected : new Date(0)
+      const base = selected && isValid(selected) ? selected : draftTime
       dateToCommit = new Date(
         date.getFullYear(), date.getMonth(), date.getDate(),
         base.getHours(), base.getMinutes(), base.getSeconds(),
@@ -254,7 +262,7 @@ export function DatePicker({
   }
 
   function handleTimeChange(h: number, m: number, s: number) {
-    const base = selected && isValid(selected) ? selected : new Date()
+    const base = selected && isValid(selected) ? selected : draftTime
     const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s)
     applyValid(format(newDate, dateFormat), newDate)
   }
@@ -342,7 +350,7 @@ export function DatePicker({
                 <div className="rtdp__time-separator" />
                 <div className="rtdp__popover-time">
                   <TimePanel
-                    value={selected}
+                    value={selected && isValid(selected) ? selected : draftTime}
                     showSeconds={showSeconds}
                     onChange={handleTimeChange}
                   />

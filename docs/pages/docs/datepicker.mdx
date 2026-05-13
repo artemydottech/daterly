@@ -1,13 +1,17 @@
+import ComponentPreview from '../../components/ComponentPreview';
+
 # DatePicker
 
 Поле ввода с маской `дд.мм.гггг` и попапом-календарём. Контролируемый и неконтролируемый режимы.
 
+<ComponentPreview title="DatePicker" kind="date" />
+
 ## Базовый пример
 
 ```tsx
-import { DatePicker } from '@artemy-tech/rtdp'
+import { DatePicker } from '@artemy-tech/rtdp';
 
-<DatePicker label="Дата рождения" />
+<DatePicker label="Дата рождения" />;
 ```
 
 ## Контролируемый
@@ -25,6 +29,8 @@ const [date, setDate] = useState<Date | undefined>()
 
 ## С выбором времени
 
+<ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} label="Дата и время" />
+
 ```tsx
 <DatePicker label="Дата и время" showTime={{ format: 'HH:mm' }} />
 
@@ -39,8 +45,8 @@ const [date, setDate] = useState<Date | undefined>()
 ```tsx
 <DatePicker
   label="Дата заезда"
-  fromDate={new Date()}                // не раньше сегодня
-  toDate={new Date(2027, 11, 31)}      // не позже 31.12.2027
+  fromDate={new Date()} // не раньше сегодня
+  toDate={new Date(2027, 11, 31)} // не позже 31.12.2027
 />
 ```
 
@@ -56,11 +62,16 @@ const [date, setDate] = useState<Date | undefined>()
 
 ## Размеры
 
+<ComponentPreview kind="date" size="s" label="Small" />
+<ComponentPreview kind="date" size="l" label="Large" />
+
 ```tsx
 <DatePicker size="s" />
 <DatePicker size="m" />  {/* по умолчанию */}
 <DatePicker size="l" />
 ```
+
+Подробнее — на странице [Размеры](/docs/sizes).
 
 ## Без календаря
 
@@ -99,42 +110,52 @@ const [date, setDate] = useState<Date | undefined>()
 Сохранить логику маски, но заменить сам `<input>` на компонент из UI-кита:
 
 ```tsx
-import { Input } from 'antd'
+import { Input } from 'antd';
 
 <DatePicker
   renderInput={({ ref, className, ...props }) => (
     <Input ref={ref as any} {...props} />
   )}
-/>
+/>;
 ```
 
 Все обработчики (`onChange`, `onKeyDown`, `onPaste`, …) уже включены в `props`.
 
 ## Локаль и формат
 
+<ComponentPreview kind="date" locale="en" dateFormat="MM/dd/yyyy" label="Birthday" />
+<ComponentPreview kind="date" locale="de" dateFormat="dd.MM.yyyy" label="Geburtstag" />
+
+```tsx
+import { enUS, de } from 'date-fns/locale'
+
+<DatePicker locale={enUS} dateFormat="MM/dd/yyyy" label="Birthday" />
+<DatePicker locale={de}   dateFormat="dd.MM.yyyy" label="Geburtstag" />
+```
+
 См. отдельную страницу [Локали и форматы](/docs/locales).
 
 ## Пропсы
 
-| Prop | Тип | По умолчанию | Описание |
-|------|-----|--------------|----------|
-| `value` | `Date` | — | Контролируемое значение |
-| `defaultValue` | `Date` | — | Неконтролируемое начальное значение |
-| `onChange` | `(date: Date \| undefined) => void` | — | Колбэк при изменении |
-| `label` | `string` | — | Плавающий лейбл |
-| `placeholder` | `string` | из формата | Плейсхолдер |
-| `locale` | `Locale` (`date-fns`) | `ru` | Локаль |
-| `dateFormat` | `string` | `'dd.MM.yyyy'` | Формат даты |
-| `fromDate` | `Date` | — | Минимально допустимая |
-| `toDate` | `Date` | — | Максимально допустимая |
-| `showTime` | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | — | Включить выбор времени |
-| `noCalendar` | `boolean` | `false` | Только инпут, без попапа |
-| `size` | `'s' \| 'm' \| 'l'` | `'m'` | Размер |
-| `disabled` | `boolean` | `false` | Отключено |
-| `failed` | `boolean` | `false` | Состояние ошибки |
-| `loading` | `boolean` | `false` | Загрузка |
-| `icon` | `ReactNode \| false` | календарь | Иконка |
-| `iconPosition` | `'start' \| 'end'` | `'end'` | Позиция иконки |
-| `renderInput` | `(props) => ReactNode` | — | Заменить `<input>` |
-| `customTrigger` | `(value, onClick) => ReactNode` | — | Заменить весь триггер |
-| `className` | `string` | — | CSS-класс на корне |
+| Prop            | Тип                                            | По умолчанию   | Описание                            |
+| --------------- | ---------------------------------------------- | -------------- | ----------------------------------- |
+| `value`         | `Date`                                         | —              | Контролируемое значение             |
+| `defaultValue`  | `Date`                                         | —              | Неконтролируемое начальное значение |
+| `onChange`      | `(date: Date \| undefined) => void`            | —              | Колбэк при изменении                |
+| `label`         | `string`                                       | —              | Плавающий лейбл                     |
+| `placeholder`   | `string`                                       | из формата     | Плейсхолдер                         |
+| `locale`        | `Locale` (`date-fns`)                          | `ru`           | Локаль                              |
+| `dateFormat`    | `string`                                       | `'dd.MM.yyyy'` | Формат даты                         |
+| `fromDate`      | `Date`                                         | —              | Минимально допустимая               |
+| `toDate`        | `Date`                                         | —              | Максимально допустимая              |
+| `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —              | Включить выбор времени              |
+| `noCalendar`    | `boolean`                                      | `false`        | Только инпут, без попапа            |
+| `size`          | `'s' \| 'm' \| 'l'`                            | `'m'`          | Размер                              |
+| `disabled`      | `boolean`                                      | `false`        | Отключено                           |
+| `failed`        | `boolean`                                      | `false`        | Состояние ошибки                    |
+| `loading`       | `boolean`                                      | `false`        | Загрузка                            |
+| `icon`          | `ReactNode \| false`                           | календарь      | Иконка                              |
+| `iconPosition`  | `'start' \| 'end'`                             | `'end'`        | Позиция иконки                      |
+| `renderInput`   | `(props) => ReactNode`                         | —              | Заменить `<input>`                  |
+| `customTrigger` | `(value, onClick) => ReactNode`                | —              | Заменить весь триггер               |
+| `className`     | `string`                                       | —              | CSS-класс на корне                  |
