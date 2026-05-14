@@ -1,0 +1,961 @@
+/* Variables declaration */
+.rdp-root {
+  --rdp-accent-color: blue; /* The accent color used for selected days and UI elements. */
+  --rdp-accent-background-color: #f0f0ff; /* The accent background color used for selected days and UI elements. */
+
+  --rdp-day-height: 44px; /* The height of the day cells. */
+  --rdp-day-width: 44px; /* The width of the day cells. */
+
+  --rdp-day_button-border-radius: 100%; /* The border radius of the day cells. */
+  --rdp-day_button-border: 2px solid transparent; /* The border of the day cells. */
+  --rdp-day_button-height: 42px; /* The height of the day cells. */
+  --rdp-day_button-width: 42px; /* The width of the day cells. */
+
+  --rdp-selected-border: 2px solid var(--rdp-accent-color); /* The border of the selected days. */
+  --rdp-disabled-opacity: 0.5; /* The opacity of the disabled days. */
+  --rdp-outside-opacity: 0.75; /* The opacity of the days outside the current month. */
+  --rdp-today-color: var(--rdp-accent-color); /* The color of the today's date. */
+
+  --rdp-dropdown-gap: 0.5rem; /* The gap between the dropdowns used in the month captons. */
+
+  --rdp-months-gap: 2rem; /* The gap between the months in the multi-month view. */
+
+  --rdp-nav_button-disabled-opacity: 0.5; /* The opacity of the disabled navigation buttons. */
+  --rdp-nav_button-height: 2.25rem; /* The height of the navigation buttons. */
+  --rdp-nav_button-width: 2.25rem; /* The width of the navigation buttons. */
+  --rdp-nav-height: 2.75rem; /* The height of the navigation bar. */
+
+  --rdp-range_middle-background-color: var(--rdp-accent-background-color); /* The color of the background for days in the middle of a range. */
+  --rdp-range_middle-color: inherit; /* The color of the range text. */
+
+  --rdp-range_start-color: white; /* The color of the range text. */
+  --rdp-range_start-background: linear-gradient(
+    var(--rdp-gradient-direction),
+    transparent 50%,
+    var(--rdp-range_middle-background-color) 50%
+  ); /* Used for the background of the start of the selected range. */
+  --rdp-range_start-date-background-color: var(--rdp-accent-color); /* The background color of the date when at the start of the selected range. */
+
+  --rdp-range_end-background: linear-gradient(
+    var(--rdp-gradient-direction),
+    var(--rdp-range_middle-background-color) 50%,
+    transparent 50%
+  ); /* Used for the background of the end of the selected range. */
+  --rdp-range_end-color: white; /* The color of the range text. */
+  --rdp-range_end-date-background-color: var(--rdp-accent-color); /* The background color of the date when at the end of the selected range. */
+
+  --rdp-week_number-border-radius: 100%; /* The border radius of the week number. */
+  --rdp-week_number-border: 2px solid transparent; /* The border of the week number. */
+
+  --rdp-week_number-height: var(--rdp-day-height); /* The height of the week number cells. */
+  --rdp-week_number-opacity: 0.75; /* The opacity of the week number. */
+  --rdp-week_number-width: var(--rdp-day-width); /* The width of the week number cells. */
+  --rdp-weeknumber-text-align: center; /* The text alignment of the weekday cells. */
+
+  --rdp-weekday-opacity: 0.75; /* The opacity of the weekday. */
+  --rdp-weekday-padding: 0.5rem 0rem; /* The padding of the weekday. */
+  --rdp-weekday-text-align: center; /* The text alignment of the weekday cells. */
+
+  --rdp-gradient-direction: 90deg;
+
+  --rdp-animation_duration: 0.3s;
+  --rdp-animation_timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+.rdp-root[dir="rtl"] {
+  --rdp-gradient-direction: -90deg;
+}
+.rdp-root[data-broadcast-calendar="true"] {
+  --rdp-outside-opacity: unset;
+}
+/* Root of the component. */
+.rdp-root {
+  position: relative; /* Required to position the navigation toolbar. */
+  box-sizing: border-box;
+}
+.rdp-root * {
+  box-sizing: border-box;
+}
+.rdp-day {
+  width: var(--rdp-day-width);
+  height: var(--rdp-day-height);
+  text-align: center;
+}
+.rdp-day_button {
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+
+  width: var(--rdp-day_button-width);
+  height: var(--rdp-day_button-height);
+  border: var(--rdp-day_button-border);
+  border-radius: var(--rdp-day_button-border-radius);
+}
+.rdp-day_button:disabled {
+  cursor: revert;
+}
+.rdp-caption_label {
+  z-index: 1;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  white-space: nowrap;
+  border: 0;
+}
+.rdp-dropdown:focus-visible ~ .rdp-caption_label {
+  outline: 5px auto Highlight;
+  /* biome-ignore lint/suspicious/noDuplicateProperties: backward compatibility */
+  outline: 5px auto -webkit-focus-ring-color;
+}
+.rdp-button_next,
+.rdp-button_previous {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  appearance: none;
+
+  width: var(--rdp-nav_button-width);
+  height: var(--rdp-nav_button-height);
+}
+.rdp-button_next:disabled,
+.rdp-button_next[aria-disabled="true"],
+.rdp-button_previous:disabled,
+.rdp-button_previous[aria-disabled="true"] {
+  cursor: revert;
+
+  opacity: var(--rdp-nav_button-disabled-opacity);
+}
+.rdp-chevron {
+  display: inline-block;
+  fill: var(--rdp-accent-color);
+}
+.rdp-root[dir="rtl"] .rdp-nav .rdp-chevron {
+  transform: rotate(180deg);
+  transform-origin: 50%;
+}
+.rdp-dropdowns {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rdp-dropdown-gap);
+}
+.rdp-dropdown {
+  z-index: 2;
+
+  /* Reset */
+  opacity: 0;
+  appearance: none;
+  position: absolute;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: inherit;
+  border: none;
+  line-height: inherit;
+}
+.rdp-dropdown_root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.rdp-dropdown_root[data-disabled="true"] .rdp-chevron {
+  opacity: var(--rdp-disabled-opacity);
+}
+.rdp-month_caption {
+  display: flex;
+  align-content: center;
+  height: var(--rdp-nav-height);
+  font-weight: bold;
+  font-size: large;
+}
+.rdp-root[data-nav-layout="around"] .rdp-month,
+.rdp-root[data-nav-layout="after"] .rdp-month {
+  position: relative;
+}
+.rdp-root[data-nav-layout="around"] .rdp-month_caption {
+  justify-content: center;
+  margin-inline-start: var(--rdp-nav_button-width);
+  margin-inline-end: var(--rdp-nav_button-width);
+  position: relative;
+}
+.rdp-root[data-nav-layout="around"] .rdp-button_previous {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  height: var(--rdp-nav-height);
+  display: inline-flex;
+}
+.rdp-root[data-nav-layout="around"] .rdp-button_next {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 0;
+  height: var(--rdp-nav-height);
+  display: inline-flex;
+  justify-content: center;
+}
+.rdp-months {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rdp-months-gap);
+  max-width: fit-content;
+}
+.rdp-month_grid {
+  border-collapse: collapse;
+}
+.rdp-nav {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+
+  display: flex;
+  align-items: center;
+
+  height: var(--rdp-nav-height);
+}
+.rdp-weekday {
+  opacity: var(--rdp-weekday-opacity);
+  padding: var(--rdp-weekday-padding);
+  font-weight: 500;
+  font-size: smaller;
+  text-align: var(--rdp-weekday-text-align);
+  text-transform: var(--rdp-weekday-text-transform);
+}
+.rdp-week_number {
+  opacity: var(--rdp-week_number-opacity);
+  font-weight: 400;
+  font-size: small;
+  height: var(--rdp-week_number-height);
+  width: var(--rdp-week_number-width);
+  border: var(--rdp-week_number-border);
+  border-radius: var(--rdp-week_number-border-radius);
+  text-align: var(--rdp-weeknumber-text-align);
+}
+/* DAY MODIFIERS */
+.rdp-today:not(.rdp-outside) {
+  color: var(--rdp-today-color);
+}
+.rdp-selected {
+  font-weight: bold;
+  font-size: large;
+}
+.rdp-selected .rdp-day_button {
+  border: var(--rdp-selected-border);
+}
+.rdp-outside {
+  opacity: var(--rdp-outside-opacity);
+}
+.rdp-disabled:not(.rdp-selected) {
+  opacity: var(--rdp-disabled-opacity);
+}
+.rdp-hidden {
+  visibility: hidden;
+  color: var(--rdp-range_start-color);
+}
+.rdp-range_start {
+  background: var(--rdp-range_start-background);
+}
+.rdp-range_start .rdp-day_button {
+  background-color: var(--rdp-range_start-date-background-color);
+  color: var(--rdp-range_start-color);
+}
+.rdp-range_middle {
+  background-color: var(--rdp-range_middle-background-color);
+}
+.rdp-range_middle .rdp-day_button {
+  border: unset;
+  border-radius: unset;
+  color: var(--rdp-range_middle-color);
+}
+.rdp-range_end {
+  background: var(--rdp-range_end-background);
+  color: var(--rdp-range_end-color);
+}
+.rdp-range_end .rdp-day_button {
+  color: var(--rdp-range_start-color);
+  background-color: var(--rdp-range_end-date-background-color);
+}
+.rdp-range_start.rdp-range_end {
+  background: revert;
+}
+.rdp-focusable {
+  cursor: pointer;
+}
+@keyframes rdp-slide_in_left {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes rdp-slide_in_right {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes rdp-slide_out_left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+@keyframes rdp-slide_out_right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.rdp-weeks_before_enter {
+  animation: rdp-slide_in_left var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-weeks_before_exit {
+  animation: rdp-slide_out_left var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-weeks_after_enter {
+  animation: rdp-slide_in_right var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-weeks_after_exit {
+  animation: rdp-slide_out_right var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-root[dir="rtl"] .rdp-weeks_after_enter {
+  animation: rdp-slide_in_left var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-root[dir="rtl"] .rdp-weeks_before_exit {
+  animation: rdp-slide_out_right var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-root[dir="rtl"] .rdp-weeks_before_enter {
+  animation: rdp-slide_in_right var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-root[dir="rtl"] .rdp-weeks_after_exit {
+  animation: rdp-slide_out_left var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+@keyframes rdp-fade_in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes rdp-fade_out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.rdp-caption_after_enter {
+  animation: rdp-fade_in var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-caption_after_exit {
+  animation: rdp-fade_out var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-caption_before_enter {
+  animation: rdp-fade_in var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+.rdp-caption_before_exit {
+  animation: rdp-fade_out var(--rdp-animation_duration)
+    var(--rdp-animation_timing) forwards;
+}
+:root {
+  --daterly-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    system-ui, sans-serif;
+  --daterly-font-size: 16px;
+  --daterly-font-size-label: 12px;
+
+  --daterly-color-text: #212121;
+  --daterly-color-placeholder: #9e9e9e;
+  --daterly-color-border: #e0e0e0;
+  --daterly-color-border-focus: #1f84db;
+  --daterly-color-border-error: #fb3a2f;
+  --daterly-color-bg: #fff;
+  --daterly-color-bg-disabled: #fafafa;
+  --daterly-color-label: #9e9e9e;
+  --daterly-color-label-focus: #1f84db;
+  --daterly-color-label-error: #fb3a2f;
+  --daterly-color-accent: #1f84db;
+
+  --daterly-color-today-bg: #e4f1f9;
+  --daterly-color-hover: #f5f5f5;
+
+  --daterly-height: 40px;
+  --daterly-padding-h: 12px;
+  --daterly-label-top-filled: 4px;
+  --daterly-input-padding-top: 20px;
+  --daterly-radius: 4px;
+  --daterly-shadow: 0 0 4px rgba(0, 0, 0, 0.04),
+    0 2px 4px rgba(0, 0, 0, 0.08);
+
+  --daterly-icon-size: 16px;
+  --daterly-icon-gap: 6px;
+  --daterly-icon-color: #9e9e9e;
+}
+.daterly--s {
+  font-size: 14px;
+  --daterly-height: 32px;
+  --daterly-font-size: 14px;
+  --daterly-padding-h: 12px;
+}
+.daterly--l {
+  --daterly-height: 56px;
+  --daterly-padding-h: 16px;
+  --daterly-label-top-filled: 8px;
+  --daterly-input-padding-top: 24px;
+}
+.daterly,
+.daterly-range {
+  position: relative;
+  display: inline-block;
+  font-family: var(--daterly-font-family);
+  font-size: var(--daterly-font-size);
+}
+.daterly__field {
+  position: relative;
+  height: var(--daterly-height);
+  min-width: 220px;
+  background: var(--daterly-color-bg);
+  border: 1px solid var(--daterly-color-border);
+  border-radius: var(--daterly-radius);
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+  cursor: text;
+}
+.daterly__field--custom {
+  height: auto;
+  min-width: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  cursor: auto;
+}
+.daterly-range .daterly__field {
+  min-width: 320px;
+}
+.daterly[data-focused] .daterly__field {
+  border-color: var(--daterly-color-border-focus);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--daterly-color-border-focus) 15%, transparent);
+}
+.daterly[data-failed] .daterly__field {
+  border-color: var(--daterly-color-border-error);
+}
+.daterly[data-failed][data-focused] .daterly__field {
+  border-color: var(--daterly-color-border-error);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--daterly-color-border-error) 18%, transparent);
+}
+.daterly[data-disabled] .daterly__field {
+  background: var(--daterly-color-bg-disabled);
+  border-color: var(--daterly-color-border);
+  cursor: not-allowed;
+}
+.daterly__label {
+  position: absolute;
+  left: calc(var(--daterly-padding-h) + var(--_prefix-extra, 0px));
+  right: calc(var(--daterly-padding-h) + var(--_suffix-extra, 0px));
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--daterly-font-size);
+  color: var(--daterly-color-label);
+  pointer-events: none;
+  transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease,
+    transform 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+.daterly[data-focused] .daterly__label,
+.daterly[data-filled] .daterly__label {
+  top: var(--daterly-label-top-filled);
+  transform: none;
+  font-size: var(--daterly-font-size-label);
+}
+.daterly[data-focused] .daterly__label {
+  color: var(--daterly-color-label-focus);
+}
+.daterly[data-failed] .daterly__label {
+  color: var(--daterly-color-label-error);
+}
+.daterly--s .daterly__label {
+  font-size: inherit;
+  transition: opacity 0.15s ease;
+}
+.daterly--s[data-focused] .daterly__label,
+.daterly--s[data-filled] .daterly__label {
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: inherit;
+  color: var(--daterly-color-label);
+  opacity: 0;
+}
+.daterly__icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--daterly-icon-color);
+  width: var(--daterly-icon-size);
+  height: var(--daterly-icon-size);
+  pointer-events: none;
+}
+.daterly__icon--start {
+  left: var(--daterly-padding-h);
+}
+.daterly__icon--end {
+  right: var(--daterly-padding-h);
+}
+.daterly__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: var(--daterly-input-padding-top);
+  padding-bottom: 8px;
+  padding-left: calc(var(--daterly-padding-h) + var(--_prefix-extra, 0px));
+  padding-right: calc(var(--daterly-padding-h) + var(--_suffix-extra, 0px));
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--daterly-font-family);
+  font-size: var(--daterly-font-size);
+  color: var(--daterly-color-text);
+  cursor: text;
+}
+.daterly__field:not(:has(.daterly__label)) .daterly__input {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.daterly__field[data-icon-start] {
+  --_prefix-extra: calc(
+    var(--daterly-icon-size) + var(--daterly-icon-gap)
+  );
+}
+.daterly__field[data-icon-end] {
+  --_suffix-extra: calc(
+    var(--daterly-icon-size) + var(--daterly-icon-gap)
+  );
+}
+.daterly--s .daterly__input {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.daterly__input::placeholder {
+  color: var(--daterly-color-placeholder);
+}
+.daterly__input:disabled {
+  cursor: not-allowed;
+  color: var(--daterly-color-placeholder);
+}
+.daterly__popover {
+  position: absolute;
+  top: calc(var(--daterly-height) + 6px);
+  left: 0;
+  z-index: 100;
+  background: var(--daterly-color-bg);
+  border: 1px solid var(--daterly-color-border);
+  border-radius: var(--daterly-radius);
+  box-shadow: var(--daterly-shadow);
+  padding: 12px;
+}
+.daterly__popover--horizontal .rdp-months {
+  flex-wrap: nowrap;
+}
+@media (max-width: 640px) {
+  .daterly-range .daterly__field {
+    min-width: 0;
+  }
+  .daterly__popover {
+    max-width: calc(100vw - 24px);
+    overflow-x: auto;
+  }
+  .daterly-range .daterly__popover--horizontal .rdp-months,
+  .daterly-range .daterly__popover .rdp-months {
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+}
+.daterly-calendar {
+  --rdp-accent-color: var(--daterly-color-accent);
+  --rdp-accent-background-color: var(--daterly-color-today-bg);
+  --rdp-background-color: var(--daterly-color-hover);
+  --rdp-weekday-opacity: 1;
+  --rdp-selected-border: none;
+  margin: 0;
+  font-family: var(--daterly-font-family);
+  font-size: var(--daterly-font-size);
+  color: var(--daterly-color-text);
+}
+.daterly-calendar .rdp-month_grid {
+  border-spacing: 0;
+}
+.daterly-calendar .rdp-day {
+  padding: 0;
+}
+.daterly-calendar .rdp-day_button {
+  font-size: inherit;
+  font-family: inherit;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-radius 0.15s ease;
+}
+.daterly-calendar .rdp-caption_label {
+  text-transform: capitalize;
+  font-size: var(--daterly-font-size);
+  font-weight: 600;
+}
+.daterly-calendar .rdp-weekday {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--daterly-color-label);
+  text-transform: capitalize;
+}
+.daterly-calendar .rdp-chevron {
+  fill: var(--daterly-color-text);
+}
+.daterly-calendar .rdp-button_previous:hover:not(:disabled),
+.daterly-calendar .rdp-button_next:hover:not(:disabled) {
+  background-color: var(--daterly-color-hover);
+  border-radius: var(--daterly-radius);
+}
+.daterly-calendar
+  .rdp-day:not(.rdp-selected):not(.rdp-range_middle)
+  .rdp-day_button:hover:not(:disabled) {
+  background-color: var(--daterly-color-hover);
+}
+.daterly-calendar
+  .rdp-today:not(.rdp-outside):not(.rdp-selected):not(.rdp-range_middle)
+  .rdp-day_button {
+  background-color: var(--daterly-color-today-bg);
+  color: var(--daterly-color-accent);
+}
+.daterly-calendar .rdp-selected {
+  font-weight: inherit;
+  font-size: inherit;
+}
+.daterly-calendar .rdp-selected:not(.rdp-range_middle) .rdp-day_button {
+  background-color: var(--daterly-color-accent);
+  color: #fff;
+  border: none;
+}
+.daterly-calendar .rdp-range_middle .rdp-day_button {
+  border-radius: 0;
+  border: none;
+}
+.daterly-calendar .rdp-range_middle .rdp-day_button:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--daterly-color-accent) 20%,
+    transparent
+  );
+}
+.daterly__popover--s .daterly-calendar {
+  font-size: 12px;
+  --rdp-day-height: 30px;
+  --rdp-day-width: 30px;
+  --rdp-day_button-height: 26px;
+  --rdp-day_button-width: 26px;
+  --rdp-nav_button-height: 1.75rem;
+  --rdp-nav_button-width: 1.75rem;
+  --rdp-nav-height: 2rem;
+}
+.daterly__popover--m .daterly-calendar {
+  font-size: 14px;
+  --rdp-day-height: 38px;
+  --rdp-day-width: 38px;
+  --rdp-day_button-height: 32px;
+  --rdp-day_button-width: 32px;
+  --rdp-nav_button-height: 2rem;
+  --rdp-nav_button-width: 2rem;
+  --rdp-nav-height: 2.5rem;
+}
+.daterly__popover--with-time {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.daterly__popover--with-time > * {
+  width: 100%;
+  box-sizing: border-box;
+}
+.daterly__popover-body {
+  display: flex;
+  align-items: stretch;
+}
+.daterly__popover-calendar {
+  padding: 12px;
+}
+.daterly__time-separator {
+  width: 1px;
+  background: var(--daterly-color-border);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.daterly__popover-time {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+.daterly__time-row {
+  display: flex;
+  align-items: stretch;
+  border-top: 1px solid var(--daterly-color-border);
+}
+.daterly__time-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: 8px 4px 4px;
+  gap: 4px;
+}
+.daterly__time-label {
+  font-size: 12px;
+  color: var(--daterly-color-label);
+  line-height: 1;
+}
+.daterly__time-row .daterly__time-separator {
+  width: 1px;
+  align-self: stretch;
+  margin: 0;
+}
+.daterly__popover-footer {
+  padding: 8px 12px;
+  border-top: 1px solid var(--daterly-color-border);
+  display: flex;
+  justify-content: flex-end;
+}
+.daterly__popover-footer--time {
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-start;
+}
+.daterly__popover-footer--time .daterly__ok-btn {
+  margin-left: auto;
+}
+.daterly__time-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--daterly-font-family);
+}
+.daterly__time-field-label {
+  font-size: 13px;
+  color: var(--daterly-color-label);
+  line-height: 1;
+}
+.daterly__time-input {
+  box-sizing: border-box;
+  width: 90px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--daterly-color-border);
+  border-radius: var(--daterly-radius);
+  background: var(--daterly-color-bg);
+  font-family: var(--daterly-font-family);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--daterly-color-text);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.daterly__time-input:focus {
+  border-color: var(--daterly-color-border-focus);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--daterly-color-border-focus) 15%, transparent);
+}
+.daterly__time-input:disabled {
+  background: var(--daterly-color-bg-disabled);
+  color: var(--daterly-color-placeholder);
+  cursor: not-allowed;
+}
+.daterly__popover--time-input .daterly__popover-calendar {
+  padding: 12px;
+}
+.daterly__ok-btn {
+  padding: 4px 15px;
+  background: var(--daterly-color-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--daterly-radius);
+  cursor: pointer;
+  font-family: var(--daterly-font-family);
+  font-size: 14px;
+  line-height: 22px;
+}
+.daterly__ok-btn:hover {
+  opacity: 0.85;
+}
+.daterly-spinner {
+  display: inline-block;
+  width: var(--daterly-icon-size);
+  height: var(--daterly-icon-size);
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  animation: daterly-spin 0.65s linear infinite;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+@keyframes daterly-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.dp-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  border-radius: var(--daterly-radius);
+  font-family: var(--daterly-font-family);
+  font-weight: 600;
+  box-sizing: border-box;
+  padding: 0 var(--daterly-padding-h);
+  border: 0;
+  outline: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+.dp-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+.dp-btn:disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+.dp-btn--s {
+  height: 32px;
+  font-size: 14px;
+}
+.dp-btn--m {
+  height: 40px;
+  font-size: var(--daterly-font-size);
+}
+.dp-btn--primary {
+  background: var(--daterly-color-accent);
+  color: #fff;
+}
+.dp-btn--primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--daterly-color-accent) 85%, #000);
+}
+.dp-btn--secondary {
+  background: transparent;
+  color: var(--daterly-color-accent);
+  border: 1px solid var(--daterly-color-accent);
+}
+.dp-btn--secondary:hover:not(:disabled) {
+  background: color-mix(
+    in srgb,
+    var(--daterly-color-accent) 8%,
+    transparent
+  );
+}
+.dp-btn--loading {
+  color: transparent;
+}
+.dp-btn--loading .daterly-spinner {
+  position: absolute;
+  top: calc(50% - var(--daterly-icon-size) / 2);
+  left: calc(50% - var(--daterly-icon-size) / 2);
+  color: var(--daterly-color-accent);
+}
+.dp-btn--loading.dp-btn--primary .daterly-spinner {
+  color: #fff;
+}
+.daterly-rhf {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.daterly-rhf__error {
+  font-size: 12px;
+  color: var(--daterly-color-border-error);
+  font-family: var(--daterly-font-family);
+  line-height: 1;
+}
+.time-panel {
+  display: flex;
+}
+.time-panel__column {
+  height: 224px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  padding-block: 8px;
+}
+.time-panel__column::-webkit-scrollbar {
+  display: none;
+}
+.time-panel__item {
+  flex-shrink: 0;
+  height: 32px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--daterly-radius);
+  border: none;
+  background: none;
+  font-family: var(--daterly-font-family);
+  font-size: 14px;
+  color: var(--daterly-color-text);
+  padding: 0;
+}
+.time-panel__item:hover {
+  background: var(--daterly-color-hover);
+}
+.time-panel__item[data-selected] {
+  background: var(--daterly-color-accent);
+  color: #fff;
+}

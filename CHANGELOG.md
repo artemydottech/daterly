@@ -1,5 +1,15 @@
 # daterly
 
+## 1.1.0
+
+### Minor Changes
+
+- - feat: добавлен компонент `TimeInput` — альтернатива барабанному `TimePanel` с прямым вводом часов/минут/секунд.
+  - feat: новый проп `timePickerType: 'drum' | 'input'` в `DatePicker` и `DateRangePicker` для выбора варианта ввода времени.
+  - feat: расширен набор CSS-токенов `--datepicker-*` для кастомизации time-инпутов.
+  - fix: `RHFDatePicker` и `RHFDateRangePicker` корректно обрабатывают `null`/`undefined` из react-hook-form (значение больше не «залипает» после сброса формы).
+  - docs: обновлены страницы `datepicker` и `daterangepicker` с примерами `timePickerType`.
+
 ## 1.0.0
 
 ### Major Changes — ребрендинг

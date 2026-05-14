@@ -130,6 +130,23 @@ function commitTime(masked, showSeconds) {
   const s = showSeconds ? clamp(parseInt((_c = parts[2]) != null ? _c : "", 10), 59) : 0;
   return { h, m, s };
 }
+var SEGMENT_RANGES = {
+  h: [0, 2],
+  m: [3, 5],
+  s: [6, 8]
+};
+function getSegmentList(showSeconds) {
+  return showSeconds ? ["h", "m", "s"] : ["h", "m"];
+}
+function getSegmentAt(pos, showSeconds) {
+  if (pos <= 2) return "h";
+  if (pos <= 5 || !showSeconds) return "m";
+  return "s";
+}
+function selectSegment(input, seg) {
+  const [start, end] = SEGMENT_RANGES[seg];
+  input.setSelectionRange(start, end);
+}
 function TimeInput({ value, showSeconds, onChange, ariaLabel, disabled }) {
   var _a, _b, _c;
   const h = (_a = value == null ? void 0 : value.getHours()) != null ? _a : 0;
@@ -157,6 +174,37 @@ function TimeInput({ value, showSeconds, onChange, ariaLabel, disabled }) {
     setDraft(formatTime(h2, m2, s2, showSeconds));
     onChange(h2, m2, s2);
   }
+  function bumpSegment(seg, delta) {
+    const next = { h, m, s };
+    if (seg === "h") next.h = (h + delta + 24) % 24;
+    if (seg === "m") next.m = (m + delta + 60) % 60;
+    if (seg === "s") next.s = (s + delta + 60) % 60;
+    setDraft(formatTime(next.h, next.m, next.s, showSeconds));
+    onChange(next.h, next.m, next.s);
+  }
+  function handleKeyDown(e) {
+    var _a2;
+    const input = e.currentTarget;
+    const pos = (_a2 = input.selectionStart) != null ? _a2 : 0;
+    const segs = getSegmentList(showSeconds);
+    const seg = getSegmentAt(pos, showSeconds);
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      bumpSegment(seg, e.key === "ArrowUp" ? 1 : -1);
+      requestAnimationFrame(() => selectSegment(input, seg));
+      return;
+    }
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      e.preventDefault();
+      const idx = segs.indexOf(seg);
+      const targetIdx = e.key === "ArrowLeft" ? Math.max(0, idx - 1) : Math.min(segs.length - 1, idx + 1);
+      selectSegment(input, segs[targetIdx]);
+      return;
+    }
+    if (e.key.length === 1 && !/\d/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+    }
+  }
   return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
     "input",
     {
@@ -173,11 +221,7 @@ function TimeInput({ value, showSeconds, onChange, ariaLabel, disabled }) {
       },
       onChange: handleChange,
       onBlur: handleBlur,
-      onKeyDown: (e) => {
-        if (e.key.length === 1 && !/\d/.test(e.key) && !e.ctrlKey && !e.metaKey) {
-          e.preventDefault();
-        }
-      }
+      onKeyDown: handleKeyDown
     }
   );
 }

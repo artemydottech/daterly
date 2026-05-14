@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/experimental-ct-react'
 import { DatePicker } from '../../src/components/DatePicker'
-import { ControlledDatePicker } from './stories/ControlledDatePicker'
-import { CustomTriggerDatePicker } from './stories/CustomTriggerDatePicker'
+import { ControlledDatePicker } from './fixtures/ControlledDatePicker'
+import { CustomTriggerDatePicker } from './fixtures/CustomTriggerDatePicker'
 
 test.describe('DatePicker', () => {
   test('renders input', async ({ mount }) => {
@@ -84,7 +84,7 @@ test.describe('DatePicker', () => {
 
   test('shows datetime mask when showTime is set', async ({ mount }) => {
     const component = await mount(<DatePicker showTime={{ format: 'HH:mm' }} />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('textbox', { name: 'Выберите дату' })
     await input.click()
     await input.pressSequentially('150320241430')
     await expect(input).toHaveValue('15.03.2024 14:30')

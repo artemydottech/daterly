@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/experimental-ct-react'
 import { DateRangePicker } from '../../src/components/DateRangePicker'
-import { ControlledDateRangePicker } from './stories/ControlledDateRangePicker'
-import { RangeSelectionWrapper } from './stories/RangeSelectionWrapper'
+import { ControlledDateRangePicker } from './fixtures/ControlledDateRangePicker'
+import { RangeSelectionWrapper } from './fixtures/RangeSelectionWrapper'
 
 test.describe('DateRangePicker', () => {
   test('renders input', async ({ mount }) => {
