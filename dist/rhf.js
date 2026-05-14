@@ -1,7 +1,7 @@
 import {
   DatePicker,
   DateRangePicker
-} from "./chunk-MOUCUVZB.js";
+} from "./chunk-N5VGXVTW.js";
 
 // src/components/RHFDatePicker/RHFDatePicker.tsx
 import { Controller, useFormContext } from "react-hook-form";
@@ -15,7 +15,15 @@ function RHFDatePicker({ name, rules, ...props }) {
       name,
       rules,
       render: ({ field: { value, onChange }, fieldState: { error } }) => /* @__PURE__ */ jsxs("div", { className: "daterly-rhf", children: [
-        /* @__PURE__ */ jsx(DatePicker, { value, onChange, failed: Boolean(error), ...props }),
+        /* @__PURE__ */ jsx(
+          DatePicker,
+          {
+            value: value != null ? value : void 0,
+            onChange: (d) => onChange(d != null ? d : null),
+            failed: Boolean(error),
+            ...props
+          }
+        ),
         (error == null ? void 0 : error.message) && /* @__PURE__ */ jsx("span", { className: "daterly-rhf__error", children: error.message })
       ] })
     }

@@ -12,7 +12,12 @@ export function RHFDatePicker<T extends FieldValues>({ name, rules, ...props }: 
       rules={rules}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <div className="daterly-rhf">
-          <DatePicker value={value} onChange={onChange} failed={Boolean(error)} {...props} />
+          <DatePicker
+            value={value ?? undefined}
+            onChange={(d) => onChange(d ?? null)}
+            failed={Boolean(error)}
+            {...props}
+          />
           {error?.message && <span className="daterly-rhf__error">{error.message}</span>}
         </div>
       )}

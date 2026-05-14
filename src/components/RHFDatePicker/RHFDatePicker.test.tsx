@@ -65,6 +65,21 @@ describe('RHFDatePicker', () => {
     expect(submitted.date?.getDate()).toBe(15)
   })
 
+  it('does not revert to defaultValue when erasing all chars', async () => {
+    const user = userEvent.setup()
+    render(
+      <Wrapper defaultValues={{ date: new Date(2026, 4, 14, 0, 0, 0) }}>
+        <RHFDatePicker<FormValues> name="date" showTime={{ format: 'HH:mm' }} />
+      </Wrapper>,
+    )
+    const input = screen.getByRole('textbox') as HTMLInputElement
+    expect(input.value).toBe('14.05.2026 00:00')
+    input.focus()
+    input.setSelectionRange(input.value.length, input.value.length)
+    for (let i = 0; i < 12; i++) await user.keyboard('{Backspace}')
+    expect(input.value).toBe('')
+  })
+
   it('renders validation error message', async () => {
     const user = userEvent.setup()
     render(

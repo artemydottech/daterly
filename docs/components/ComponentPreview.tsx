@@ -18,6 +18,7 @@ type Props = {
   kind: Kind
   title?: ReactNode
   showTime?: boolean | { format: 'HH:mm' | 'HH:mm:ss' }
+  timePickerType?: 'input' | 'drum'
   locale?: LocaleKey
   dateFormat?: string
   size?: Size
@@ -42,6 +43,7 @@ export default function ComponentPreview({
   kind,
   title,
   showTime,
+  timePickerType,
   locale,
   dateFormat,
   size,
@@ -59,6 +61,7 @@ export default function ComponentPreview({
     dateFormat && `format=${dateFormat}`,
     size && `size=${size}`,
     showTime && (typeof showTime === 'object' ? showTime.format : 'HH:mm:ss'),
+    showTime && timePickerType && `timePicker=${timePickerType}`,
   ]
     .filter(Boolean)
     .join(' · ')
@@ -81,6 +84,7 @@ export default function ComponentPreview({
             value={date}
             onChange={setDate}
             showTime={showTime}
+            timePickerType={timePickerType}
             locale={localeObj}
             dateFormat={dateFormat}
             size={size}
@@ -92,6 +96,7 @@ export default function ComponentPreview({
             value={range}
             onChange={setRange}
             showTime={showTime}
+            timePickerType={timePickerType}
             locale={localeObj}
             dateFormat={dateFormat}
             size={size}

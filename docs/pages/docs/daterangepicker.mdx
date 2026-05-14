@@ -45,7 +45,27 @@ const [range, setRange] = useState<DateRange | undefined>()
 />
 ```
 
-В режиме `showTime` под календарём появляются два `TimePanel` — для начала и конца. Попап в этом режиме не закрывается автоматически — закрытие по кнопке OK.
+Под календарём появляются два поля выбора времени — для начала и для конца диапазона. Попап в этом режиме не закрывается автоматически — закрытие по кнопке OK.
+
+### Варианты TimePicker
+
+Проп `timePickerType` управляет видом выбора времени. По умолчанию — `'input'`.
+
+**`'input'`** — два компактных числовых поля рядом с кнопкой OK (Начало / Конец). Удобно для ввода с клавиатуры.
+
+<ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} timePickerType="input" label="TimePicker: input" />
+
+```tsx
+<DateRangePicker showTime={{ format: 'HH:mm' }} timePickerType="input" />
+```
+
+**`'drum'`** — два «барабана» под календарём, листаются кликом или колесом. Подходит для тач-устройств.
+
+<ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} timePickerType="drum" label="TimePicker: drum" />
+
+```tsx
+<DateRangePicker showTime={{ format: 'HH:mm' }} timePickerType="drum" />
+```
 
 ## Локаль
 

@@ -170,17 +170,19 @@ describe('DatePicker', () => {
     it('applies datetime mask when showTime is set', async () => {
       const user = userEvent.setup()
       render(<DatePicker showTime={{ format: 'HH:mm' }} />)
-      await user.type(screen.getByRole('textbox'), '150320241430')
-      expect(screen.getByRole('textbox')).toHaveValue('15.03.2024 14:30')
+      const input = screen.getByLabelText('Выберите дату') as HTMLInputElement
+      await user.type(input, '150320241430')
+      expect(input).toHaveValue('15.03.2024 14:30')
     })
 
-    it('updates value when a time slot is clicked in the TimePanel', async () => {
+    it('updates value when a time slot is clicked in the TimePanel (drum)', async () => {
       const user = userEvent.setup()
       const onChange = vi.fn()
       const { container } = render(
         <DatePicker
           defaultValue={new Date(2024, 2, 15, 10, 0, 0)}
           showTime={{ format: 'HH:mm' }}
+          timePickerType="drum"
           onChange={onChange}
         />,
       )
@@ -193,6 +195,25 @@ describe('DatePicker', () => {
       const date = onChange.mock.calls.at(-1)?.[0] as Date
       expect(date.getHours()).toBe(15)
       expect(date.getMinutes()).toBe(0)
+    })
+
+    it('updates value when time is typed into the time input', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DatePicker
+          defaultValue={new Date(2024, 2, 15, 10, 0, 0)}
+          showTime={{ format: 'HH:mm' }}
+          onChange={onChange}
+        />,
+      )
+      await user.click(screen.getByRole('textbox'))
+      const timeInput = screen.getByLabelText('Время') as HTMLInputElement
+      await user.tripleClick(timeInput)
+      await user.keyboard('1545')
+      const date = onChange.mock.calls.at(-1)?.[0] as Date
+      expect(date.getHours()).toBe(15)
+      expect(date.getMinutes()).toBe(45)
     })
 
     it('keeps popover open after time selection and closes on OK', async () => {

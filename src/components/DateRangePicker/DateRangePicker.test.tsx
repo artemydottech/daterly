@@ -1,7 +1,30 @@
 import { describe, it, expect, vi } from 'vitest'
+import { useState } from 'react'
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { DateRangePicker } from './DateRangePicker'
+import { DateRangePicker, type DateRange } from './DateRangePicker'
+
+function Controlled({
+  initial,
+  onChangeSpy,
+  showTime,
+}: {
+  initial: DateRange | undefined
+  onChangeSpy?: (r: DateRange | undefined) => void
+  showTime?: { format: 'HH:mm' | 'HH:mm:ss' }
+}) {
+  const [v, setV] = useState<DateRange | undefined>(initial)
+  return (
+    <DateRangePicker
+      value={v}
+      showTime={showTime}
+      onChange={(r) => {
+        setV(r)
+        onChangeSpy?.(r)
+      }}
+    />
+  )
+}
 
 describe('DateRangePicker', () => {
   it('renders without crashing', () => {
@@ -220,7 +243,7 @@ describe('DateRangePicker', () => {
       expect(screen.getByText('Конец')).toBeInTheDocument()
     })
 
-    it('updates the from-time when a slot is clicked', async () => {
+    it('updates the from-time when a slot is clicked (drum)', async () => {
       const user = userEvent.setup()
       const onChange = vi.fn()
       const { container } = render(
@@ -230,6 +253,7 @@ describe('DateRangePicker', () => {
             to: new Date(2024, 2, 10, 18, 0, 0),
           }}
           showTime={{ format: 'HH:mm' }}
+          timePickerType="drum"
           onChange={onChange}
         />,
       )
@@ -241,6 +265,73 @@ describe('DateRangePicker', () => {
       await user.click(hour15)
       const last = onChange.mock.calls.at(-1)?.[0]
       expect(last?.from?.getHours()).toBe(15)
+    })
+
+    it('updates the from-time when typed into the time input', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DateRangePicker
+          defaultValue={{
+            from: new Date(2024, 2, 1, 10, 0, 0),
+            to: new Date(2024, 2, 10, 18, 0, 0),
+          }}
+          showTime={{ format: 'HH:mm' }}
+          onChange={onChange}
+        />,
+      )
+      await user.click(screen.getByRole('textbox'))
+      const fromInput = screen.getByLabelText('Время начала') as HTMLInputElement
+      await user.tripleClick(fromInput)
+      await user.keyboard('1530')
+      const last = onChange.mock.calls.at(-1)?.[0]
+      expect(last?.from?.getHours()).toBe(15)
+      expect(last?.from?.getMinutes()).toBe(30)
+    })
+
+    it('does not reset to original when erasing the to-date in controlled mode', async () => {
+      const user = userEvent.setup()
+      render(
+        <Controlled
+          initial={{
+            from: new Date(2026, 4, 14),
+            to: new Date(2026, 4, 15),
+          }}
+        />,
+      )
+      const input = screen.getByRole('textbox') as HTMLInputElement
+      expect(input.value).toBe('14.05.2026 — 15.05.2026')
+      input.focus()
+      input.setSelectionRange(input.value.length, input.value.length)
+      for (let i = 0; i < 8; i++) await user.keyboard('{Backspace}')
+      expect(input.value).toBe('14.05.2026')
+      await user.keyboard('{Backspace}')
+      expect(input.value).toBe('14.05.202')
+      await user.keyboard('{Backspace}')
+      expect(input.value).toBe('14.05.20')
+    })
+
+    it('does not reset when erasing the to-date with showTime in controlled mode', async () => {
+      const user = userEvent.setup()
+      render(
+        <Controlled
+          initial={{
+            from: new Date(2026, 4, 14, 0, 0),
+            to: new Date(2026, 4, 15, 23, 59),
+          }}
+          showTime={{ format: 'HH:mm' }}
+        />,
+      )
+      const input = screen.getByLabelText('Выберите период') as HTMLInputElement
+      expect(input.value).toBe('14.05.2026 00:00 — 15.05.2026 23:59')
+      input.focus()
+      input.setSelectionRange(input.value.length, input.value.length)
+      // Erase all `to` digits (12 datetime digits)
+      for (let i = 0; i < 12; i++) await user.keyboard('{Backspace}')
+      expect(input.value).toBe('14.05.2026 00:00')
+      // Continue erasing into `from` time
+      await user.keyboard('{Backspace}')
+      expect(input.value).toBe('14.05.2026 00:0')
     })
 
     it('closes the popover on OK', async () => {

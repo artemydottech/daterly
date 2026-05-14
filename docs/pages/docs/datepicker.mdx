@@ -40,6 +40,28 @@ const [date, setDate] = useState<Date | undefined>()
 
 `showTime={true}` эквивалентно `{ format: 'HH:mm:ss' }`.
 
+### Варианты TimePicker
+
+Проп `timePickerType` управляет тем, как выглядит выбор времени в попапе. По умолчанию — `'input'`.
+
+**`'input'`** — компактные числовые поля рядом с кнопкой OK, в одну строку с календарём. Подходит, когда нужен быстрый ввод с клавиатуры.
+
+<ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} timePickerType="input" label="TimePicker: input" />
+
+```tsx
+<DatePicker showTime={{ format: 'HH:mm' }} timePickerType="input" />
+```
+
+**`'drum'`** — вертикальные «барабаны» под календарём, листать кликом или колесом. Подходит для тач-устройств и сценариев, где время важнее даты.
+
+<ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} timePickerType="drum" label="TimePicker: drum" />
+
+```tsx
+<DatePicker showTime={{ format: 'HH:mm' }} timePickerType="drum" />
+```
+
+В обоих режимах попап не закрывается автоматически — закрытие по кнопке OK.
+
 ## Ограничение диапазона
 
 ```tsx
@@ -149,6 +171,7 @@ import { enUS, de } from 'date-fns/locale'
 | `fromDate`      | `Date`                                         | —              | Минимально допустимая               |
 | `toDate`        | `Date`                                         | —              | Максимально допустимая              |
 | `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —              | Включить выбор времени              |
+| `timePickerType`| `'input' \| 'drum'`                            | `'input'`      | Внешний вид выбора времени          |
 | `noCalendar`    | `boolean`                                      | `false`        | Только инпут, без попапа            |
 | `size`          | `'s' \| 'm' \| 'l'`                            | `'m'`          | Размер                              |
 | `disabled`      | `boolean`                                      | `false`        | Отключено                           |

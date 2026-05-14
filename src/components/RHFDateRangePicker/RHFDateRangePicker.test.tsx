@@ -75,6 +75,32 @@ describe('RHFDateRangePicker', () => {
     expect(submitted.period?.to?.getDate()).toBe(20)
   })
 
+  it('does not revert to defaultValue when erasing chars across the separator', async () => {
+    const user = userEvent.setup()
+    render(
+      <Wrapper
+        defaultValues={{
+          period: {
+            from: new Date(2026, 4, 14, 0, 0, 0),
+            to: new Date(2026, 4, 14, 23, 59, 0),
+          },
+        }}
+      >
+        <RHFDateRangePicker<FormValues> name="period" showTime={{ format: 'HH:mm' }} />
+      </Wrapper>,
+    )
+    const input = screen.getByRole('textbox') as HTMLInputElement
+    expect(input.value).toBe('14.05.2026 00:00 — 14.05.2026 23:59')
+    input.focus()
+    input.setSelectionRange(input.value.length, input.value.length)
+    for (let i = 0; i < 12; i++) await user.keyboard('{Backspace}')
+    expect(input.value).toBe('14.05.2026 00:00')
+    await user.keyboard('{Backspace}')
+    expect(input.value).toBe('14.05.2026 00:0')
+    for (let i = 0; i < 11; i++) await user.keyboard('{Backspace}')
+    expect(input.value).toBe('')
+  })
+
   it('renders validation error message', async () => {
     const user = userEvent.setup()
     render(

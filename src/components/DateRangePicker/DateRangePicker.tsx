@@ -9,10 +9,14 @@ import {
 import { isValid, startOfDay } from 'date-fns';
 import { ru, type Locale } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
-import type { DatePickerShowTime } from '../DatePicker/DatePicker';
+import type {
+  DatePickerShowTime,
+  DatePickerTimePickerType,
+} from '../DatePicker/DatePicker';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { Calendar } from '../Calendar';
 import { TimePanel } from '../TimePanel';
+import { TimeInput } from '../TimeInput';
 import { CalendarIcon } from '../icons/CalendarIcon';
 import { Spinner } from '../icons/Spinner';
 import {
@@ -28,7 +32,7 @@ import { DEFAULT_DATE_FORMAT, resolveTimeFormat } from '../../utils/date-mask';
 import { buildFormatSchema } from '../../utils/format-schema';
 
 export type { DateRange };
-export type { DatePickerShowTime };
+export type { DatePickerShowTime, DatePickerTimePickerType };
 
 export type DateRangePickerSize = 's' | 'm' | 'l';
 export type DateRangePickerCalendarLayout = 'vertical' | 'horizontal';
@@ -46,6 +50,7 @@ export interface DateRangePickerProps {
   size?: DateRangePickerSize;
   calendarLayout?: DateRangePickerCalendarLayout;
   showTime?: DatePickerShowTime;
+  timePickerType?: DatePickerTimePickerType;
   icon?: ReactNode | false;
   iconPosition?: 'start' | 'end';
   className?: string;
@@ -66,6 +71,7 @@ export function DateRangePicker({
   size = 'm',
   calendarLayout = 'horizontal',
   showTime,
+  timePickerType = 'input',
   icon,
   iconPosition = 'end',
   className,
@@ -285,15 +291,9 @@ export function DateRangePicker({
     }
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const input = e.target;
-    const cursorPos = input.selectionStart ?? 0;
-    const raw = input.value;
-    const digits = raw.replace(/\D/g, '').slice(0, totalDigits);
+  function commitDigits(rawDigits: string) {
+    const digits = rawDigits.slice(0, totalDigits);
     const masked = applyRangeMask(digits, schema);
-    const digitsBeforeCursor = raw
-      .slice(0, cursorPos)
-      .replace(/\D/g, '').length;
 
     setInputValue(masked);
     setAnchorDate(undefined);
@@ -301,16 +301,14 @@ export function DateRangePicker({
 
     const fromDigits = digits.slice(0, maxDigits);
     const toDigits = digits.slice(maxDigits);
-    const parsedFrom =
-      fromDigits.length === maxDigits
-        ? parseDate(applyDateMask(fromDigits, schema), schema)
-        : undefined;
-    const parsedTo =
-      toDigits.length === maxDigits
-        ? parseDate(applyDateMask(toDigits, schema), schema)
-        : undefined;
     const fromComplete = fromDigits.length === maxDigits;
     const toComplete = toDigits.length === maxDigits;
+    const parsedFrom = fromComplete
+      ? parseDate(applyDateMask(fromDigits, schema), schema)
+      : undefined;
+    const parsedTo = toComplete
+      ? parseDate(applyDateMask(toDigits, schema), schema)
+      : undefined;
     setInputInvalid((fromComplete && !parsedFrom) || (toComplete && !parsedTo));
 
     if (!isControlled) {
@@ -319,9 +317,21 @@ export function DateRangePicker({
     }
     lastEmittedFromRef.current = parsedFrom;
     lastEmittedToRef.current = parsedTo;
-    onChange?.(
-      parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : undefined,
-    );
+    onChange?.({ from: parsedFrom, to: parsedTo });
+
+    return masked;
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const input = e.target;
+    const cursorPos = input.selectionStart ?? 0;
+    const raw = input.value;
+    const digits = raw.replace(/\D/g, '').slice(0, totalDigits);
+    const digitsBeforeCursor = raw
+      .slice(0, cursorPos)
+      .replace(/\D/g, '').length;
+
+    const masked = commitDigits(digits);
 
     requestAnimationFrame(() =>
       inputRef.current?.setSelectionRange(
@@ -334,69 +344,44 @@ export function DateRangePicker({
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     const input = e.currentTarget;
     const pos = input.selectionStart ?? 0;
+    const selectionEnd = input.selectionEnd ?? pos;
+    const hasSelection = selectionEnd > pos;
 
     if (e.key.length === 1 && !/\d/.test(e.key) && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
       return;
     }
+    if (hasSelection) return;
+    if (e.key !== 'Backspace' || pos === 0) return;
+
     const separatorChars = new Set<string>([' ', '—']);
     schema.separators.forEach((s) => {
       for (const ch of s.chars) separatorChars.add(ch);
     });
-    if (
-      e.key === 'Backspace' &&
-      pos > 0 &&
-      separatorChars.has(input.value[pos - 1])
-    ) {
-      e.preventDefault();
-      const val = input.value;
-      const charsToSkip =
-        val.slice(0, pos).match(/[\s—]+$/)?.[0].length ?? 1;
-      const newPos = pos - charsToSkip;
-      const masked = applyRangeMask(
-        (val.slice(0, newPos - 1) + val.slice(newPos)).replace(/\D/g, ''),
-        schema,
-      );
-      setInputValue(masked);
-      requestAnimationFrame(() =>
-        input.setSelectionRange(newPos - 1, newPos - 1),
-      );
-    }
+    if (!separatorChars.has(input.value[pos - 1])) return;
+
+    e.preventDefault();
+    const val = input.value;
+    const sepRun = val.slice(0, pos).match(/[^\d]+$/)?.[0] ?? '';
+    const runStart = pos - sepRun.length;
+    if (runStart === 0) return;
+
+    const nextDigits = (
+      val.slice(0, runStart - 1) + val.slice(pos)
+    ).replace(/\D/g, '');
+    const masked = commitDigits(nextDigits);
+    const digitsBeforeCursor = val
+      .slice(0, runStart - 1)
+      .replace(/\D/g, '').length;
+    const newCursor = getRangeCursorPos(masked, digitsBeforeCursor);
+    requestAnimationFrame(() => input.setSelectionRange(newCursor, newCursor));
   }
 
   function handlePaste(e: React.ClipboardEvent<HTMLInputElement>) {
     e.preventDefault();
     const text = e.clipboardData.getData('text');
     const digits = text.replace(/\D/g, '').slice(0, totalDigits);
-    const masked = applyRangeMask(digits, schema);
-    setInputValue(masked);
-    setAnchorDate(undefined);
-    setHoveredDate(undefined);
-
-    const parsedFrom =
-      digits.length >= maxDigits
-        ? parseDate(applyDateMask(digits.slice(0, maxDigits), schema), schema)
-        : undefined;
-    const parsedTo =
-      digits.length >= totalDigits
-        ? parseDate(
-            applyDateMask(digits.slice(maxDigits, totalDigits), schema),
-            schema,
-          )
-        : undefined;
-    setInputInvalid(
-      (digits.length >= maxDigits && !parsedFrom) ||
-        (digits.length >= totalDigits && !parsedTo),
-    );
-    if (!isControlled) {
-      setInternalFrom(parsedFrom);
-      setInternalTo(parsedTo);
-    }
-    lastEmittedFromRef.current = parsedFrom;
-    lastEmittedToRef.current = parsedTo;
-    onChange?.(
-      parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : undefined,
-    );
+    const masked = commitDigits(digits);
 
     requestAnimationFrame(() =>
       inputRef.current?.setSelectionRange(masked.length, masked.length),
@@ -476,6 +461,7 @@ export function DateRangePicker({
             calendarLayout === 'horizontal' &&
               'daterly__popover--horizontal',
             showTime && 'daterly__popover--with-time',
+            showTime && `daterly__popover--time-${timePickerType}`,
           ]
             .filter(Boolean)
             .join(' ')}
@@ -483,8 +469,66 @@ export function DateRangePicker({
           aria-label="Выберите период"
         >
           {showTime ? (
-            <>
-              <div className="daterly__popover-body">
+            timePickerType === 'drum' ? (
+              <>
+                <div className="daterly__popover-body">
+                  <div className="daterly__popover-calendar">
+                    <Calendar
+                      mode="range"
+                      selected={calendarSelected}
+                      month={month}
+                      onMonthChange={setMonth}
+                      onSelect={() => {}}
+                      onDayClick={handleDayClick}
+                      onDayMouseEnter={handleDayMouseEnter}
+                      onDayMouseLeave={() => setHoveredDate(undefined)}
+                      startMonth={fromDay}
+                      endMonth={toDay}
+                      disabled={disabledDays.length ? disabledDays : undefined}
+                      numberOfMonths={2}
+                      locale={locale}
+                    />
+                  </div>
+                </div>
+                <div className="daterly__time-row">
+                  <div className="daterly__time-col">
+                    <span className="daterly__time-label">Начало</span>
+                    <TimePanel
+                      value={
+                        confirmedFrom && isValid(confirmedFrom)
+                          ? confirmedFrom
+                          : draftFromTime
+                      }
+                      showSeconds={showSeconds}
+                      onChange={handleFromTimeChange}
+                    />
+                  </div>
+                  <div className="daterly__time-separator" />
+                  <div className="daterly__time-col">
+                    <span className="daterly__time-label">Конец</span>
+                    <TimePanel
+                      value={
+                        confirmedTo && isValid(confirmedTo)
+                          ? confirmedTo
+                          : draftToTime
+                      }
+                      showSeconds={showSeconds}
+                      onChange={handleToTimeChange}
+                    />
+                  </div>
+                </div>
+                <div className="daterly__popover-footer">
+                  <button
+                    className="daterly__ok-btn"
+                    type="button"
+                    onClick={close}
+                  >
+                    OK
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
                 <div className="daterly__popover-calendar">
                   <Calendar
                     mode="range"
@@ -502,44 +546,43 @@ export function DateRangePicker({
                     locale={locale}
                   />
                 </div>
-              </div>
-              <div className="daterly__time-row">
-                <div className="daterly__time-col">
-                  <span className="daterly__time-label">Начало</span>
-                  <TimePanel
-                    value={
-                      confirmedFrom && isValid(confirmedFrom)
-                        ? confirmedFrom
-                        : draftFromTime
-                    }
-                    showSeconds={showSeconds}
-                    onChange={handleFromTimeChange}
-                  />
+                <div className="daterly__popover-footer daterly__popover-footer--time">
+                  <label className="daterly__time-field">
+                    <span className="daterly__time-field-label">Начало</span>
+                    <TimeInput
+                      value={
+                        confirmedFrom && isValid(confirmedFrom)
+                          ? confirmedFrom
+                          : draftFromTime
+                      }
+                      showSeconds={showSeconds}
+                      onChange={handleFromTimeChange}
+                      ariaLabel="Время начала"
+                    />
+                  </label>
+                  <label className="daterly__time-field">
+                    <span className="daterly__time-field-label">Конец</span>
+                    <TimeInput
+                      value={
+                        confirmedTo && isValid(confirmedTo)
+                          ? confirmedTo
+                          : draftToTime
+                      }
+                      showSeconds={showSeconds}
+                      onChange={handleToTimeChange}
+                      ariaLabel="Время конца"
+                    />
+                  </label>
+                  <button
+                    className="daterly__ok-btn"
+                    type="button"
+                    onClick={close}
+                  >
+                    OK
+                  </button>
                 </div>
-                <div className="daterly__time-separator" />
-                <div className="daterly__time-col">
-                  <span className="daterly__time-label">Конец</span>
-                  <TimePanel
-                    value={
-                      confirmedTo && isValid(confirmedTo)
-                        ? confirmedTo
-                        : draftToTime
-                    }
-                    showSeconds={showSeconds}
-                    onChange={handleToTimeChange}
-                  />
-                </div>
-              </div>
-              <div className="daterly__popover-footer">
-                <button
-                  className="daterly__ok-btn"
-                  type="button"
-                  onClick={close}
-                >
-                  OK
-                </button>
-              </div>
-            </>
+              </>
+            )
           ) : (
             <Calendar
               mode="range"

@@ -366,6 +366,12 @@
   padding: 0;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+}
+
+.daterly__popover--with-time > * {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .daterly__popover-body {
@@ -422,6 +428,62 @@
   border-top: 1px solid var(--daterly-color-border);
   display: flex;
   justify-content: flex-end;
+}
+
+.daterly__popover-footer--time {
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+.daterly__popover-footer--time .daterly__ok-btn {
+  margin-left: auto;
+}
+
+.daterly__time-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--daterly-font-family);
+}
+
+.daterly__time-field-label {
+  font-size: 13px;
+  color: var(--daterly-color-label);
+  line-height: 1;
+}
+
+.daterly__time-input {
+  box-sizing: border-box;
+  width: 90px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--daterly-color-border);
+  border-radius: var(--daterly-radius);
+  background: var(--daterly-color-bg);
+  font-family: var(--daterly-font-family);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--daterly-color-text);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.daterly__time-input:focus {
+  border-color: var(--daterly-color-border-focus);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--daterly-color-border-focus) 15%, transparent);
+}
+
+.daterly__time-input:disabled {
+  background: var(--daterly-color-bg-disabled);
+  color: var(--daterly-color-placeholder);
+  cursor: not-allowed;
+}
+
+.daterly__popover--time-input .daterly__popover-calendar {
+  padding: 12px;
 }
 
 .daterly__ok-btn {

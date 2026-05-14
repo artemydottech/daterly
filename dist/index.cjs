@@ -41,7 +41,7 @@ function Calendar({ className, ...props }) {
 }
 
 // src/components/DatePicker/DatePicker.tsx
-var import_react3 = require("react");
+var import_react4 = require("react");
 var import_date_fns2 = require("date-fns");
 var import_locale = require("date-fns/locale");
 
@@ -99,20 +99,102 @@ function TimePanel({ value, showSeconds, onChange }) {
   ] });
 }
 
-// src/components/icons/CalendarIcon.tsx
+// src/components/TimeInput/TimeInput.tsx
+var import_react3 = require("react");
 var import_jsx_runtime3 = require("react/jsx-runtime");
+function pad22(n) {
+  return String(n).padStart(2, "0");
+}
+function formatTime(h, m, s, showSeconds) {
+  return showSeconds ? `${pad22(h)}:${pad22(m)}:${pad22(s)}` : `${pad22(h)}:${pad22(m)}`;
+}
+function clamp(value, max) {
+  if (Number.isNaN(value)) return 0;
+  if (value < 0) return 0;
+  if (value > max) return max;
+  return value;
+}
+function applyTimeMask(digits, showSeconds) {
+  const max = showSeconds ? 6 : 4;
+  const d = digits.slice(0, max);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}:${d.slice(2)}`;
+  return `${d.slice(0, 2)}:${d.slice(2, 4)}:${d.slice(4)}`;
+}
+function commitTime(masked, showSeconds) {
+  var _a, _b, _c;
+  const parts = masked.split(":");
+  const h = clamp(parseInt((_a = parts[0]) != null ? _a : "", 10), 23);
+  const m = clamp(parseInt((_b = parts[1]) != null ? _b : "", 10), 59);
+  const s = showSeconds ? clamp(parseInt((_c = parts[2]) != null ? _c : "", 10), 59) : 0;
+  return { h, m, s };
+}
+function TimeInput({ value, showSeconds, onChange, ariaLabel, disabled }) {
+  var _a, _b, _c;
+  const h = (_a = value == null ? void 0 : value.getHours()) != null ? _a : 0;
+  const m = (_b = value == null ? void 0 : value.getMinutes()) != null ? _b : 0;
+  const s = (_c = value == null ? void 0 : value.getSeconds()) != null ? _c : 0;
+  const display = formatTime(h, m, s, showSeconds);
+  const [draft, setDraft] = (0, import_react3.useState)(display);
+  const focusedRef = (0, import_react3.useRef)(false);
+  (0, import_react3.useEffect)(() => {
+    if (!focusedRef.current) setDraft(display);
+  }, [display]);
+  const maxDigits = showSeconds ? 6 : 4;
+  function handleChange(e) {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, maxDigits);
+    const masked = applyTimeMask(digits, showSeconds);
+    setDraft(masked);
+    if (digits.length === maxDigits) {
+      const { h: h2, m: m2, s: s2 } = commitTime(masked, showSeconds);
+      onChange(h2, m2, s2);
+    }
+  }
+  function handleBlur() {
+    focusedRef.current = false;
+    const { h: h2, m: m2, s: s2 } = commitTime(draft, showSeconds);
+    setDraft(formatTime(h2, m2, s2, showSeconds));
+    onChange(h2, m2, s2);
+  }
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+    "input",
+    {
+      type: "text",
+      inputMode: "numeric",
+      className: "daterly__time-input",
+      value: draft,
+      placeholder: showSeconds ? "--:--:--" : "--:--",
+      disabled,
+      "aria-label": ariaLabel != null ? ariaLabel : "\u0412\u0440\u0435\u043C\u044F",
+      onFocus: (e) => {
+        focusedRef.current = true;
+        e.target.select();
+      },
+      onChange: handleChange,
+      onBlur: handleBlur,
+      onKeyDown: (e) => {
+        if (e.key.length === 1 && !/\d/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+        }
+      }
+    }
+  );
+}
+
+// src/components/icons/CalendarIcon.tsx
+var import_jsx_runtime4 = require("react/jsx-runtime");
 function CalendarIcon() {
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("rect", { x: "1", y: "2.5", width: "14", height: "12", rx: "1.5", stroke: "currentColor", strokeWidth: "1.5" }),
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M1 6.5H15", stroke: "currentColor", strokeWidth: "1.5" }),
-    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M5 1V4M11 1V4", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round" })
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("rect", { x: "1", y: "2.5", width: "14", height: "12", rx: "1.5", stroke: "currentColor", strokeWidth: "1.5" }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("path", { d: "M1 6.5H15", stroke: "currentColor", strokeWidth: "1.5" }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("path", { d: "M5 1V4M11 1V4", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round" })
   ] });
 }
 
 // src/components/icons/Spinner.tsx
-var import_jsx_runtime4 = require("react/jsx-runtime");
+var import_jsx_runtime5 = require("react/jsx-runtime");
 function Spinner() {
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "daterly-spinner", "aria-hidden": "true" });
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "daterly-spinner", "aria-hidden": "true" });
 }
 
 // src/utils/date-mask.ts
@@ -270,7 +352,7 @@ function parseDateTime(masked, schema) {
 }
 
 // src/components/DatePicker/DatePicker.tsx
-var import_jsx_runtime5 = require("react/jsx-runtime");
+var import_jsx_runtime6 = require("react/jsx-runtime");
 function DatePicker({
   value,
   defaultValue,
@@ -285,6 +367,7 @@ function DatePicker({
   size = "m",
   noCalendar = false,
   showTime,
+  timePickerType = "input",
   icon,
   iconPosition = "end",
   className,
@@ -294,7 +377,7 @@ function DatePicker({
   dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT
 }) {
   const timeFormat = resolveTimeFormat(showTime);
-  const schema = (0, import_react3.useMemo)(
+  const schema = (0, import_react4.useMemo)(
     () => buildFormatSchema(dateFormatProp, timeFormat, locale),
     [dateFormatProp, timeFormat, locale]
   );
@@ -308,38 +391,42 @@ function DatePicker({
     ...fromDay ? [{ before: fromDay }] : [],
     ...toDay ? [{ after: toDay }] : []
   ];
-  const resolvedIcon = loading ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Spinner, {}) : icon === false ? null : icon != null ? icon : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(CalendarIcon, {});
+  const resolvedIcon = loading ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Spinner, {}) : icon === false ? null : icon != null ? icon : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(CalendarIcon, {});
   const isControlled = value !== void 0;
-  const [internalDate, setInternalDate] = (0, import_react3.useState)(defaultValue);
-  const [open, setOpen] = (0, import_react3.useState)(false);
-  const [focused, setFocused] = (0, import_react3.useState)(false);
-  const [inputValue, setInputValue] = (0, import_react3.useState)(() => {
+  const [internalDate, setInternalDate] = (0, import_react4.useState)(
+    defaultValue
+  );
+  const [open, setOpen] = (0, import_react4.useState)(false);
+  const [focused, setFocused] = (0, import_react4.useState)(false);
+  const [inputValue, setInputValue] = (0, import_react4.useState)(() => {
     const initial = value != null ? value : defaultValue;
     return initial && (0, import_date_fns2.isValid)(initial) ? (0, import_date_fns2.format)(initial, dateFormat) : "";
   });
-  const [inputInvalid, setInputInvalid] = (0, import_react3.useState)(false);
-  const inputRef = (0, import_react3.useRef)(null);
-  const containerRef = (0, import_react3.useRef)(null);
-  const lastValidRef = (0, import_react3.useRef)(inputValue);
-  const lastEmittedRef = (0, import_react3.useRef)(value !== void 0 ? value : defaultValue);
-  const wasControlledRef = (0, import_react3.useRef)(value !== void 0);
+  const [inputInvalid, setInputInvalid] = (0, import_react4.useState)(false);
+  const inputRef = (0, import_react4.useRef)(null);
+  const containerRef = (0, import_react4.useRef)(null);
+  const lastValidRef = (0, import_react4.useRef)(inputValue);
+  const lastEmittedRef = (0, import_react4.useRef)(
+    value !== void 0 ? value : defaultValue
+  );
+  const wasControlledRef = (0, import_react4.useRef)(value !== void 0);
   const selected = isControlled ? value : internalDate;
-  const [month, setMonth] = (0, import_react3.useState)(
+  const [month, setMonth] = (0, import_react4.useState)(
     () => selected && (0, import_date_fns2.isValid)(selected) ? selected : /* @__PURE__ */ new Date()
   );
-  const [draftTime, setDraftTime] = (0, import_react3.useState)(() => /* @__PURE__ */ new Date());
+  const [draftTime, setDraftTime] = (0, import_react4.useState)(() => /* @__PURE__ */ new Date());
   const filled = inputValue.length > 0;
-  (0, import_react3.useEffect)(() => {
+  (0, import_react4.useEffect)(() => {
     if (open && (!selected || !(0, import_date_fns2.isValid)(selected))) {
       setDraftTime(/* @__PURE__ */ new Date());
     }
   }, [open]);
-  (0, import_react3.useEffect)(() => {
+  (0, import_react4.useEffect)(() => {
     if (selected && (0, import_date_fns2.isValid)(selected)) setMonth(selected);
   }, [selected == null ? void 0 : selected.getFullYear(), selected == null ? void 0 : selected.getMonth()]);
-  const close = (0, import_react3.useCallback)(() => setOpen(false), []);
+  const close = (0, import_react4.useCallback)(() => setOpen(false), []);
   useClickOutside(containerRef, close);
-  (0, import_react3.useEffect)(() => {
+  (0, import_react4.useEffect)(() => {
     var _a, _b, _c;
     if (value !== void 0) wasControlledRef.current = true;
     const lastTime = (_b = (_a = lastEmittedRef.current) == null ? void 0 : _a.getTime()) != null ? _b : null;
@@ -399,10 +486,12 @@ function DatePicker({
     const newCursorPos = getCursorPos(masked, digitsBeforeCursor);
     setInputValue(masked);
     commit(masked);
-    requestAnimationFrame(() => {
-      var _a2;
-      return (_a2 = inputRef.current) == null ? void 0 : _a2.setSelectionRange(newCursorPos, newCursorPos);
-    });
+    requestAnimationFrame(
+      () => {
+        var _a2;
+        return (_a2 = inputRef.current) == null ? void 0 : _a2.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    );
   }
   function handleKeyDown(e) {
     var _a;
@@ -419,7 +508,10 @@ function DatePicker({
     if (e.key === "Backspace" && pos > 0 && separatorChars.has(input.value[pos - 1])) {
       e.preventDefault();
       const val = input.value;
-      const masked = applyMask((val.slice(0, pos - 2) + val.slice(pos)).replace(/\D/g, ""), schema);
+      const masked = applyMask(
+        (val.slice(0, pos - 2) + val.slice(pos)).replace(/\D/g, ""),
+        schema
+      );
       setInputValue(masked);
       commit(masked);
       requestAnimationFrame(() => input.setSelectionRange(pos - 2, pos - 2));
@@ -427,13 +519,18 @@ function DatePicker({
   }
   function handlePaste(e) {
     e.preventDefault();
-    const masked = applyMask(e.clipboardData.getData("text").replace(/\D/g, ""), schema);
+    const masked = applyMask(
+      e.clipboardData.getData("text").replace(/\D/g, ""),
+      schema
+    );
     setInputValue(masked);
     commit(masked);
-    requestAnimationFrame(() => {
-      var _a;
-      return (_a = inputRef.current) == null ? void 0 : _a.setSelectionRange(masked.length, masked.length);
-    });
+    requestAnimationFrame(
+      () => {
+        var _a;
+        return (_a = inputRef.current) == null ? void 0 : _a.setSelectionRange(masked.length, masked.length);
+      }
+    );
   }
   function handleCalendarSelect(date) {
     if (!date || !(0, import_date_fns2.isValid)(date)) {
@@ -460,11 +557,18 @@ function DatePicker({
   }
   function handleTimeChange(h, m, s) {
     const base = selected && (0, import_date_fns2.isValid)(selected) ? selected : draftTime;
-    const newDate = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, m, s);
+    const newDate = new Date(
+      base.getFullYear(),
+      base.getMonth(),
+      base.getDate(),
+      h,
+      m,
+      s
+    );
     applyValid((0, import_date_fns2.format)(newDate, dateFormat), newDate);
   }
   const interactive = !disabled && !loading;
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
     "div",
     {
       ref: containerRef,
@@ -474,10 +578,13 @@ function DatePicker({
       "data-failed": failed || inputInvalid || void 0,
       "data-disabled": !interactive || void 0,
       children: [
-        customTrigger ? customTrigger(inputValue, () => interactive && setOpen((prev) => !prev)) : /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+        customTrigger ? customTrigger(inputValue, () => interactive && setOpen((prev) => !prev)) : /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
           "div",
           {
-            className: ["daterly__field", renderInput ? "daterly__field--custom" : ""].filter(Boolean).join(" "),
+            className: [
+              "daterly__field",
+              renderInput ? "daterly__field--custom" : ""
+            ].filter(Boolean).join(" "),
             "data-icon-start": resolvedIcon && iconPosition === "start" ? true : void 0,
             "data-icon-end": resolvedIcon && iconPosition === "end" ? true : void 0,
             onClick: () => {
@@ -485,8 +592,8 @@ function DatePicker({
               return interactive && ((_a = inputRef.current) == null ? void 0 : _a.focus());
             },
             children: [
-              resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "daterly__icon daterly__icon--start", children: resolvedIcon }),
-              label && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "daterly__label", children: label }),
+              resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__icon daterly__icon--start", children: resolvedIcon }),
+              label && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__label", children: label }),
               (() => {
                 const inputProps = {
                   ref: inputRef,
@@ -511,25 +618,26 @@ function DatePicker({
                 };
                 if (renderInput) return renderInput(inputProps);
                 const { ref, ...rest } = inputProps;
-                return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("input", { ref, ...rest });
+                return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("input", { ref, ...rest });
               })(),
-              resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "daterly__icon daterly__icon--end", children: resolvedIcon })
+              resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__icon daterly__icon--end", children: resolvedIcon })
             ]
           }
         ),
-        !noCalendar && open && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+        !noCalendar && open && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
           "div",
           {
             className: [
               "daterly__popover",
               `daterly__popover--${size}`,
-              timeFormat && "daterly__popover--with-time"
+              timeFormat && "daterly__popover--with-time",
+              timeFormat && `daterly__popover--time-${timePickerType}`
             ].filter(Boolean).join(" "),
             role: "dialog",
             "aria-label": "\u041A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u044C",
-            children: timeFormat ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "daterly__popover-body", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "daterly__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            children: timeFormat ? timePickerType === "drum" ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "daterly__popover-body", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
                   Calendar,
                   {
                     mode: "single",
@@ -544,8 +652,8 @@ function DatePicker({
                     locale
                   }
                 ) }),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "daterly__time-separator" }),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "daterly__popover-time", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__time-separator" }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__popover-time", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
                   TimePanel,
                   {
                     value: selected && (0, import_date_fns2.isValid)(selected) ? selected : draftTime,
@@ -554,7 +662,7 @@ function DatePicker({
                   }
                 ) })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "daterly__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
                 "button",
                 {
                   className: "daterly__ok-btn",
@@ -563,7 +671,45 @@ function DatePicker({
                   children: "OK"
                 }
               ) })
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                Calendar,
+                {
+                  mode: "single",
+                  selected,
+                  month,
+                  onMonthChange: setMonth,
+                  onSelect: handleCalendarSelect,
+                  startMonth: fromDay,
+                  endMonth: toDay,
+                  disabled: disabledDays.length ? disabledDays : void 0,
+                  navLayout: "around",
+                  locale
+                }
+              ) }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "daterly__popover-footer daterly__popover-footer--time", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("label", { className: "daterly__time-field", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__time-field-label", children: "\u0412\u0440\u0435\u043C\u044F" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                    TimeInput,
+                    {
+                      value: selected && (0, import_date_fns2.isValid)(selected) ? selected : draftTime,
+                      showSeconds,
+                      onChange: handleTimeChange
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                  "button",
+                  {
+                    className: "daterly__ok-btn",
+                    type: "button",
+                    onClick: () => setOpen(false),
+                    children: "OK"
+                  }
+                )
+              ] })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
               Calendar,
               {
                 mode: "single",
@@ -586,7 +732,7 @@ function DatePicker({
 }
 
 // src/components/DateRangePicker/DateRangePicker.tsx
-var import_react4 = require("react");
+var import_react5 = require("react");
 var import_date_fns4 = require("date-fns");
 var import_locale2 = require("date-fns/locale");
 
@@ -636,7 +782,7 @@ function resolveShowSeconds(showTime) {
 }
 
 // src/components/DateRangePicker/DateRangePicker.tsx
-var import_jsx_runtime6 = require("react/jsx-runtime");
+var import_jsx_runtime7 = require("react/jsx-runtime");
 function DateRangePicker({
   value,
   defaultValue,
@@ -650,6 +796,7 @@ function DateRangePicker({
   size = "m",
   calendarLayout = "horizontal",
   showTime,
+  timePickerType = "input",
   icon,
   iconPosition = "end",
   className,
@@ -657,13 +804,13 @@ function DateRangePicker({
   dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT
 }) {
   const timeFormat = resolveTimeFormat(showTime);
-  const schema = (0, import_react4.useMemo)(
+  const schema = (0, import_react5.useMemo)(
     () => buildFormatSchema(dateFormatProp, timeFormat, locale),
     [dateFormatProp, timeFormat, locale]
   );
   const maxDigits = schema.digitCount;
   const totalDigits = maxDigits * 2;
-  const resolvedIcon = loading ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Spinner, {}) : icon === false ? null : icon != null ? icon : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(CalendarIcon, {});
+  const resolvedIcon = loading ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Spinner, {}) : icon === false ? null : icon != null ? icon : /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(CalendarIcon, {});
   const isControlled = value !== void 0;
   const showSeconds = resolveShowSeconds(showTime);
   const fromDay = fromConstraint ? (0, import_date_fns4.startOfDay)(fromConstraint) : void 0;
@@ -672,56 +819,56 @@ function DateRangePicker({
     ...fromDay ? [{ before: fromDay }] : [],
     ...toDay ? [{ after: toDay }] : []
   ];
-  const [internalFrom, setInternalFrom] = (0, import_react4.useState)(
+  const [internalFrom, setInternalFrom] = (0, import_react5.useState)(
     defaultValue == null ? void 0 : defaultValue.from
   );
-  const [internalTo, setInternalTo] = (0, import_react4.useState)(
+  const [internalTo, setInternalTo] = (0, import_react5.useState)(
     defaultValue == null ? void 0 : defaultValue.to
   );
-  const [inputValue, setInputValue] = (0, import_react4.useState)(() => {
+  const [inputValue, setInputValue] = (0, import_react5.useState)(() => {
     const initial = value != null ? value : defaultValue;
     return formatRange(initial == null ? void 0 : initial.from, initial == null ? void 0 : initial.to, schema);
   });
-  const [inputInvalid, setInputInvalid] = (0, import_react4.useState)(false);
-  const [open, setOpen] = (0, import_react4.useState)(false);
-  const [focused, setFocused] = (0, import_react4.useState)(false);
-  const [anchorDate, setAnchorDate] = (0, import_react4.useState)(void 0);
-  const [hoveredDate, setHoveredDate] = (0, import_react4.useState)(void 0);
-  const inputRef = (0, import_react4.useRef)(null);
-  const containerRef = (0, import_react4.useRef)(null);
-  const lastEmittedFromRef = (0, import_react4.useRef)(
+  const [inputInvalid, setInputInvalid] = (0, import_react5.useState)(false);
+  const [open, setOpen] = (0, import_react5.useState)(false);
+  const [focused, setFocused] = (0, import_react5.useState)(false);
+  const [anchorDate, setAnchorDate] = (0, import_react5.useState)(void 0);
+  const [hoveredDate, setHoveredDate] = (0, import_react5.useState)(void 0);
+  const inputRef = (0, import_react5.useRef)(null);
+  const containerRef = (0, import_react5.useRef)(null);
+  const lastEmittedFromRef = (0, import_react5.useRef)(
     value !== void 0 ? value == null ? void 0 : value.from : defaultValue == null ? void 0 : defaultValue.from
   );
-  const lastEmittedToRef = (0, import_react4.useRef)(
+  const lastEmittedToRef = (0, import_react5.useRef)(
     value !== void 0 ? value == null ? void 0 : value.to : defaultValue == null ? void 0 : defaultValue.to
   );
-  const wasControlledRef = (0, import_react4.useRef)(value !== void 0);
+  const wasControlledRef = (0, import_react5.useRef)(value !== void 0);
   const confirmedFrom = isControlled ? value == null ? void 0 : value.from : internalFrom;
   const confirmedTo = isControlled ? value == null ? void 0 : value.to : internalTo;
   const filled = inputValue.length > 0;
-  const [draftFromTime, setDraftFromTime] = (0, import_react4.useState)(() => /* @__PURE__ */ new Date());
-  const [draftToTime, setDraftToTime] = (0, import_react4.useState)(() => /* @__PURE__ */ new Date());
-  (0, import_react4.useEffect)(() => {
+  const [draftFromTime, setDraftFromTime] = (0, import_react5.useState)(() => /* @__PURE__ */ new Date());
+  const [draftToTime, setDraftToTime] = (0, import_react5.useState)(() => /* @__PURE__ */ new Date());
+  (0, import_react5.useEffect)(() => {
     if (!open) return;
     const now = /* @__PURE__ */ new Date();
     if (!confirmedFrom || !(0, import_date_fns4.isValid)(confirmedFrom)) setDraftFromTime(now);
     if (!confirmedTo || !(0, import_date_fns4.isValid)(confirmedTo)) setDraftToTime(now);
   }, [open]);
-  const [month, setMonth] = (0, import_react4.useState)(() => {
+  const [month, setMonth] = (0, import_react5.useState)(() => {
     const init = confirmedFrom != null ? confirmedFrom : confirmedTo;
     return init && (0, import_date_fns4.isValid)(init) ? init : /* @__PURE__ */ new Date();
   });
   const monthAnchor = confirmedFrom != null ? confirmedFrom : confirmedTo;
-  (0, import_react4.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     if (monthAnchor && (0, import_date_fns4.isValid)(monthAnchor)) setMonth(monthAnchor);
   }, [monthAnchor == null ? void 0 : monthAnchor.getFullYear(), monthAnchor == null ? void 0 : monthAnchor.getMonth()]);
-  const close = (0, import_react4.useCallback)(() => {
+  const close = (0, import_react5.useCallback)(() => {
     setOpen(false);
     setAnchorDate(void 0);
     setHoveredDate(void 0);
   }, []);
   useClickOutside(containerRef, close);
-  (0, import_react4.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     var _a, _b, _c, _d, _e, _f;
     if (value !== void 0) wasControlledRef.current = true;
     const newFrom = value == null ? void 0 : value.from;
@@ -834,23 +981,18 @@ function DateRangePicker({
       setDraftToTime(newDate);
     }
   }
-  function handleChange(e) {
-    var _a;
-    const input = e.target;
-    const cursorPos = (_a = input.selectionStart) != null ? _a : 0;
-    const raw = input.value;
-    const digits = raw.replace(/\D/g, "").slice(0, totalDigits);
+  function commitDigits(rawDigits) {
+    const digits = rawDigits.slice(0, totalDigits);
     const masked = applyRangeMask(digits, schema);
-    const digitsBeforeCursor = raw.slice(0, cursorPos).replace(/\D/g, "").length;
     setInputValue(masked);
     setAnchorDate(void 0);
     setHoveredDate(void 0);
     const fromDigits = digits.slice(0, maxDigits);
     const toDigits = digits.slice(maxDigits);
-    const parsedFrom = fromDigits.length === maxDigits ? parseDate(applyDateMask(fromDigits, schema), schema) : void 0;
-    const parsedTo = toDigits.length === maxDigits ? parseDate(applyDateMask(toDigits, schema), schema) : void 0;
     const fromComplete = fromDigits.length === maxDigits;
     const toComplete = toDigits.length === maxDigits;
+    const parsedFrom = fromComplete ? parseDate(applyDateMask(fromDigits, schema), schema) : void 0;
+    const parsedTo = toComplete ? parseDate(applyDateMask(toDigits, schema), schema) : void 0;
     setInputInvalid(fromComplete && !parsedFrom || toComplete && !parsedTo);
     if (!isControlled) {
       setInternalFrom(parsedFrom);
@@ -858,9 +1000,17 @@ function DateRangePicker({
     }
     lastEmittedFromRef.current = parsedFrom;
     lastEmittedToRef.current = parsedTo;
-    onChange == null ? void 0 : onChange(
-      parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : void 0
-    );
+    onChange == null ? void 0 : onChange({ from: parsedFrom, to: parsedTo });
+    return masked;
+  }
+  function handleChange(e) {
+    var _a;
+    const input = e.target;
+    const cursorPos = (_a = input.selectionStart) != null ? _a : 0;
+    const raw = input.value;
+    const digits = raw.replace(/\D/g, "").slice(0, totalDigits);
+    const digitsBeforeCursor = raw.slice(0, cursorPos).replace(/\D/g, "").length;
+    const masked = commitDigits(digits);
     requestAnimationFrame(
       () => {
         var _a2;
@@ -872,57 +1022,38 @@ function DateRangePicker({
     );
   }
   function handleKeyDown(e) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     const input = e.currentTarget;
     const pos = (_a = input.selectionStart) != null ? _a : 0;
+    const selectionEnd = (_b = input.selectionEnd) != null ? _b : pos;
+    const hasSelection = selectionEnd > pos;
     if (e.key.length === 1 && !/\d/.test(e.key) && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
       return;
     }
+    if (hasSelection) return;
+    if (e.key !== "Backspace" || pos === 0) return;
     const separatorChars = /* @__PURE__ */ new Set([" ", "\u2014"]);
     schema.separators.forEach((s) => {
       for (const ch of s.chars) separatorChars.add(ch);
     });
-    if (e.key === "Backspace" && pos > 0 && separatorChars.has(input.value[pos - 1])) {
-      e.preventDefault();
-      const val = input.value;
-      const charsToSkip = (_c = (_b = val.slice(0, pos).match(/[\s—]+$/)) == null ? void 0 : _b[0].length) != null ? _c : 1;
-      const newPos = pos - charsToSkip;
-      const masked = applyRangeMask(
-        (val.slice(0, newPos - 1) + val.slice(newPos)).replace(/\D/g, ""),
-        schema
-      );
-      setInputValue(masked);
-      requestAnimationFrame(
-        () => input.setSelectionRange(newPos - 1, newPos - 1)
-      );
-    }
+    if (!separatorChars.has(input.value[pos - 1])) return;
+    e.preventDefault();
+    const val = input.value;
+    const sepRun = (_d = (_c = val.slice(0, pos).match(/[^\d]+$/)) == null ? void 0 : _c[0]) != null ? _d : "";
+    const runStart = pos - sepRun.length;
+    if (runStart === 0) return;
+    const nextDigits = (val.slice(0, runStart - 1) + val.slice(pos)).replace(/\D/g, "");
+    const masked = commitDigits(nextDigits);
+    const digitsBeforeCursor = val.slice(0, runStart - 1).replace(/\D/g, "").length;
+    const newCursor = getRangeCursorPos(masked, digitsBeforeCursor);
+    requestAnimationFrame(() => input.setSelectionRange(newCursor, newCursor));
   }
   function handlePaste(e) {
     e.preventDefault();
     const text = e.clipboardData.getData("text");
     const digits = text.replace(/\D/g, "").slice(0, totalDigits);
-    const masked = applyRangeMask(digits, schema);
-    setInputValue(masked);
-    setAnchorDate(void 0);
-    setHoveredDate(void 0);
-    const parsedFrom = digits.length >= maxDigits ? parseDate(applyDateMask(digits.slice(0, maxDigits), schema), schema) : void 0;
-    const parsedTo = digits.length >= totalDigits ? parseDate(
-      applyDateMask(digits.slice(maxDigits, totalDigits), schema),
-      schema
-    ) : void 0;
-    setInputInvalid(
-      digits.length >= maxDigits && !parsedFrom || digits.length >= totalDigits && !parsedTo
-    );
-    if (!isControlled) {
-      setInternalFrom(parsedFrom);
-      setInternalTo(parsedTo);
-    }
-    lastEmittedFromRef.current = parsedFrom;
-    lastEmittedToRef.current = parsedTo;
-    onChange == null ? void 0 : onChange(
-      parsedFrom || parsedTo ? { from: parsedFrom, to: parsedTo } : void 0
-    );
+    const masked = commitDigits(digits);
     requestAnimationFrame(
       () => {
         var _a;
@@ -932,7 +1063,7 @@ function DateRangePicker({
   }
   const placeholder = label && !focused && !filled ? void 0 : `${schema.placeholder} \u2014 ${schema.placeholder}`;
   const interactive = !disabled && !loading;
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
     "div",
     {
       ref: containerRef,
@@ -947,7 +1078,7 @@ function DateRangePicker({
       "data-failed": failed || inputInvalid || void 0,
       "data-disabled": !interactive || void 0,
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
           "div",
           {
             className: "daterly__field",
@@ -958,9 +1089,9 @@ function DateRangePicker({
               return interactive && ((_a = inputRef.current) == null ? void 0 : _a.focus());
             },
             children: [
-              resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__icon daterly__icon--start", children: resolvedIcon }),
-              label && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__label", children: label }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+              resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__icon daterly__icon--start", children: resolvedIcon }),
+              label && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__label", children: label }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                 "input",
                 {
                   ref: inputRef,
@@ -984,23 +1115,24 @@ function DateRangePicker({
                   "aria-invalid": inputInvalid || void 0
                 }
               ),
-              resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__icon daterly__icon--end", children: resolvedIcon })
+              resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__icon daterly__icon--end", children: resolvedIcon })
             ]
           }
         ),
-        open && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+        open && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
           "div",
           {
             className: [
               "daterly__popover",
               `daterly__popover--${size}`,
               calendarLayout === "horizontal" && "daterly__popover--horizontal",
-              showTime && "daterly__popover--with-time"
+              showTime && "daterly__popover--with-time",
+              showTime && `daterly__popover--time-${timePickerType}`
             ].filter(Boolean).join(" "),
             role: "dialog",
             "aria-label": "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0438\u043E\u0434",
-            children: showTime ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__popover-body", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            children: showTime ? timePickerType === "drum" ? /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__popover-body", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                 Calendar,
                 {
                   mode: "range",
@@ -1019,10 +1151,10 @@ function DateRangePicker({
                   locale
                 }
               ) }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "daterly__time-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "daterly__time-col", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__time-label", children: "\u041D\u0430\u0447\u0430\u043B\u043E" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "daterly__time-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "daterly__time-col", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__time-label", children: "\u041D\u0430\u0447\u0430\u043B\u043E" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                     TimePanel,
                     {
                       value: confirmedFrom && (0, import_date_fns4.isValid)(confirmedFrom) ? confirmedFrom : draftFromTime,
@@ -1031,10 +1163,10 @@ function DateRangePicker({
                     }
                   )
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__time-separator" }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "daterly__time-col", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly__time-label", children: "\u041A\u043E\u043D\u0435\u0446" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__time-separator" }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "daterly__time-col", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__time-label", children: "\u041A\u043E\u043D\u0435\u0446" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                     TimePanel,
                     {
                       value: confirmedTo && (0, import_date_fns4.isValid)(confirmedTo) ? confirmedTo : draftToTime,
@@ -1044,7 +1176,7 @@ function DateRangePicker({
                   )
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "daterly__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                 "button",
                 {
                   className: "daterly__ok-btn",
@@ -1053,7 +1185,62 @@ function DateRangePicker({
                   children: "OK"
                 }
               ) })
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+                Calendar,
+                {
+                  mode: "range",
+                  selected: calendarSelected,
+                  month,
+                  onMonthChange: setMonth,
+                  onSelect: () => {
+                  },
+                  onDayClick: handleDayClick,
+                  onDayMouseEnter: handleDayMouseEnter,
+                  onDayMouseLeave: () => setHoveredDate(void 0),
+                  startMonth: fromDay,
+                  endMonth: toDay,
+                  disabled: disabledDays.length ? disabledDays : void 0,
+                  numberOfMonths: 2,
+                  locale
+                }
+              ) }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "daterly__popover-footer daterly__popover-footer--time", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "daterly__time-field", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__time-field-label", children: "\u041D\u0430\u0447\u0430\u043B\u043E" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+                    TimeInput,
+                    {
+                      value: confirmedFrom && (0, import_date_fns4.isValid)(confirmedFrom) ? confirmedFrom : draftFromTime,
+                      showSeconds,
+                      onChange: handleFromTimeChange,
+                      ariaLabel: "\u0412\u0440\u0435\u043C\u044F \u043D\u0430\u0447\u0430\u043B\u0430"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "daterly__time-field", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__time-field-label", children: "\u041A\u043E\u043D\u0435\u0446" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+                    TimeInput,
+                    {
+                      value: confirmedTo && (0, import_date_fns4.isValid)(confirmedTo) ? confirmedTo : draftToTime,
+                      showSeconds,
+                      onChange: handleToTimeChange,
+                      ariaLabel: "\u0412\u0440\u0435\u043C\u044F \u043A\u043E\u043D\u0446\u0430"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+                  "button",
+                  {
+                    className: "daterly__ok-btn",
+                    type: "button",
+                    onClick: close,
+                    children: "OK"
+                  }
+                )
+              ] })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
               Calendar,
               {
                 mode: "range",
@@ -1079,7 +1266,7 @@ function DateRangePicker({
 }
 
 // src/components/Button/Button.tsx
-var import_jsx_runtime7 = require("react/jsx-runtime");
+var import_jsx_runtime8 = require("react/jsx-runtime");
 function Button({
   variant = "primary",
   size = "m",
@@ -1096,9 +1283,9 @@ function Button({
     loading && "dp-btn--loading",
     className
   ].filter(Boolean).join(" ");
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("button", { ...rest, className: classes, disabled: disabled || loading, children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("button", { ...rest, className: classes, disabled: disabled || loading, children: [
     children,
-    loading && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(Spinner, {})
+    loading && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Spinner, {})
   ] });
 }
 // Annotate the CommonJS export names for ESM import in node:
