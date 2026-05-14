@@ -20,12 +20,12 @@ export default withNextra({
     config.resolve = config.resolve || {}
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      '@artemy-tech/rtdp/styles': path.join(
+      'daterly/styles': path.join(
         libRoot,
         'src/styles/variables.css',
       ),
-      '@artemy-tech/rtdp/rhf': path.join(libRoot, 'dist/rhf.js'),
-      '@artemy-tech/rtdp$': path.join(libRoot, 'dist/index.js'),
+      'daterly/rhf': path.join(libRoot, 'dist/rhf.js'),
+      daterly$: path.join(libRoot, 'dist/index.js'),
     }
     return config
   },

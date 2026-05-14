@@ -51,7 +51,7 @@
     "test:e2e": "playwright test --config=playwright-ct.config.ts",
     "changeset": "changeset",
     "cs:version": "changeset version",
-    "release": "tsup && changeset publish",
+    "release": "tsup && changeset publish --no-git-tag && git tag v$npm_package_version",
     "prepare": "husky"
   },
   "dependencies": {
