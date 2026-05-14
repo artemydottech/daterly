@@ -272,7 +272,7 @@ export function DatePicker({
   return (
     <div
       ref={containerRef}
-      className={['rtdp', `rtdp--${size}`, className].filter(Boolean).join(' ')}
+      className={['daterly', `daterly--${size}`, className].filter(Boolean).join(' ')}
       data-focused={focused || open || undefined}
       data-filled={filled || undefined}
       data-failed={failed || inputInvalid || undefined}
@@ -282,21 +282,21 @@ export function DatePicker({
         ? customTrigger(inputValue, () => interactive && setOpen(prev => !prev))
         : (
           <div
-            className={['rtdp__field', renderInput ? 'rtdp__field--custom' : ''].filter(Boolean).join(' ')}
+            className={['daterly__field', renderInput ? 'daterly__field--custom' : ''].filter(Boolean).join(' ')}
             data-icon-start={resolvedIcon && iconPosition === 'start' ? true : undefined}
             data-icon-end={resolvedIcon && iconPosition === 'end' ? true : undefined}
             onClick={() => interactive && inputRef.current?.focus()}
           >
             {resolvedIcon && iconPosition === 'start' && (
-              <span className="rtdp__icon rtdp__icon--start">{resolvedIcon}</span>
+              <span className="daterly__icon daterly__icon--start">{resolvedIcon}</span>
             )}
-            {label && <span className="rtdp__label">{label}</span>}
+            {label && <span className="daterly__label">{label}</span>}
             {(() => {
               const inputProps: DatePickerInputProps = {
                 ref: inputRef,
                 type: 'text',
                 inputMode: 'numeric',
-                className: 'rtdp__input',
+                className: 'daterly__input',
                 value: inputValue,
                 placeholder: label && !focused ? undefined : defaultPlaceholder,
                 disabled: !interactive,
@@ -315,7 +315,7 @@ export function DatePicker({
               return <input ref={ref as React.RefObject<HTMLInputElement>} {...rest} />
             })()}
             {resolvedIcon && iconPosition === 'end' && (
-              <span className="rtdp__icon rtdp__icon--end">{resolvedIcon}</span>
+              <span className="daterly__icon daterly__icon--end">{resolvedIcon}</span>
             )}
           </div>
         )
@@ -323,17 +323,17 @@ export function DatePicker({
       {!noCalendar && open && (
         <div
           className={[
-            'rtdp__popover',
-            `rtdp__popover--${size}`,
-            timeFormat && 'rtdp__popover--with-time',
+            'daterly__popover',
+            `daterly__popover--${size}`,
+            timeFormat && 'daterly__popover--with-time',
           ].filter(Boolean).join(' ')}
           role="dialog"
           aria-label="Календарь"
         >
           {timeFormat ? (
             <>
-              <div className="rtdp__popover-body">
-                <div className="rtdp__popover-calendar">
+              <div className="daterly__popover-body">
+                <div className="daterly__popover-calendar">
                   <Calendar
                     mode="single"
                     selected={selected}
@@ -347,8 +347,8 @@ export function DatePicker({
                     locale={locale}
                   />
                 </div>
-                <div className="rtdp__time-separator" />
-                <div className="rtdp__popover-time">
+                <div className="daterly__time-separator" />
+                <div className="daterly__popover-time">
                   <TimePanel
                     value={selected && isValid(selected) ? selected : draftTime}
                     showSeconds={showSeconds}
@@ -356,9 +356,9 @@ export function DatePicker({
                   />
                 </div>
               </div>
-              <div className="rtdp__popover-footer">
+              <div className="daterly__popover-footer">
                 <button
-                  className="rtdp__ok-btn"
+                  className="daterly__ok-btn"
                   type="button"
                   onClick={() => setOpen(false)}
                 >

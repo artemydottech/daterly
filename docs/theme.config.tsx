@@ -1,7 +1,7 @@
 import type { DocsThemeConfig } from 'nextra-theme-docs';
 import { useRouter } from 'next/router';
 
-const SITE_URL = 'https://artemydottech.github.io/rtdp';
+const SITE_URL = 'https://artemydottech.github.io/daterly';
 const SITE_DESCRIPTION =
   'React DatePicker с маской ввода, локалями date-fns, диапазонами, временем и опциональной интеграцией с react-hook-form.';
 
@@ -35,21 +35,21 @@ const config: DocsThemeConfig = {
         <path d="M15 15.5h2" />
         <path d="M17 13.5v4" strokeWidth="2.4" />
       </svg>
-      rtdp
+      daterly
     </span>
   ),
   project: {
-    link: 'https://github.com/artemydottech/rtdp',
+    link: 'https://github.com/artemydottech/daterly',
   },
   chat: {
-    link: 'https://www.npmjs.com/package/@artemy-tech/rtdp',
+    link: 'https://www.npmjs.com/package/daterly',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
         <path d="M0 0v24h24V0H0zm19.2 19.2h-2.4v-12h-4.8v12H4.8V4.8h14.4v14.4z" />
       </svg>
     ),
   },
-  docsRepositoryBase: 'https://github.com/artemydottech/rtdp/tree/main/docs',
+  docsRepositoryBase: 'https://github.com/artemydottech/daterly/tree/main/docs',
   footer: {
     content: (
       <span>
@@ -87,7 +87,7 @@ const config: DocsThemeConfig = {
         <meta name="description" content={SITE_DESCRIPTION} />
         <meta
           name="keywords"
-          content="react, rtdp, date picker, rtdp-range, date range, react-hook-form, rhf, date-fns, маска ввода, календарь, ru, ru-RU, typescript"
+          content="react, daterly, date picker, daterly-range, date range, react-hook-form, rhf, date-fns, маска ввода, календарь, ru, ru-RU, typescript"
         />
         <meta name="author" content="artemydottech" />
         <meta name="theme-color" content="#0a0a14" />
@@ -95,8 +95,8 @@ const config: DocsThemeConfig = {
 
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ru_RU" />
-        <meta property="og:site_name" content="rtdp" />
-        <meta property="og:title" content="rtdp" />
+        <meta property="og:site_name" content="daterly" />
+        <meta property="og:title" content="daterly" />
         <meta property="og:description" content={SITE_DESCRIPTION} />
         <meta property="og:url" content={url} />
         <meta property="og:image" content={ogImage} />
@@ -104,7 +104,7 @@ const config: DocsThemeConfig = {
         <meta property="og:image:height" content="630" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="rtdp" />
+        <meta name="twitter:title" content="daterly" />
         <meta name="twitter:description" content={SITE_DESCRIPTION} />
         <meta name="twitter:image" content={ogImage} />
       </>

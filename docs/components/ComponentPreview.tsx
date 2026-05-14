@@ -6,7 +6,7 @@ import {
   DateRangePicker,
   Calendar,
   type DateRange,
-} from '@artemy-tech/rtdp'
+} from 'daterly'
 import styles from './ComponentPreview.module.css'
 
 type Kind = 'date' | 'range' | 'calendar'

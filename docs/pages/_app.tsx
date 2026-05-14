@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { ThemeProvider } from 'next-themes'
-import '@artemy-tech/rtdp/styles'
+import 'daterly/styles'
 import '../styles/global.css'
 import '../styles/nextra-overrides.css'
 

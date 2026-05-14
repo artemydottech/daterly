@@ -7,7 +7,7 @@ export type CalendarProps = DayPickerProps & {
 export function Calendar({ className, ...props }: CalendarProps) {
   return (
     <DayPicker
-      className={['rtdp-calendar', className].filter(Boolean).join(' ')}
+      className={['daterly-calendar', className].filter(Boolean).join(' ')}
       {...props}
     />
   )

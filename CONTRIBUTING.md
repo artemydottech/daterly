@@ -11,8 +11,8 @@ English version below ↓
 ### Подготовка окружения
 
 ```bash
-git clone https://github.com/artemydottech/rtdp.git
-cd rtdp
+git clone https://github.com/artemydottech/daterly.git
+cd daterly
 npm install
 ```
 
@@ -59,8 +59,8 @@ Thank you for your interest in contributing! Bug reports, suggestions, and pull 
 ### Setup
 
 ```bash
-git clone https://github.com/artemydottech/rtdp.git
-cd rtdp
+git clone https://github.com/artemydottech/daterly.git
+cd daterly
 npm install
 ```
 

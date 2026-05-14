@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm, FormProvider, type SubmitHandler } from 'react-hook-form';
-import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/rtdp/rhf';
+import { RHFDatePicker, RHFDateRangePicker } from 'daterly/rhf';
 import { ArrowRight } from 'lucide-react';
 import CodeHighlight from './CodeHighlight';
 import styles from './Landing.module.css';
@@ -15,7 +15,7 @@ const CODE_SNIPPET = `import { useForm, FormProvider } from 'react-hook-form'
 import {
   RHFDatePicker,
   RHFDateRangePicker,
-} from '@artemy-tech/rtdp/rhf'
+} from 'daterly/rhf'
 
 const methods = useForm()
 
@@ -51,7 +51,7 @@ export default function FormExample() {
       <div className={styles.formHeader}>
         <h2>В реальной форме</h2>
         <p>
-          Через <code>rtdp/rhf</code> — типобезопасный{' '}
+          Через <code>daterly/rhf</code> — типобезопасный{' '}
           <code>name</code>, валидация, defaultValues, control из{' '}
           <code>useForm</code>.
         </p>

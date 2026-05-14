@@ -413,9 +413,9 @@ export function DateRangePicker({
     <div
       ref={containerRef}
       className={[
-        'rtdp',
-        'rtdp-range',
-        `rtdp--${size}`,
+        'daterly',
+        'daterly-range',
+        `daterly--${size}`,
         className,
       ]
         .filter(Boolean)
@@ -426,7 +426,7 @@ export function DateRangePicker({
       data-disabled={!interactive || undefined}
     >
       <div
-        className="rtdp__field"
+        className="daterly__field"
         data-icon-start={
           resolvedIcon && iconPosition === 'start' ? true : undefined
         }
@@ -436,16 +436,16 @@ export function DateRangePicker({
         onClick={() => interactive && inputRef.current?.focus()}
       >
         {resolvedIcon && iconPosition === 'start' && (
-          <span className="rtdp__icon rtdp__icon--start">
+          <span className="daterly__icon daterly__icon--start">
             {resolvedIcon}
           </span>
         )}
-        {label && <span className="rtdp__label">{label}</span>}
+        {label && <span className="daterly__label">{label}</span>}
         <input
           ref={inputRef}
           type="text"
           inputMode="numeric"
-          className="rtdp__input"
+          className="daterly__input"
           value={inputValue}
           placeholder={placeholder}
           disabled={!interactive}
@@ -463,7 +463,7 @@ export function DateRangePicker({
           aria-invalid={inputInvalid || undefined}
         />
         {resolvedIcon && iconPosition === 'end' && (
-          <span className="rtdp__icon rtdp__icon--end">
+          <span className="daterly__icon daterly__icon--end">
             {resolvedIcon}
           </span>
         )}
@@ -471,11 +471,11 @@ export function DateRangePicker({
       {open && (
         <div
           className={[
-            'rtdp__popover',
-            `rtdp__popover--${size}`,
+            'daterly__popover',
+            `daterly__popover--${size}`,
             calendarLayout === 'horizontal' &&
-              'rtdp__popover--horizontal',
-            showTime && 'rtdp__popover--with-time',
+              'daterly__popover--horizontal',
+            showTime && 'daterly__popover--with-time',
           ]
             .filter(Boolean)
             .join(' ')}
@@ -484,8 +484,8 @@ export function DateRangePicker({
         >
           {showTime ? (
             <>
-              <div className="rtdp__popover-body">
-                <div className="rtdp__popover-calendar">
+              <div className="daterly__popover-body">
+                <div className="daterly__popover-calendar">
                   <Calendar
                     mode="range"
                     selected={calendarSelected}
@@ -503,9 +503,9 @@ export function DateRangePicker({
                   />
                 </div>
               </div>
-              <div className="rtdp__time-row">
-                <div className="rtdp__time-col">
-                  <span className="rtdp__time-label">Начало</span>
+              <div className="daterly__time-row">
+                <div className="daterly__time-col">
+                  <span className="daterly__time-label">Начало</span>
                   <TimePanel
                     value={
                       confirmedFrom && isValid(confirmedFrom)
@@ -516,9 +516,9 @@ export function DateRangePicker({
                     onChange={handleFromTimeChange}
                   />
                 </div>
-                <div className="rtdp__time-separator" />
-                <div className="rtdp__time-col">
-                  <span className="rtdp__time-label">Конец</span>
+                <div className="daterly__time-separator" />
+                <div className="daterly__time-col">
+                  <span className="daterly__time-label">Конец</span>
                   <TimePanel
                     value={
                       confirmedTo && isValid(confirmedTo)
@@ -530,9 +530,9 @@ export function DateRangePicker({
                   />
                 </div>
               </div>
-              <div className="rtdp__popover-footer">
+              <div className="daterly__popover-footer">
                 <button
-                  className="rtdp__ok-btn"
+                  className="daterly__ok-btn"
                   type="button"
                   onClick={close}
                 >

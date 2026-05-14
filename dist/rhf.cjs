@@ -53,7 +53,7 @@ function Calendar({ className, ...props }) {
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     import_react_day_picker.DayPicker,
     {
-      className: ["rtdp-calendar", className].filter(Boolean).join(" "),
+      className: ["daterly-calendar", className].filter(Boolean).join(" "),
       ...props
     }
   );
@@ -113,7 +113,7 @@ function CalendarIcon() {
 // src/components/icons/Spinner.tsx
 var import_jsx_runtime4 = require("react/jsx-runtime");
 function Spinner() {
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "rtdp-spinner", "aria-hidden": "true" });
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { className: "daterly-spinner", "aria-hidden": "true" });
 }
 
 // src/utils/date-mask.ts
@@ -469,7 +469,7 @@ function DatePicker({
     "div",
     {
       ref: containerRef,
-      className: ["rtdp", `rtdp--${size}`, className].filter(Boolean).join(" "),
+      className: ["daterly", `daterly--${size}`, className].filter(Boolean).join(" "),
       "data-focused": focused || open || void 0,
       "data-filled": filled || void 0,
       "data-failed": failed || inputInvalid || void 0,
@@ -478,7 +478,7 @@ function DatePicker({
         customTrigger ? customTrigger(inputValue, () => interactive && setOpen((prev) => !prev)) : /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
           "div",
           {
-            className: ["rtdp__field", renderInput ? "rtdp__field--custom" : ""].filter(Boolean).join(" "),
+            className: ["daterly__field", renderInput ? "daterly__field--custom" : ""].filter(Boolean).join(" "),
             "data-icon-start": resolvedIcon && iconPosition === "start" ? true : void 0,
             "data-icon-end": resolvedIcon && iconPosition === "end" ? true : void 0,
             onClick: () => {
@@ -486,14 +486,14 @@ function DatePicker({
               return interactive && ((_a = inputRef.current) == null ? void 0 : _a.focus());
             },
             children: [
-              resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "rtdp__icon rtdp__icon--start", children: resolvedIcon }),
-              label && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "rtdp__label", children: label }),
+              resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "daterly__icon daterly__icon--start", children: resolvedIcon }),
+              label && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "daterly__label", children: label }),
               (() => {
                 const inputProps = {
                   ref: inputRef,
                   type: "text",
                   inputMode: "numeric",
-                  className: "rtdp__input",
+                  className: "daterly__input",
                   value: inputValue,
                   placeholder: label && !focused ? void 0 : defaultPlaceholder,
                   disabled: !interactive,
@@ -514,7 +514,7 @@ function DatePicker({
                 const { ref, ...rest } = inputProps;
                 return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("input", { ref, ...rest });
               })(),
-              resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "rtdp__icon rtdp__icon--end", children: resolvedIcon })
+              resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "daterly__icon daterly__icon--end", children: resolvedIcon })
             ]
           }
         ),
@@ -522,15 +522,15 @@ function DatePicker({
           "div",
           {
             className: [
-              "rtdp__popover",
-              `rtdp__popover--${size}`,
-              timeFormat && "rtdp__popover--with-time"
+              "daterly__popover",
+              `daterly__popover--${size}`,
+              timeFormat && "daterly__popover--with-time"
             ].filter(Boolean).join(" "),
             role: "dialog",
             "aria-label": "\u041A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u044C",
             children: timeFormat ? /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "rtdp__popover-body", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "rtdp__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "daterly__popover-body", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "daterly__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                   Calendar,
                   {
                     mode: "single",
@@ -545,8 +545,8 @@ function DatePicker({
                     locale
                   }
                 ) }),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "rtdp__time-separator" }),
-                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "rtdp__popover-time", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "daterly__time-separator" }),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "daterly__popover-time", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                   TimePanel,
                   {
                     value: selected && (0, import_date_fns2.isValid)(selected) ? selected : draftTime,
@@ -555,10 +555,10 @@ function DatePicker({
                   }
                 ) })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "rtdp__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "daterly__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                 "button",
                 {
-                  className: "rtdp__ok-btn",
+                  className: "daterly__ok-btn",
                   type: "button",
                   onClick: () => setOpen(false),
                   children: "OK"
@@ -596,9 +596,9 @@ function RHFDatePicker({ name, rules, ...props }) {
       control,
       name,
       rules,
-      render: ({ field: { value, onChange }, fieldState: { error } }) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "rtdp-rhf", children: [
+      render: ({ field: { value, onChange }, fieldState: { error } }) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "daterly-rhf", children: [
         /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(DatePicker, { value, onChange, failed: Boolean(error), ...props }),
-        (error == null ? void 0 : error.message) && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "rtdp-rhf__error", children: error.message })
+        (error == null ? void 0 : error.message) && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "daterly-rhf__error", children: error.message })
       ] })
     }
   );
@@ -959,9 +959,9 @@ function DateRangePicker({
     {
       ref: containerRef,
       className: [
-        "rtdp",
-        "rtdp-range",
-        `rtdp--${size}`,
+        "daterly",
+        "daterly-range",
+        `daterly--${size}`,
         className
       ].filter(Boolean).join(" "),
       "data-focused": focused || open || void 0,
@@ -972,7 +972,7 @@ function DateRangePicker({
         /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
           "div",
           {
-            className: "rtdp__field",
+            className: "daterly__field",
             "data-icon-start": resolvedIcon && iconPosition === "start" ? true : void 0,
             "data-icon-end": resolvedIcon && iconPosition === "end" ? true : void 0,
             onClick: () => {
@@ -980,15 +980,15 @@ function DateRangePicker({
               return interactive && ((_a = inputRef.current) == null ? void 0 : _a.focus());
             },
             children: [
-              resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "rtdp__icon rtdp__icon--start", children: resolvedIcon }),
-              label && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "rtdp__label", children: label }),
+              resolvedIcon && iconPosition === "start" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__icon daterly__icon--start", children: resolvedIcon }),
+              label && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__label", children: label }),
               /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                 "input",
                 {
                   ref: inputRef,
                   type: "text",
                   inputMode: "numeric",
-                  className: "rtdp__input",
+                  className: "daterly__input",
                   value: inputValue,
                   placeholder,
                   disabled: !interactive,
@@ -1006,7 +1006,7 @@ function DateRangePicker({
                   "aria-invalid": inputInvalid || void 0
                 }
               ),
-              resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "rtdp__icon rtdp__icon--end", children: resolvedIcon })
+              resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__icon daterly__icon--end", children: resolvedIcon })
             ]
           }
         ),
@@ -1014,15 +1014,15 @@ function DateRangePicker({
           "div",
           {
             className: [
-              "rtdp__popover",
-              `rtdp__popover--${size}`,
-              calendarLayout === "horizontal" && "rtdp__popover--horizontal",
-              showTime && "rtdp__popover--with-time"
+              "daterly__popover",
+              `daterly__popover--${size}`,
+              calendarLayout === "horizontal" && "daterly__popover--horizontal",
+              showTime && "daterly__popover--with-time"
             ].filter(Boolean).join(" "),
             role: "dialog",
             "aria-label": "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0438\u043E\u0434",
             children: showTime ? /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "rtdp__popover-body", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "rtdp__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__popover-body", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__popover-calendar", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                 Calendar,
                 {
                   mode: "range",
@@ -1041,9 +1041,9 @@ function DateRangePicker({
                   locale
                 }
               ) }) }),
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rtdp__time-row", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rtdp__time-col", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "rtdp__time-label", children: "\u041D\u0430\u0447\u0430\u043B\u043E" }),
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "daterly__time-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "daterly__time-col", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__time-label", children: "\u041D\u0430\u0447\u0430\u043B\u043E" }),
                   /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                     TimePanel,
                     {
@@ -1053,9 +1053,9 @@ function DateRangePicker({
                     }
                   )
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "rtdp__time-separator" }),
-                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "rtdp__time-col", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "rtdp__time-label", children: "\u041A\u043E\u043D\u0435\u0446" }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__time-separator" }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "daterly__time-col", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__time-label", children: "\u041A\u043E\u043D\u0435\u0446" }),
                   /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                     TimePanel,
                     {
@@ -1066,10 +1066,10 @@ function DateRangePicker({
                   )
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "rtdp__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "daterly__popover-footer", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
                 "button",
                 {
-                  className: "rtdp__ok-btn",
+                  className: "daterly__ok-btn",
                   type: "button",
                   onClick: close,
                   children: "OK"
@@ -1110,9 +1110,9 @@ function RHFDateRangePicker({ name, rules, ...props }) {
       control,
       name,
       rules,
-      render: ({ field: { value, onChange }, fieldState: { error } }) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "rtdp-rhf", children: [
+      render: ({ field: { value, onChange }, fieldState: { error } }) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "daterly-rhf", children: [
         /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(DateRangePicker, { value, onChange, failed: Boolean(error), ...props }),
-        (error == null ? void 0 : error.message) && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "rtdp-rhf__error", children: error.message })
+        (error == null ? void 0 : error.message) && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { className: "daterly-rhf__error", children: error.message })
       ] })
     }
   );

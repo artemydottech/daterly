@@ -16,15 +16,15 @@ import SizePresets from '../../components/SizePresets'
 
 ## Что меняется
 
-Размер — это набор CSS-токенов, которые подменяются модификатором-классом `.rtdp--s` / `.rtdp--l` (для `m` остаются базовые значения):
+Размер — это набор CSS-токенов, которые подменяются модификатором-классом `.daterly--s` / `.daterly--l` (для `m` остаются базовые значения):
 
 | Токен                       | `s`    | `m` (default) | `l`    |
 | --------------------------- | ------ | ------------- | ------ |
-| `--rtdp-height`             | `32px` | `40px`        | `56px` |
-| `--rtdp-font-size`          | `14px` | `16px`        | `16px` |
-| `--rtdp-padding-h`          | `12px` | `12px`        | `16px` |
-| `--rtdp-input-padding-top`  | —      | `20px`        | `24px` |
-| `--rtdp-label-top-filled`   | —      | `4px`         | `8px`  |
+| `--daterly-height`             | `32px` | `40px`        | `56px` |
+| `--daterly-font-size`          | `14px` | `16px`        | `16px` |
+| `--daterly-padding-h`          | `12px` | `12px`        | `16px` |
+| `--daterly-input-padding-top`  | —      | `20px`        | `24px` |
+| `--daterly-label-top-filled`   | —      | `4px`         | `8px`  |
 
 В размере `s` плавающий лейбл не используется — он зашит над полем (помещать его внутрь 32px невозможно без визуального компромисса).
 
@@ -33,10 +33,10 @@ import SizePresets from '../../components/SizePresets'
 Если хочется размер «между» — переопредели токены для нужного скоупа:
 
 ```css
-.compact .rtdp {
-  --rtdp-height: 36px;
-  --rtdp-font-size: 15px;
-  --rtdp-padding-h: 10px;
+.compact .daterly {
+  --daterly-height: 36px;
+  --daterly-font-size: 15px;
+  --daterly-padding-h: 10px;
 }
 ```
 
@@ -44,10 +44,10 @@ import SizePresets from '../../components/SizePresets'
 
 ## Попап календаря
 
-Размер влияет и на класс попапа — `.rtdp__popover--s`, `.rtdp__popover--m`, `.rtdp__popover--l`. По умолчанию визуально это одинаковые попапы; модификатор есть на случай, если ты хочешь подогнать отступ/размер дней под высоту инпута:
+Размер влияет и на класс попапа — `.daterly__popover--s`, `.daterly__popover--m`, `.daterly__popover--l`. По умолчанию визуально это одинаковые попапы; модификатор есть на случай, если ты хочешь подогнать отступ/размер дней под высоту инпута:
 
 ```css
-.rtdp__popover--s {
+.daterly__popover--s {
   --rdp-day-width: 32px;
   --rdp-day-height: 32px;
 }

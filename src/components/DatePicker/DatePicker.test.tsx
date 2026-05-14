@@ -150,12 +150,12 @@ describe('DatePicker', () => {
 
   it('shows spinner icon when loading', () => {
     const { container } = render(<DatePicker loading />)
-    expect(container.querySelector('.rtdp__icon')).toBeInTheDocument()
+    expect(container.querySelector('.daterly__icon')).toBeInTheDocument()
   })
 
   it('hides icon when icon is false', () => {
     const { container } = render(<DatePicker icon={false} />)
-    expect(container.querySelector('.rtdp__icon')).not.toBeInTheDocument()
+    expect(container.querySelector('.daterly__icon')).not.toBeInTheDocument()
   })
 
   describe('showTime', () => {
@@ -223,7 +223,7 @@ describe('DatePicker', () => {
 
   it('renders icon at the start when iconPosition="start"', () => {
     const { container } = render(<DatePicker iconPosition="start" />)
-    expect(container.querySelector('.rtdp__icon--start')).toBeInTheDocument()
+    expect(container.querySelector('.daterly__icon--start')).toBeInTheDocument()
   })
 
   it('pastes a date string and applies mask', async () => {

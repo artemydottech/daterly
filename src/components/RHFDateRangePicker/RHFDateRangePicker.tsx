@@ -11,9 +11,9 @@ export function RHFDateRangePicker<T extends FieldValues>({ name, rules, ...prop
       name={name}
       rules={rules}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
-        <div className="rtdp-rhf">
+        <div className="daterly-rhf">
           <DateRangePicker value={value} onChange={onChange} failed={Boolean(error)} {...props} />
-          {error?.message && <span className="rtdp-rhf__error">{error.message}</span>}
+          {error?.message && <span className="daterly-rhf__error">{error.message}</span>}
         </div>
       )}
     />

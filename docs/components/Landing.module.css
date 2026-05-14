@@ -624,12 +624,12 @@
   .demoPickerWrap {
     width: 100%;
   }
-  .demoPickerWrap :global(.rtdp),
-  .demoPickerWrap :global(.rtdp-range) {
+  .demoPickerWrap :global(.daterly),
+  .demoPickerWrap :global(.daterly-range) {
     width: 100%;
     display: block;
   }
-  .demoPickerWrap :global(.rtdp__field) {
+  .demoPickerWrap :global(.daterly__field) {
     min-width: 0;
     width: 100%;
   }
@@ -716,29 +716,29 @@
 }
 
 :global(html.dark) .demoStage {
-  --rtdp-color-bg: rgba(255, 255, 255, 0.04);
-  --rtdp-color-text: #e8e9f1;
-  --rtdp-color-placeholder: rgba(232, 233, 241, 0.35);
-  --rtdp-color-border: rgba(255, 255, 255, 0.12);
-  --rtdp-color-border-focus: var(--lp-accent-2);
-  --rtdp-color-border-error: var(--lp-error);
-  --rtdp-color-label: rgba(232, 233, 241, 0.55);
-  --rtdp-color-label-focus: var(--lp-accent-2);
-  --rtdp-color-label-error: var(--lp-error);
-  --rtdp-color-accent: var(--lp-accent-2);
-  --rtdp-color-today-bg: rgba(176, 107, 255, 0.18);
-  --rtdp-color-hover: rgba(255, 255, 255, 0.06);
-  --rtdp-color-bg-disabled: rgba(255, 255, 255, 0.02);
-  --rtdp-icon-color: rgba(232, 233, 241, 0.55);
-  --rtdp-radius: 8px;
+  --daterly-color-bg: rgba(255, 255, 255, 0.04);
+  --daterly-color-text: #e8e9f1;
+  --daterly-color-placeholder: rgba(232, 233, 241, 0.35);
+  --daterly-color-border: rgba(255, 255, 255, 0.12);
+  --daterly-color-border-focus: var(--lp-accent-2);
+  --daterly-color-border-error: var(--lp-error);
+  --daterly-color-label: rgba(232, 233, 241, 0.55);
+  --daterly-color-label-focus: var(--lp-accent-2);
+  --daterly-color-label-error: var(--lp-error);
+  --daterly-color-accent: var(--lp-accent-2);
+  --daterly-color-today-bg: rgba(176, 107, 255, 0.18);
+  --daterly-color-hover: rgba(255, 255, 255, 0.06);
+  --daterly-color-bg-disabled: rgba(255, 255, 255, 0.02);
+  --daterly-icon-color: rgba(232, 233, 241, 0.55);
+  --daterly-radius: 8px;
 }
 
 .demoStage {
-  --rtdp-color-border-focus: var(--lp-accent-1);
-  --rtdp-color-label-focus: var(--lp-accent-1);
-  --rtdp-color-accent: var(--lp-accent-1);
-  --rtdp-color-today-bg: rgba(124, 92, 255, 0.12);
-  --rtdp-radius: 8px;
+  --daterly-color-border-focus: var(--lp-accent-1);
+  --daterly-color-label-focus: var(--lp-accent-1);
+  --daterly-color-accent: var(--lp-accent-1);
+  --daterly-color-today-bg: rgba(124, 92, 255, 0.12);
+  --daterly-radius: 8px;
 }
 
 .demoPickerWrap {
@@ -817,7 +817,7 @@
   color: #e8e9f1;
 }
 
-.demoStage :global(.rtdp__popover) {
+.demoStage :global(.daterly__popover) {
   background: var(--lp-popover-bg);
   border-color: var(--lp-border);
   box-shadow: var(--lp-shadow-popover);
@@ -827,7 +827,7 @@
 }
 
 @media (max-width: 640px) {
-  .demoStage :global(.rtdp__popover) {
+  .demoStage :global(.daterly__popover) {
     left: 0;
     transform: none;
   }
@@ -858,12 +858,12 @@
     padding: 20px 16px;
     border-radius: 14px;
   }
-  .formCard :global(.rtdp),
-  .formCard :global(.rtdp-range) {
+  .formCard :global(.daterly),
+  .formCard :global(.daterly-range) {
     width: 100%;
     display: block;
   }
-  .formCard :global(.rtdp__field) {
+  .formCard :global(.daterly__field) {
     min-width: 0;
     width: 100%;
   }
@@ -927,29 +927,29 @@
   gap: 18px;
   backdrop-filter: blur(12px);
 
-  --rtdp-color-border-focus: var(--lp-accent-1);
-  --rtdp-color-border-error: var(--lp-error);
-  --rtdp-color-label-focus: var(--lp-accent-1);
-  --rtdp-color-label-error: var(--lp-error);
-  --rtdp-color-accent: var(--lp-accent-1);
-  --rtdp-color-today-bg: rgba(124, 92, 255, 0.12);
-  --rtdp-radius: 8px;
+  --daterly-color-border-focus: var(--lp-accent-1);
+  --daterly-color-border-error: var(--lp-error);
+  --daterly-color-label-focus: var(--lp-accent-1);
+  --daterly-color-label-error: var(--lp-error);
+  --daterly-color-accent: var(--lp-accent-1);
+  --daterly-color-today-bg: rgba(124, 92, 255, 0.12);
+  --daterly-radius: 8px;
 }
 
 :global(html.dark) .formCard {
-  --rtdp-color-bg: rgba(255, 255, 255, 0.04);
-  --rtdp-color-text: #e8e9f1;
-  --rtdp-color-placeholder: rgba(232, 233, 241, 0.35);
-  --rtdp-color-border: rgba(255, 255, 255, 0.12);
-  --rtdp-color-border-focus: var(--lp-accent-2);
-  --rtdp-color-border-error: var(--lp-error);
-  --rtdp-color-label: rgba(232, 233, 241, 0.55);
-  --rtdp-color-label-focus: var(--lp-accent-2);
-  --rtdp-color-label-error: var(--lp-error);
-  --rtdp-color-accent: var(--lp-accent-2);
-  --rtdp-color-today-bg: rgba(176, 107, 255, 0.18);
-  --rtdp-color-hover: rgba(255, 255, 255, 0.06);
-  --rtdp-icon-color: rgba(232, 233, 241, 0.55);
+  --daterly-color-bg: rgba(255, 255, 255, 0.04);
+  --daterly-color-text: #e8e9f1;
+  --daterly-color-placeholder: rgba(232, 233, 241, 0.35);
+  --daterly-color-border: rgba(255, 255, 255, 0.12);
+  --daterly-color-border-focus: var(--lp-accent-2);
+  --daterly-color-border-error: var(--lp-error);
+  --daterly-color-label: rgba(232, 233, 241, 0.55);
+  --daterly-color-label-focus: var(--lp-accent-2);
+  --daterly-color-label-error: var(--lp-error);
+  --daterly-color-accent: var(--lp-accent-2);
+  --daterly-color-today-bg: rgba(176, 107, 255, 0.18);
+  --daterly-color-hover: rgba(255, 255, 255, 0.06);
+  --daterly-icon-color: rgba(232, 233, 241, 0.55);
 }
 
 .formCard :global(.rdp-root) {
@@ -964,7 +964,7 @@
   color: #e8e9f1;
 }
 
-.formCard :global(.rtdp__popover) {
+.formCard :global(.daterly__popover) {
   background: var(--lp-popover-bg);
   border-color: var(--lp-border);
   box-shadow: var(--lp-shadow-popover);
@@ -1057,22 +1057,22 @@
   flex-direction: column;
 }
 
-.formPickerSlot :global(.rtdp),
-.formPickerSlot :global(.rtdp-range) {
+.formPickerSlot :global(.daterly),
+.formPickerSlot :global(.daterly-range) {
   display: block;
 }
 
-.formPickerSlot :global(.rtdp__field),
-.formPickerSlot :global(.rtdp-range .rtdp__field) {
+.formPickerSlot :global(.daterly__field),
+.formPickerSlot :global(.daterly-range .daterly__field) {
   width: 100%;
   min-width: 0;
 }
 
 .formPickerSlotEmerald {
-  --rtdp-color-accent: #10b981;
-  --rtdp-color-border-focus: #10b981;
-  --rtdp-color-label-focus: #10b981;
-  --rtdp-color-today-bg: rgba(16, 185, 129, 0.12);
+  --daterly-color-accent: #10b981;
+  --daterly-color-border-focus: #10b981;
+  --daterly-color-label-focus: #10b981;
+  --daterly-color-today-bg: rgba(16, 185, 129, 0.12);
 }
 
 .formPickerSlotEmerald :global(.rdp-root) {
@@ -1080,10 +1080,10 @@
 }
 
 .formPickerSlotRose {
-  --rtdp-color-accent: #f43f5e;
-  --rtdp-color-border-focus: #f43f5e;
-  --rtdp-color-label-focus: #f43f5e;
-  --rtdp-color-today-bg: rgba(244, 63, 94, 0.12);
+  --daterly-color-accent: #f43f5e;
+  --daterly-color-border-focus: #f43f5e;
+  --daterly-color-label-focus: #f43f5e;
+  --daterly-color-today-bg: rgba(244, 63, 94, 0.12);
 }
 
 .formPickerSlotRose :global(.rdp-root) {

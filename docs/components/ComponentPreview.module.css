@@ -57,7 +57,7 @@
   align-items: center;
 }
 
-.stage :global(.rtdp__popover) {
+.stage :global(.daterly__popover) {
   z-index: 50;
 }
 
@@ -65,18 +65,18 @@
   padding: 20px;
 }
 
-.stage :global(.rtdp),
-.stage :global(.rtdp-range) {
+.stage :global(.daterly),
+.stage :global(.daterly-range) {
   display: block;
   width: 320px;
 }
 
-.stage[data-kind='range'] :global(.rtdp-range) {
+.stage[data-kind='range'] :global(.daterly-range) {
   width: 360px;
 }
 
-.stage :global(.rtdp__field),
-.stage :global(.rtdp-range .rtdp__field) {
+.stage :global(.daterly__field),
+.stage :global(.daterly-range .daterly__field) {
   width: 100%;
   min-width: 0;
 }

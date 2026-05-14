@@ -1,6 +1,6 @@
 # Введение
 
-`rtdp` — React-библиотека для ввода дат с маской, поддержкой произвольных локалей и форматов, выбора диапазона и времени. Опциональная интеграция с react-hook-form через отдельный entry-point.
+`daterly` — React-библиотека для ввода дат с маской, поддержкой произвольных локалей и форматов, выбора диапазона и времени. Опциональная интеграция с react-hook-form через отдельный entry-point.
 
 Под капотом — [react-day-picker v9](https://daypicker.dev/) (headless-календарь) и [date-fns v4](https://date-fns.org/) (форматирование и парсинг).
 
@@ -16,12 +16,12 @@
 ## Быстрый старт
 
 ```bash
-npm install @artemy-tech/rtdp
+npm install daterly
 ```
 
 ```tsx
-import '@artemy-tech/rtdp/styles'
-import { DatePicker } from '@artemy-tech/rtdp'
+import 'daterly/styles'
+import { DatePicker } from 'daterly'
 
 export const Example = () => <DatePicker label="Дата рождения" />
 ```

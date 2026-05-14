@@ -33,7 +33,7 @@ describe('Button', () => {
     const btn = screen.getByRole('button')
     expect(btn).toBeDisabled()
     expect(btn.className).toContain('dp-btn--loading')
-    expect(container.querySelector('.rtdp-spinner')).toBeInTheDocument()
+    expect(container.querySelector('.daterly-spinner')).toBeInTheDocument()
   })
 
   it('respects explicit disabled prop', () => {

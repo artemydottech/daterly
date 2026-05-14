@@ -1,74 +1,74 @@
 @import 'react-day-picker/style.css';
 
 :root {
-  --rtdp-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+  --daterly-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text',
     system-ui, sans-serif;
-  --rtdp-font-size: 16px;
-  --rtdp-font-size-label: 12px;
+  --daterly-font-size: 16px;
+  --daterly-font-size-label: 12px;
 
-  --rtdp-color-text: #212121;
-  --rtdp-color-placeholder: #9e9e9e;
-  --rtdp-color-border: #e0e0e0;
-  --rtdp-color-border-focus: #1f84db;
-  --rtdp-color-border-error: #fb3a2f;
-  --rtdp-color-bg: #fff;
-  --rtdp-color-bg-disabled: #fafafa;
-  --rtdp-color-label: #9e9e9e;
-  --rtdp-color-label-focus: #1f84db;
-  --rtdp-color-label-error: #fb3a2f;
-  --rtdp-color-accent: #1f84db;
+  --daterly-color-text: #212121;
+  --daterly-color-placeholder: #9e9e9e;
+  --daterly-color-border: #e0e0e0;
+  --daterly-color-border-focus: #1f84db;
+  --daterly-color-border-error: #fb3a2f;
+  --daterly-color-bg: #fff;
+  --daterly-color-bg-disabled: #fafafa;
+  --daterly-color-label: #9e9e9e;
+  --daterly-color-label-focus: #1f84db;
+  --daterly-color-label-error: #fb3a2f;
+  --daterly-color-accent: #1f84db;
 
-  --rtdp-color-today-bg: #e4f1f9;
-  --rtdp-color-hover: #f5f5f5;
+  --daterly-color-today-bg: #e4f1f9;
+  --daterly-color-hover: #f5f5f5;
 
-  --rtdp-height: 40px;
-  --rtdp-padding-h: 12px;
-  --rtdp-label-top-filled: 4px;
-  --rtdp-input-padding-top: 20px;
-  --rtdp-radius: 4px;
-  --rtdp-shadow: 0 0 4px rgba(0, 0, 0, 0.04),
+  --daterly-height: 40px;
+  --daterly-padding-h: 12px;
+  --daterly-label-top-filled: 4px;
+  --daterly-input-padding-top: 20px;
+  --daterly-radius: 4px;
+  --daterly-shadow: 0 0 4px rgba(0, 0, 0, 0.04),
     0 2px 4px rgba(0, 0, 0, 0.08);
 
-  --rtdp-icon-size: 16px;
-  --rtdp-icon-gap: 6px;
-  --rtdp-icon-color: #9e9e9e;
+  --daterly-icon-size: 16px;
+  --daterly-icon-gap: 6px;
+  --daterly-icon-color: #9e9e9e;
 }
 
-.rtdp--s {
+.daterly--s {
   font-size: 14px;
-  --rtdp-height: 32px;
-  --rtdp-font-size: 14px;
-  --rtdp-padding-h: 12px;
+  --daterly-height: 32px;
+  --daterly-font-size: 14px;
+  --daterly-padding-h: 12px;
 }
 
-.rtdp--l {
-  --rtdp-height: 56px;
-  --rtdp-padding-h: 16px;
-  --rtdp-label-top-filled: 8px;
-  --rtdp-input-padding-top: 24px;
+.daterly--l {
+  --daterly-height: 56px;
+  --daterly-padding-h: 16px;
+  --daterly-label-top-filled: 8px;
+  --daterly-input-padding-top: 24px;
 }
 
-.rtdp,
-.rtdp-range {
+.daterly,
+.daterly-range {
   position: relative;
   display: inline-block;
-  font-family: var(--rtdp-font-family);
-  font-size: var(--rtdp-font-size);
+  font-family: var(--daterly-font-family);
+  font-size: var(--daterly-font-size);
 }
 
-.rtdp__field {
+.daterly__field {
   position: relative;
-  height: var(--rtdp-height);
+  height: var(--daterly-height);
   min-width: 220px;
-  background: var(--rtdp-color-bg);
-  border: 1px solid var(--rtdp-color-border);
-  border-radius: var(--rtdp-radius);
+  background: var(--daterly-color-bg);
+  border: 1px solid var(--daterly-color-border);
+  border-radius: var(--daterly-radius);
   box-sizing: border-box;
   transition: border-color 0.15s;
   cursor: text;
 }
 
-.rtdp__field--custom {
+.daterly__field--custom {
   height: auto;
   min-width: 0;
   border: none;
@@ -77,40 +77,40 @@
   cursor: auto;
 }
 
-.rtdp-range .rtdp__field {
+.daterly-range .daterly__field {
   min-width: 320px;
 }
 
-.rtdp[data-focused] .rtdp__field {
-  border-color: var(--rtdp-color-border-focus);
+.daterly[data-focused] .daterly__field {
+  border-color: var(--daterly-color-border-focus);
   box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--rtdp-color-border-focus) 15%, transparent);
+    color-mix(in srgb, var(--daterly-color-border-focus) 15%, transparent);
 }
 
-.rtdp[data-failed] .rtdp__field {
-  border-color: var(--rtdp-color-border-error);
+.daterly[data-failed] .daterly__field {
+  border-color: var(--daterly-color-border-error);
 }
 
-.rtdp[data-failed][data-focused] .rtdp__field {
-  border-color: var(--rtdp-color-border-error);
+.daterly[data-failed][data-focused] .daterly__field {
+  border-color: var(--daterly-color-border-error);
   box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--rtdp-color-border-error) 18%, transparent);
+    color-mix(in srgb, var(--daterly-color-border-error) 18%, transparent);
 }
 
-.rtdp[data-disabled] .rtdp__field {
-  background: var(--rtdp-color-bg-disabled);
-  border-color: var(--rtdp-color-border);
+.daterly[data-disabled] .daterly__field {
+  background: var(--daterly-color-bg-disabled);
+  border-color: var(--daterly-color-border);
   cursor: not-allowed;
 }
 
-.rtdp__label {
+.daterly__label {
   position: absolute;
-  left: calc(var(--rtdp-padding-h) + var(--_prefix-extra, 0px));
-  right: calc(var(--rtdp-padding-h) + var(--_suffix-extra, 0px));
+  left: calc(var(--daterly-padding-h) + var(--_prefix-extra, 0px));
+  right: calc(var(--daterly-padding-h) + var(--_suffix-extra, 0px));
   top: 50%;
   transform: translateY(-50%);
-  font-size: var(--rtdp-font-size);
-  color: var(--rtdp-color-label);
+  font-size: var(--daterly-font-size);
+  color: var(--daterly-color-label);
   pointer-events: none;
   transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease,
     transform 0.15s ease;
@@ -120,132 +120,132 @@
   line-height: 1;
 }
 
-.rtdp[data-focused] .rtdp__label,
-.rtdp[data-filled] .rtdp__label {
-  top: var(--rtdp-label-top-filled);
+.daterly[data-focused] .daterly__label,
+.daterly[data-filled] .daterly__label {
+  top: var(--daterly-label-top-filled);
   transform: none;
-  font-size: var(--rtdp-font-size-label);
+  font-size: var(--daterly-font-size-label);
 }
 
-.rtdp[data-focused] .rtdp__label {
-  color: var(--rtdp-color-label-focus);
+.daterly[data-focused] .daterly__label {
+  color: var(--daterly-color-label-focus);
 }
 
-.rtdp[data-failed] .rtdp__label {
-  color: var(--rtdp-color-label-error);
+.daterly[data-failed] .daterly__label {
+  color: var(--daterly-color-label-error);
 }
 
-.rtdp--s .rtdp__label {
+.daterly--s .daterly__label {
   font-size: inherit;
   transition: opacity 0.15s ease;
 }
 
-.rtdp--s[data-focused] .rtdp__label,
-.rtdp--s[data-filled] .rtdp__label {
+.daterly--s[data-focused] .daterly__label,
+.daterly--s[data-filled] .daterly__label {
   top: 50%;
   transform: translateY(-50%);
   font-size: inherit;
-  color: var(--rtdp-color-label);
+  color: var(--daterly-color-label);
   opacity: 0;
 }
 
-.rtdp__icon {
+.daterly__icon {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--rtdp-icon-color);
-  width: var(--rtdp-icon-size);
-  height: var(--rtdp-icon-size);
+  color: var(--daterly-icon-color);
+  width: var(--daterly-icon-size);
+  height: var(--daterly-icon-size);
   pointer-events: none;
 }
 
-.rtdp__icon--start {
-  left: var(--rtdp-padding-h);
+.daterly__icon--start {
+  left: var(--daterly-padding-h);
 }
 
-.rtdp__icon--end {
-  right: var(--rtdp-padding-h);
+.daterly__icon--end {
+  right: var(--daterly-padding-h);
 }
 
-.rtdp__input {
+.daterly__input {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding-top: var(--rtdp-input-padding-top);
+  padding-top: var(--daterly-input-padding-top);
   padding-bottom: 8px;
-  padding-left: calc(var(--rtdp-padding-h) + var(--_prefix-extra, 0px));
-  padding-right: calc(var(--rtdp-padding-h) + var(--_suffix-extra, 0px));
+  padding-left: calc(var(--daterly-padding-h) + var(--_prefix-extra, 0px));
+  padding-right: calc(var(--daterly-padding-h) + var(--_suffix-extra, 0px));
   background: transparent;
   border: none;
   outline: none;
-  font-family: var(--rtdp-font-family);
-  font-size: var(--rtdp-font-size);
-  color: var(--rtdp-color-text);
+  font-family: var(--daterly-font-family);
+  font-size: var(--daterly-font-size);
+  color: var(--daterly-color-text);
   cursor: text;
 }
 
-.rtdp__field:not(:has(.rtdp__label)) .rtdp__input {
+.daterly__field:not(:has(.daterly__label)) .daterly__input {
   padding-top: 0;
   padding-bottom: 0;
 }
 
-.rtdp__field[data-icon-start] {
+.daterly__field[data-icon-start] {
   --_prefix-extra: calc(
-    var(--rtdp-icon-size) + var(--rtdp-icon-gap)
+    var(--daterly-icon-size) + var(--daterly-icon-gap)
   );
 }
 
-.rtdp__field[data-icon-end] {
+.daterly__field[data-icon-end] {
   --_suffix-extra: calc(
-    var(--rtdp-icon-size) + var(--rtdp-icon-gap)
+    var(--daterly-icon-size) + var(--daterly-icon-gap)
   );
 }
 
-.rtdp--s .rtdp__input {
+.daterly--s .daterly__input {
   padding-top: 0;
   padding-bottom: 0;
 }
 
-.rtdp__input::placeholder {
-  color: var(--rtdp-color-placeholder);
+.daterly__input::placeholder {
+  color: var(--daterly-color-placeholder);
 }
 
-.rtdp__input:disabled {
+.daterly__input:disabled {
   cursor: not-allowed;
-  color: var(--rtdp-color-placeholder);
+  color: var(--daterly-color-placeholder);
 }
 
-.rtdp__popover {
+.daterly__popover {
   position: absolute;
-  top: calc(var(--rtdp-height) + 6px);
+  top: calc(var(--daterly-height) + 6px);
   left: 0;
   z-index: 100;
-  background: var(--rtdp-color-bg);
-  border: 1px solid var(--rtdp-color-border);
-  border-radius: var(--rtdp-radius);
-  box-shadow: var(--rtdp-shadow);
+  background: var(--daterly-color-bg);
+  border: 1px solid var(--daterly-color-border);
+  border-radius: var(--daterly-radius);
+  box-shadow: var(--daterly-shadow);
   padding: 12px;
 }
 
-.rtdp__popover--horizontal .rdp-months {
+.daterly__popover--horizontal .rdp-months {
   flex-wrap: nowrap;
 }
 
 @media (max-width: 640px) {
-  .rtdp-range .rtdp__field {
+  .daterly-range .daterly__field {
     min-width: 0;
   }
-  .rtdp__popover {
+  .daterly__popover {
     max-width: calc(100vw - 24px);
     overflow-x: auto;
   }
-  .rtdp-range .rtdp__popover--horizontal .rdp-months,
-  .rtdp-range .rtdp__popover .rdp-months {
+  .daterly-range .daterly__popover--horizontal .rdp-months,
+  .daterly-range .daterly__popover .rdp-months {
     flex-direction: column;
     flex-wrap: wrap;
     align-items: center;
@@ -253,94 +253,94 @@
   }
 }
 
-.rtdp-calendar {
-  --rdp-accent-color: var(--rtdp-color-accent);
-  --rdp-accent-background-color: var(--rtdp-color-today-bg);
-  --rdp-background-color: var(--rtdp-color-hover);
+.daterly-calendar {
+  --rdp-accent-color: var(--daterly-color-accent);
+  --rdp-accent-background-color: var(--daterly-color-today-bg);
+  --rdp-background-color: var(--daterly-color-hover);
   --rdp-weekday-opacity: 1;
   --rdp-selected-border: none;
   margin: 0;
-  font-family: var(--rtdp-font-family);
-  font-size: var(--rtdp-font-size);
-  color: var(--rtdp-color-text);
+  font-family: var(--daterly-font-family);
+  font-size: var(--daterly-font-size);
+  color: var(--daterly-color-text);
 }
 
-.rtdp-calendar .rdp-month_grid {
+.daterly-calendar .rdp-month_grid {
   border-spacing: 0;
 }
 
-.rtdp-calendar .rdp-day {
+.daterly-calendar .rdp-day {
   padding: 0;
 }
 
-.rtdp-calendar .rdp-day_button {
+.daterly-calendar .rdp-day_button {
   font-size: inherit;
   font-family: inherit;
   transition: background-color 0.15s ease, color 0.15s ease,
     border-radius 0.15s ease;
 }
 
-.rtdp-calendar .rdp-caption_label {
+.daterly-calendar .rdp-caption_label {
   text-transform: capitalize;
-  font-size: var(--rtdp-font-size);
+  font-size: var(--daterly-font-size);
   font-weight: 600;
 }
 
-.rtdp-calendar .rdp-weekday {
+.daterly-calendar .rdp-weekday {
   font-size: 12px;
   font-weight: 400;
-  color: var(--rtdp-color-label);
+  color: var(--daterly-color-label);
   text-transform: capitalize;
 }
 
-.rtdp-calendar .rdp-chevron {
-  fill: var(--rtdp-color-text);
+.daterly-calendar .rdp-chevron {
+  fill: var(--daterly-color-text);
 }
 
-.rtdp-calendar .rdp-button_previous:hover:not(:disabled),
-.rtdp-calendar .rdp-button_next:hover:not(:disabled) {
-  background-color: var(--rtdp-color-hover);
-  border-radius: var(--rtdp-radius);
+.daterly-calendar .rdp-button_previous:hover:not(:disabled),
+.daterly-calendar .rdp-button_next:hover:not(:disabled) {
+  background-color: var(--daterly-color-hover);
+  border-radius: var(--daterly-radius);
 }
 
-.rtdp-calendar
+.daterly-calendar
   .rdp-day:not(.rdp-selected):not(.rdp-range_middle)
   .rdp-day_button:hover:not(:disabled) {
-  background-color: var(--rtdp-color-hover);
+  background-color: var(--daterly-color-hover);
 }
 
-.rtdp-calendar
+.daterly-calendar
   .rdp-today:not(.rdp-outside):not(.rdp-selected):not(.rdp-range_middle)
   .rdp-day_button {
-  background-color: var(--rtdp-color-today-bg);
-  color: var(--rtdp-color-accent);
+  background-color: var(--daterly-color-today-bg);
+  color: var(--daterly-color-accent);
 }
 
-.rtdp-calendar .rdp-selected {
+.daterly-calendar .rdp-selected {
   font-weight: inherit;
   font-size: inherit;
 }
 
-.rtdp-calendar .rdp-selected:not(.rdp-range_middle) .rdp-day_button {
-  background-color: var(--rtdp-color-accent);
+.daterly-calendar .rdp-selected:not(.rdp-range_middle) .rdp-day_button {
+  background-color: var(--daterly-color-accent);
   color: #fff;
   border: none;
 }
 
-.rtdp-calendar .rdp-range_middle .rdp-day_button {
+.daterly-calendar .rdp-range_middle .rdp-day_button {
   border-radius: 0;
   border: none;
 }
 
-.rtdp-calendar .rdp-range_middle .rdp-day_button:hover {
+.daterly-calendar .rdp-range_middle .rdp-day_button:hover {
   background-color: color-mix(
     in srgb,
-    var(--rtdp-color-accent) 20%,
+    var(--daterly-color-accent) 20%,
     transparent
   );
 }
 
-.rtdp__popover--s .rtdp-calendar {
+.daterly__popover--s .daterly-calendar {
   font-size: 12px;
   --rdp-day-height: 30px;
   --rdp-day-width: 30px;
@@ -351,7 +351,7 @@
   --rdp-nav-height: 2rem;
 }
 
-.rtdp__popover--m .rtdp-calendar {
+.daterly__popover--m .daterly-calendar {
   font-size: 14px;
   --rdp-day-height: 38px;
   --rdp-day-width: 38px;
@@ -362,41 +362,41 @@
   --rdp-nav-height: 2.5rem;
 }
 
-.rtdp__popover--with-time {
+.daterly__popover--with-time {
   padding: 0;
   display: flex;
   flex-direction: column;
 }
 
-.rtdp__popover-body {
+.daterly__popover-body {
   display: flex;
   align-items: stretch;
 }
 
-.rtdp__popover-calendar {
+.daterly__popover-calendar {
   padding: 12px;
 }
 
-.rtdp__time-separator {
+.daterly__time-separator {
   width: 1px;
-  background: var(--rtdp-color-border);
+  background: var(--daterly-color-border);
   align-self: stretch;
   flex-shrink: 0;
 }
 
-.rtdp__popover-time {
+.daterly__popover-time {
   display: flex;
   align-items: center;
   padding: 0 4px;
 }
 
-.rtdp__time-row {
+.daterly__time-row {
   display: flex;
   align-items: stretch;
-  border-top: 1px solid var(--rtdp-color-border);
+  border-top: 1px solid var(--daterly-color-border);
 }
 
-.rtdp__time-col {
+.daterly__time-col {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -405,54 +405,54 @@
   gap: 4px;
 }
 
-.rtdp__time-label {
+.daterly__time-label {
   font-size: 12px;
-  color: var(--rtdp-color-label);
+  color: var(--daterly-color-label);
   line-height: 1;
 }
 
-.rtdp__time-row .rtdp__time-separator {
+.daterly__time-row .daterly__time-separator {
   width: 1px;
   align-self: stretch;
   margin: 0;
 }
 
-.rtdp__popover-footer {
+.daterly__popover-footer {
   padding: 8px 12px;
-  border-top: 1px solid var(--rtdp-color-border);
+  border-top: 1px solid var(--daterly-color-border);
   display: flex;
   justify-content: flex-end;
 }
 
-.rtdp__ok-btn {
+.daterly__ok-btn {
   padding: 4px 15px;
-  background: var(--rtdp-color-accent);
+  background: var(--daterly-color-accent);
   color: #fff;
   border: none;
-  border-radius: var(--rtdp-radius);
+  border-radius: var(--daterly-radius);
   cursor: pointer;
-  font-family: var(--rtdp-font-family);
+  font-family: var(--daterly-font-family);
   font-size: 14px;
   line-height: 22px;
 }
 
-.rtdp__ok-btn:hover {
+.daterly__ok-btn:hover {
   opacity: 0.85;
 }
 
-.rtdp-spinner {
+.daterly-spinner {
   display: inline-block;
-  width: var(--rtdp-icon-size);
-  height: var(--rtdp-icon-size);
+  width: var(--daterly-icon-size);
+  height: var(--daterly-icon-size);
   border-radius: 50%;
   border: 1.5px solid currentColor;
   border-top-color: transparent;
-  animation: rtdp-spin 0.65s linear infinite;
+  animation: daterly-spin 0.65s linear infinite;
   flex-shrink: 0;
   box-sizing: border-box;
 }
 
-@keyframes rtdp-spin {
+@keyframes daterly-spin {
   to {
     transform: rotate(360deg);
   }
@@ -465,11 +465,11 @@
   justify-content: center;
   gap: 6px;
   white-space: nowrap;
-  border-radius: var(--rtdp-radius);
-  font-family: var(--rtdp-font-family);
+  border-radius: var(--daterly-radius);
+  font-family: var(--daterly-font-family);
   font-weight: 600;
   box-sizing: border-box;
-  padding: 0 var(--rtdp-padding-h);
+  padding: 0 var(--daterly-padding-h);
   border: 0;
   outline: 0;
   overflow: hidden;
@@ -492,28 +492,28 @@
 
 .dp-btn--m {
   height: 40px;
-  font-size: var(--rtdp-font-size);
+  font-size: var(--daterly-font-size);
 }
 
 .dp-btn--primary {
-  background: var(--rtdp-color-accent);
+  background: var(--daterly-color-accent);
   color: #fff;
 }
 
 .dp-btn--primary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--rtdp-color-accent) 85%, #000);
+  background: color-mix(in srgb, var(--daterly-color-accent) 85%, #000);
 }
 
 .dp-btn--secondary {
   background: transparent;
-  color: var(--rtdp-color-accent);
-  border: 1px solid var(--rtdp-color-accent);
+  color: var(--daterly-color-accent);
+  border: 1px solid var(--daterly-color-accent);
 }
 
 .dp-btn--secondary:hover:not(:disabled) {
   background: color-mix(
     in srgb,
-    var(--rtdp-color-accent) 8%,
+    var(--daterly-color-accent) 8%,
     transparent
   );
 }
@@ -522,27 +522,27 @@
   color: transparent;
 }
 
-.dp-btn--loading .rtdp-spinner {
+.dp-btn--loading .daterly-spinner {
   position: absolute;
-  top: calc(50% - var(--rtdp-icon-size) / 2);
-  left: calc(50% - var(--rtdp-icon-size) / 2);
-  color: var(--rtdp-color-accent);
+  top: calc(50% - var(--daterly-icon-size) / 2);
+  left: calc(50% - var(--daterly-icon-size) / 2);
+  color: var(--daterly-color-accent);
 }
 
-.dp-btn--loading.dp-btn--primary .rtdp-spinner {
+.dp-btn--loading.dp-btn--primary .daterly-spinner {
   color: #fff;
 }
 
-.rtdp-rhf {
+.daterly-rhf {
   display: inline-flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.rtdp-rhf__error {
+.daterly-rhf__error {
   font-size: 12px;
-  color: var(--rtdp-color-border-error);
-  font-family: var(--rtdp-font-family);
+  color: var(--daterly-color-border-error);
+  font-family: var(--daterly-font-family);
   line-height: 1;
 }
 
@@ -571,20 +571,20 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-radius: var(--rtdp-radius);
+  border-radius: var(--daterly-radius);
   border: none;
   background: none;
-  font-family: var(--rtdp-font-family);
+  font-family: var(--daterly-font-family);
   font-size: 14px;
-  color: var(--rtdp-color-text);
+  color: var(--daterly-color-text);
   padding: 0;
 }
 
 .time-panel__item:hover {
-  background: var(--rtdp-color-hover);
+  background: var(--daterly-color-hover);
 }
 
 .time-panel__item[data-selected] {
-  background: var(--rtdp-color-accent);
+  background: var(--daterly-color-accent);
   color: #fff;
 }

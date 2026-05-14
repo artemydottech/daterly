@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
-import { DatePicker, DateRangePicker, type DateRange } from '@artemy-tech/rtdp';
+import { DatePicker, DateRangePicker, type DateRange } from 'daterly';
 import {
   Webhook,
   Package,
@@ -23,7 +23,7 @@ import styles from './Landing.module.css';
 
 type Demo = 'single' | 'range' | 'time';
 
-const INSTALL_COMMAND = 'npm install @artemy-tech/rtdp';
+const INSTALL_COMMAND = 'npm install daterly';
 
 function formatValue(
   demo: Demo,
@@ -79,7 +79,7 @@ export default function Landing() {
           <span className={styles.logoMark} aria-hidden>
             <LogoMark size={16} variant="dashes" />
           </span>
-          rtdp
+          daterly
         </Link>
         <nav className={styles.navRight}>
           <Link className={styles.navLink} href="/docs">
@@ -89,7 +89,7 @@ export default function Landing() {
             className={styles.navLink}
             target="_blank"
             rel="noreferrer"
-            href="https://github.com/artemydottech/rtdp"
+            href="https://github.com/artemydottech/daterly"
             aria-label="GitHub"
           >
             <IconGithub size={16} />
@@ -97,7 +97,7 @@ export default function Landing() {
           </a>
           <a
             className={styles.navLink}
-            href="https://www.npmjs.com/package/@artemy-tech/rtdp"
+            href="https://www.npmjs.com/package/daterly"
             target="_blank"
             rel="noreferrer"
             aria-label="npm"
@@ -149,7 +149,7 @@ export default function Landing() {
             </Link>
             <a
               className={styles.btnSecondary}
-              href="https://github.com/artemydottech/rtdp"
+              href="https://github.com/artemydottech/daterly"
               target="_blank"
               rel="noreferrer"
             >
@@ -391,7 +391,7 @@ export default function Landing() {
                 {'\n  '}
                 <span className={styles.codeKeyword}>from</span>{' '}
                 <span className={styles.codeString}>
-                  &apos;@artemy-tech/rtdp/rhf&apos;
+                  &apos;daterly/rhf&apos;
                 </span>
                 {'\n\n'}
                 {'<'}
@@ -425,7 +425,7 @@ export default function Landing() {
             </Link>
             <a
               className={styles.btnSecondary}
-              href="https://github.com/artemydottech/rtdp"
+              href="https://github.com/artemydottech/daterly"
               target="_blank"
               rel="noreferrer"
             >
@@ -457,14 +457,14 @@ export default function Landing() {
           <div className={styles.footerLinks}>
             <Link href="/docs">Документация</Link>
             <a
-              href="https://github.com/artemydottech/rtdp"
+              href="https://github.com/artemydottech/daterly"
               target="_blank"
               rel="noreferrer"
             >
               GitHub
             </a>
             <a
-              href="https://www.npmjs.com/package/@artemy-tech/rtdp"
+              href="https://www.npmjs.com/package/daterly"
               target="_blank"
               rel="noreferrer"
             >

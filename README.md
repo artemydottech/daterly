@@ -1,14 +1,14 @@
-# rtdp — [@artemy-tech/rtdp](https://www.npmjs.com/package/@artemy-tech/rtdp)
+# daterly
 
-[![npm version](https://img.shields.io/npm/v/@artemy-tech/rtdp?color=blue)](https://www.npmjs.com/package/@artemy-tech/rtdp)
-[![npm downloads](https://img.shields.io/npm/dm/@artemy-tech/rtdp?color=green)](https://www.npmjs.com/package/@artemy-tech/rtdp)
-[![CI](https://github.com/artemydottech/rtdp/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/rtdp/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/artemydottech/rtdp/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/rtdp)
-[![publish size](https://badgen.net/packagephobia/publish/@artemy-tech/rtdp)](https://packagephobia.com/result?p=@artemy-tech/rtdp)
+[![npm version](https://img.shields.io/npm/v/daterly?color=blue)](https://www.npmjs.com/package/daterly)
+[![npm downloads](https://img.shields.io/npm/dm/daterly?color=green)](https://www.npmjs.com/package/daterly)
+[![CI](https://github.com/artemydottech/daterly/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/daterly/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/artemydottech/daterly/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/daterly)
+[![publish size](https://badgen.net/packagephobia/publish/daterly)](https://packagephobia.com/result?p=daterly)
 
 React DatePicker с маской ввода, поддержкой произвольных локалей и форматов даты, выбором диапазона и времени, опциональной интеграцией с react-hook-form. Построен на [react-day-picker v9](https://daypicker.dev/) и [date-fns v4](https://date-fns.org/).
 
-**📚 [Документация и примеры →](https://artemydottech.github.io/rtdp)**
+**📚 [Документация и примеры →](https://artemydottech.github.io/daterly)**
 
 ## Возможности
 
@@ -19,13 +19,13 @@ React DatePicker с маской ввода, поддержкой произво
 - **Произвольный формат даты** через проп `dateFormat` (`dd.MM.yyyy`, `MM/dd/yyyy`, `yyyy-MM-dd`, …) — маска ввода генерится автоматически
 - Кастомный триггер (`customTrigger`) и кастомный инпут (`renderInput`) — интеграция с Ant Design, MUI, shadcn/ui и др.
 - Интеграция с react-hook-form (нулевые издержки если не используется)
-- Стилизация через CSS-переменные `--rtdp-*`
+- Стилизация через CSS-переменные `--daterly-*`
 - Полная поддержка TypeScript, в т.ч. дженерики для RHF-компонентов
 
 ## Установка
 
 ```bash
-npm install @artemy-tech/rtdp
+npm install daterly
 ```
 
 Для интеграции с react-hook-form установите его как peer-зависимость:
@@ -37,8 +37,8 @@ npm install react-hook-form
 ## Quick start
 
 ```tsx
-import '@artemy-tech/rtdp/styles';
-import { DatePicker } from '@artemy-tech/rtdp';
+import 'daterly/styles';
+import { DatePicker } from 'daterly';
 
 export const Example = () => <DatePicker label="Дата рождения" />;
 ```
@@ -49,7 +49,7 @@ export const Example = () => <DatePicker label="Дата рождения" />;
 
 ```tsx
 import { useState } from 'react';
-import { DatePicker } from '@artemy-tech/rtdp';
+import { DatePicker } from 'daterly';
 
 // Неконтролируемый
 <DatePicker label="Дата рождения" />
@@ -69,7 +69,7 @@ const [date, setDate] = useState<Date | undefined>();
 
 ```tsx
 import { useState } from 'react';
-import { DateRangePicker, type DateRange } from '@artemy-tech/rtdp';
+import { DateRangePicker, type DateRange } from 'daterly';
 
 const [range, setRange] = useState<DateRange | undefined>();
 
@@ -87,7 +87,7 @@ const [range, setRange] = useState<DateRange | undefined>();
 
 ```tsx
 import { enUS, de } from 'date-fns/locale';
-import { DatePicker, DateRangePicker } from '@artemy-tech/rtdp';
+import { DatePicker, DateRangePicker } from 'daterly';
 
 <DatePicker
   locale={enUS}
@@ -116,8 +116,8 @@ import { DatePicker, DateRangePicker } from '@artemy-tech/rtdp';
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
-import { RHFDatePicker, RHFDateRangePicker } from '@artemy-tech/rtdp/rhf';
-import type { DateRange } from '@artemy-tech/rtdp';
+import { RHFDatePicker, RHFDateRangePicker } from 'daterly/rhf';
+import type { DateRange } from 'daterly';
 
 interface BookingFormValues {
   checkIn: Date | undefined;
@@ -151,29 +151,29 @@ const BookingForm = () => {
 };
 ```
 
-> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/rtdp/docs/recipes).
+> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/daterly/docs/recipes).
 
 ## Стилизация
 
 Подключите базовые стили и переопределите нужные CSS-переменные:
 
 ```css
-@import '@artemy-tech/rtdp/styles';
+@import 'daterly/styles';
 
 :root {
-  --rtdp-color-accent: #6366f1;
-  --rtdp-radius: 8px;
-  --rtdp-border-color-focus: #6366f1;
+  --daterly-color-accent: #6366f1;
+  --daterly-radius: 8px;
+  --daterly-border-color-focus: #6366f1;
 }
 ```
 
 Состояния задаются через `data-*`-атрибуты на корневом элементе (`data-focused`, `data-filled`, `data-failed`, `data-disabled`) — стилизуются без JS.
 
-Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/rtdp/docs/theming).
+Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/daterly/docs/theming).
 
 ## API
 
-Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/rtdp/docs).
+Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/daterly/docs).
 
 ## Лицензия
 

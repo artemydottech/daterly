@@ -1,5 +1,5 @@
 {
-  "name": "rtdp-docs",
+  "name": "daterly-docs",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@artemy-tech/rtdp": "*",
+    "daterly": "*",
     "date-fns": "^4.0.0",
     "lucide-react": "^1.14.0",
     "next": "^14.2.5",

@@ -24,10 +24,10 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build --workspace=@artemy-tech/rtdp
-      - run: npm run build --workspace=rtdp-docs
+      - run: npm run build --workspace=daterly
+      - run: npm run build --workspace=daterly-docs
         env:
-          NEXT_PUBLIC_BASE_PATH: /rtdp
+          NEXT_PUBLIC_BASE_PATH: /daterly
       - name: Add .nojekyll
         run: touch docs/out/.nojekyll
       - uses: actions/upload-pages-artifact@v3

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DatePicker } from '@artemy-tech/rtdp'
+import { DatePicker } from 'daterly'
 import { Copy, Check } from 'lucide-react'
 import styles from './ThemePresets.module.css'
 

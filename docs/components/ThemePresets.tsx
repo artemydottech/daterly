@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DatePicker } from '@artemy-tech/rtdp'
+import { DatePicker } from 'daterly'
 import { Copy, Check } from 'lucide-react'
 import styles from './ThemePresets.module.css'
 
@@ -18,11 +18,11 @@ const PRESETS: Preset[] = [
     description: 'Поставляется из коробки',
     swatch: '#1f84db',
     vars: {
-      '--rtdp-color-accent': '#1f84db',
-      '--rtdp-color-border-focus': '#1f84db',
-      '--rtdp-color-label-focus': '#1f84db',
-      '--rtdp-color-today-bg': '#e4f1f9',
-      '--rtdp-radius': '4px',
+      '--daterly-color-accent': '#1f84db',
+      '--daterly-color-border-focus': '#1f84db',
+      '--daterly-color-label-focus': '#1f84db',
+      '--daterly-color-today-bg': '#e4f1f9',
+      '--daterly-radius': '4px',
     },
   },
   {
@@ -31,11 +31,11 @@ const PRESETS: Preset[] = [
     description: 'Фиолетовый акцент, скруглённые углы',
     swatch: '#7c5cff',
     vars: {
-      '--rtdp-color-accent': '#7c5cff',
-      '--rtdp-color-border-focus': '#7c5cff',
-      '--rtdp-color-label-focus': '#7c5cff',
-      '--rtdp-color-today-bg': 'rgba(124, 92, 255, 0.12)',
-      '--rtdp-radius': '8px',
+      '--daterly-color-accent': '#7c5cff',
+      '--daterly-color-border-focus': '#7c5cff',
+      '--daterly-color-label-focus': '#7c5cff',
+      '--daterly-color-today-bg': 'rgba(124, 92, 255, 0.12)',
+      '--daterly-radius': '8px',
     },
   },
   {
@@ -44,11 +44,11 @@ const PRESETS: Preset[] = [
     description: 'Зелёный, чуть мягче радиус',
     swatch: '#10b981',
     vars: {
-      '--rtdp-color-accent': '#10b981',
-      '--rtdp-color-border-focus': '#10b981',
-      '--rtdp-color-label-focus': '#10b981',
-      '--rtdp-color-today-bg': 'rgba(16, 185, 129, 0.12)',
-      '--rtdp-radius': '6px',
+      '--daterly-color-accent': '#10b981',
+      '--daterly-color-border-focus': '#10b981',
+      '--daterly-color-label-focus': '#10b981',
+      '--daterly-color-today-bg': 'rgba(16, 185, 129, 0.12)',
+      '--daterly-radius': '6px',
     },
   },
   {
@@ -57,11 +57,11 @@ const PRESETS: Preset[] = [
     description: 'Розовый акцент',
     swatch: '#e11d48',
     vars: {
-      '--rtdp-color-accent': '#e11d48',
-      '--rtdp-color-border-focus': '#e11d48',
-      '--rtdp-color-label-focus': '#e11d48',
-      '--rtdp-color-today-bg': 'rgba(225, 29, 72, 0.1)',
-      '--rtdp-radius': '10px',
+      '--daterly-color-accent': '#e11d48',
+      '--daterly-color-border-focus': '#e11d48',
+      '--daterly-color-label-focus': '#e11d48',
+      '--daterly-color-today-bg': 'rgba(225, 29, 72, 0.1)',
+      '--daterly-radius': '10px',
     },
   },
   {
@@ -70,11 +70,11 @@ const PRESETS: Preset[] = [
     description: 'Нейтральный графит',
     swatch: '#475569',
     vars: {
-      '--rtdp-color-accent': '#475569',
-      '--rtdp-color-border-focus': '#475569',
-      '--rtdp-color-label-focus': '#475569',
-      '--rtdp-color-today-bg': 'rgba(71, 85, 105, 0.12)',
-      '--rtdp-radius': '4px',
+      '--daterly-color-accent': '#475569',
+      '--daterly-color-border-focus': '#475569',
+      '--daterly-color-label-focus': '#475569',
+      '--daterly-color-today-bg': 'rgba(71, 85, 105, 0.12)',
+      '--daterly-radius': '4px',
     },
   },
 ]

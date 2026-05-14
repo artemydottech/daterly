@@ -1,10 +1,10 @@
 {
-  "name": "@artemy-tech/rtdp",
-  "version": "1.1.0",
+  "name": "daterly",
+  "version": "1.0.0",
   "type": "module",
-  "description": "rtdp — React date & time picker с маской ввода, диапазонами и опциональной интеграцией react-hook-form.",
+  "description": "daterly — React date & time picker с маской ввода, диапазонами и опциональной интеграцией react-hook-form.",
   "keywords": [
-    "rtdp",
+    "daterly",
     "react",
     "datepicker",
     "date-picker",
@@ -14,10 +14,10 @@
   ],
   "author": "Artemy",
   "license": "MIT",
-  "homepage": "https://artemydottech.github.io/rtdp",
+  "homepage": "https://artemydottech.github.io/daterly",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/artemydottech/rtdp.git"
+    "url": "git+https://github.com/artemydottech/daterly.git"
   },
   "publishConfig": {
     "access": "public"

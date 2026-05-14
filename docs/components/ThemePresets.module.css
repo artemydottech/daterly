@@ -130,13 +130,13 @@
   flex: 1;
 }
 
-.stage :global(.rtdp),
-.stage :global(.rtdp-range) {
+.stage :global(.daterly),
+.stage :global(.daterly-range) {
   width: 100%;
   max-width: 280px;
 }
 
-.stage :global(.rtdp__field) {
+.stage :global(.daterly__field) {
   width: 100%;
   min-width: 0;
 }
