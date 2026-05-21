@@ -25,7 +25,6 @@ type Demo = 'single' | 'range' | 'time';
 
 const INSTALL_COMMAND = 'npm install daterly';
 
-// Краткий чейнджсет последнего релиза для eyebrow-блока — обновлять на каждом релизе.
 const RELEASE_SUMMARY = 'ARIA-доступность';
 
 function formatValue(
