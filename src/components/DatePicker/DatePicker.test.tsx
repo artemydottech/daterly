@@ -6,7 +6,7 @@ import { DatePicker } from './DatePicker'
 describe('DatePicker', () => {
   it('renders without crashing', () => {
     render(<DatePicker />)
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 
   it('renders label', () => {
@@ -17,7 +17,7 @@ describe('DatePicker', () => {
   it('applies mask while typing', async () => {
     const user = userEvent.setup()
     render(<DatePicker />)
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     await user.type(input, '01012024')
     expect(input).toHaveValue('01.01.2024')
   })
@@ -25,7 +25,7 @@ describe('DatePicker', () => {
   it('ignores non-digit characters', async () => {
     const user = userEvent.setup()
     render(<DatePicker />)
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     await user.type(input, 'абвabc!@#')
     expect(input).toHaveValue('')
   })
@@ -34,7 +34,7 @@ describe('DatePicker', () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<DatePicker onChange={onChange} />)
-    await user.type(screen.getByRole('textbox'), '15032024')
+    await user.type(screen.getByRole('combobox'), '15032024')
     const date = onChange.mock.calls.at(-1)?.[0] as Date
     expect(date).toBeInstanceOf(Date)
     expect(date.getDate()).toBe(15)
@@ -46,7 +46,7 @@ describe('DatePicker', () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<DatePicker defaultValue={new Date(2024, 0, 1)} onChange={onChange} />)
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     await user.clear(input)
     expect(onChange).toHaveBeenLastCalledWith(undefined)
   })
@@ -56,7 +56,7 @@ describe('DatePicker', () => {
     const onChange = vi.fn()
     render(<DatePicker onChange={onChange} />)
     // 32.01.2024 — invalid day
-    await user.type(screen.getByRole('textbox'), '32012024')
+    await user.type(screen.getByRole('combobox'), '32012024')
     const calls = onChange.mock.calls
     const lastDate = calls.at(-1)?.[0]
     expect(lastDate).toBeUndefined()
@@ -65,7 +65,7 @@ describe('DatePicker', () => {
   it('opens calendar popover on focus', async () => {
     const user = userEvent.setup()
     render(<DatePicker />)
-    await user.click(screen.getByRole('textbox'))
+    await user.click(screen.getByRole('combobox'))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
   })
 
@@ -84,7 +84,7 @@ describe('DatePicker', () => {
         <button>outside</button>
       </div>,
     )
-    await user.click(screen.getByRole('textbox'))
+    await user.click(screen.getByRole('combobox'))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'outside' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -92,7 +92,7 @@ describe('DatePicker', () => {
 
   it('is disabled when disabled prop is true', () => {
     render(<DatePicker disabled />)
-    expect(screen.getByRole('textbox')).toBeDisabled()
+    expect(screen.getByRole('combobox')).toBeDisabled()
   })
 
   it('sets data-failed attribute when failed prop is true', () => {
@@ -107,20 +107,20 @@ describe('DatePicker', () => {
 
   it('reflects controlled value in the input', () => {
     render(<DatePicker value={new Date(2024, 2, 15, 12, 0, 0)} />)
-    expect(screen.getByRole('textbox')).toHaveValue('15.03.2024')
+    expect(screen.getByRole('combobox')).toHaveValue('15.03.2024')
   })
 
   it('updates input when controlled value changes', () => {
     const { rerender } = render(<DatePicker value={new Date(2024, 2, 15, 12, 0, 0)} />)
-    expect(screen.getByRole('textbox')).toHaveValue('15.03.2024')
+    expect(screen.getByRole('combobox')).toHaveValue('15.03.2024')
     rerender(<DatePicker value={new Date(2024, 5, 1, 12, 0, 0)} />)
-    expect(screen.getByRole('textbox')).toHaveValue('01.06.2024')
+    expect(screen.getByRole('combobox')).toHaveValue('01.06.2024')
   })
 
   it('clears input when controlled value becomes undefined', () => {
     const { rerender } = render(<DatePicker value={new Date(2024, 2, 15, 12, 0, 0)} />)
     rerender(<DatePicker value={undefined} onChange={vi.fn()} />)
-    expect(screen.getByRole('textbox')).toHaveValue('')
+    expect(screen.getByRole('combobox')).toHaveValue('')
   })
 
   it('renders customTrigger instead of input', () => {
@@ -134,7 +134,7 @@ describe('DatePicker', () => {
       />,
     )
     expect(screen.getByRole('button', { name: 'Выбрать дату' })).toBeInTheDocument()
-    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
   })
 
   it('renders renderInput replacement', () => {
@@ -162,7 +162,7 @@ describe('DatePicker', () => {
     it('shows time placeholder when showTime is true', async () => {
       const user = userEvent.setup()
       render(<DatePicker showTime />)
-      const input = screen.getByRole('textbox')
+      const input = screen.getByRole('combobox')
       await user.click(input)
       expect(input).toHaveAttribute('placeholder', 'дд.мм.гггг чч:мм:сс')
     })
@@ -186,7 +186,7 @@ describe('DatePicker', () => {
           onChange={onChange}
         />,
       )
-      await user.click(screen.getByRole('textbox'))
+      await user.click(screen.getByRole('combobox'))
       const hoursCol = container.querySelectorAll('.time-panel__column')[0]
       const hour15 = Array.from(hoursCol.querySelectorAll('.time-panel__item')).find(
         (el) => el.textContent === '15',
@@ -207,7 +207,7 @@ describe('DatePicker', () => {
           onChange={onChange}
         />,
       )
-      await user.click(screen.getByRole('textbox'))
+      await user.click(screen.getByRole('combobox'))
       const timeInput = screen.getByLabelText('Время') as HTMLInputElement
       await user.tripleClick(timeInput)
       await user.keyboard('1545')
@@ -219,11 +219,34 @@ describe('DatePicker', () => {
     it('keeps popover open after time selection and closes on OK', async () => {
       const user = userEvent.setup()
       render(<DatePicker defaultValue={new Date(2024, 2, 15, 10, 0, 0)} showTime={{ format: 'HH:mm' }} />)
-      await user.click(screen.getByRole('textbox'))
+      await user.click(screen.getByRole('combobox'))
       const okBtn = screen.getByRole('button', { name: 'OK' })
       expect(okBtn).toBeInTheDocument()
       await user.click(okBtn)
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    })
+
+    it('keeps the existing time when a calendar day is selected', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DatePicker
+          defaultValue={new Date(2024, 2, 15, 14, 30, 0)}
+          showTime={{ format: 'HH:mm' }}
+          onChange={onChange}
+        />,
+      )
+      await user.click(screen.getByRole('combobox'))
+      const dialog = screen.getByRole('dialog')
+      const day20 = Array.from(dialog.querySelectorAll('button')).find(
+        (b) => b.textContent?.trim() === '20',
+      )
+      if (!day20) throw new Error('day 20 not found')
+      await user.click(day20)
+      const date = onChange.mock.calls.at(-1)?.[0] as Date
+      expect(date.getDate()).toBe(20)
+      expect(date.getHours()).toBe(14)
+      expect(date.getMinutes()).toBe(30)
     })
   })
 
@@ -251,7 +274,7 @@ describe('DatePicker', () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<DatePicker onChange={onChange} />)
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     input.focus()
     await user.paste('15/03/2024')
     expect(input).toHaveValue('15.03.2024')
@@ -262,7 +285,7 @@ describe('DatePicker', () => {
   it('Backspace right after a separator removes the separator and the preceding digit', async () => {
     const user = userEvent.setup()
     render(<DatePicker defaultValue={new Date(2024, 0, 15, 12, 0, 0)} />)
-    const input = screen.getByRole('textbox') as HTMLInputElement
+    const input = screen.getByRole('combobox') as HTMLInputElement
     expect(input.value).toBe('15.01.2024')
     input.focus()
     input.setSelectionRange(3, 3) // right after the first dot
@@ -274,7 +297,7 @@ describe('DatePicker', () => {
   it('restores last valid value on blur when input is partial', async () => {
     const user = userEvent.setup()
     render(<DatePicker defaultValue={new Date(2024, 0, 15, 12, 0, 0)} />)
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     await user.click(input)
     await user.clear(input)
     await user.type(input, '1503')
@@ -288,7 +311,7 @@ describe('DatePicker', () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<DatePicker defaultValue={new Date(2024, 2, 15, 12, 0, 0)} onChange={onChange} />)
-    await user.click(screen.getByRole('textbox'))
+    await user.click(screen.getByRole('combobox'))
     const dialog = screen.getByRole('dialog')
     const day20 = await Promise.resolve(
       Array.from(dialog.querySelectorAll('button')).find((b) => b.textContent?.trim() === '20'),

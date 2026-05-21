@@ -42,7 +42,28 @@
     ".",
     "docs"
   ],
+  "size-limit": [
+    {
+      "name": "daterly",
+      "path": "dist/index.js",
+      "import": "{ Calendar, DatePicker, DateRangePicker }",
+      "ignore": [
+        "react",
+        "react-dom"
+      ]
+    },
+    {
+      "name": "daterly/rhf",
+      "path": "dist/rhf.js",
+      "ignore": [
+        "react",
+        "react-dom",
+        "react-hook-form"
+      ]
+    }
+  ],
   "scripts": {
+    "size": "size-limit",
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
@@ -71,6 +92,7 @@
     "@changesets/cli": "^2.31.0",
     "@playwright/experimental-ct-react": "^1.59.1",
     "@playwright/test": "^1.59.1",
+    "@size-limit/preset-small-lib": "^12.1.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.0.0",
@@ -85,9 +107,11 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.0.0",
+    "size-limit": "^12.1.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
     "vite": "^5.0.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vitest-axe": "^0.1.0"
   }
 }

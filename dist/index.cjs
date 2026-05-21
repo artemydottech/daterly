@@ -449,6 +449,9 @@ function DatePicker({
   const [inputInvalid, setInputInvalid] = (0, import_react4.useState)(false);
   const inputRef = (0, import_react4.useRef)(null);
   const containerRef = (0, import_react4.useRef)(null);
+  const popoverId = (0, import_react4.useRef)(
+    `daterly-popover-${Math.random().toString(36).slice(2, 9)}`
+  ).current;
   const lastValidRef = (0, import_react4.useRef)(inputValue);
   const lastEmittedRef = (0, import_react4.useRef)(
     value !== void 0 ? value : defaultValue
@@ -656,9 +659,11 @@ function DatePicker({
                   },
                   onBlur: handleBlur,
                   "aria-label": label != null ? label : "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443",
+                  role: !noCalendar ? "combobox" : void 0,
                   "aria-expanded": !noCalendar ? open : void 0,
                   "aria-haspopup": !noCalendar ? "dialog" : void 0,
-                  "aria-invalid": inputInvalid || void 0
+                  "aria-controls": !noCalendar && open ? popoverId : void 0,
+                  "aria-invalid": failed || inputInvalid || void 0
                 };
                 if (renderInput) return renderInput(inputProps);
                 const { ref, ...rest } = inputProps;
@@ -677,6 +682,7 @@ function DatePicker({
               timeFormat && "daterly__popover--with-time",
               timeFormat && `daterly__popover--time-${timePickerType}`
             ].filter(Boolean).join(" "),
+            id: popoverId,
             role: "dialog",
             "aria-label": "\u041A\u0430\u043B\u0435\u043D\u0434\u0430\u0440\u044C",
             children: timeFormat ? timePickerType === "drum" ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
@@ -880,6 +886,9 @@ function DateRangePicker({
   const [hoveredDate, setHoveredDate] = (0, import_react5.useState)(void 0);
   const inputRef = (0, import_react5.useRef)(null);
   const containerRef = (0, import_react5.useRef)(null);
+  const popoverId = (0, import_react5.useRef)(
+    `daterly-popover-${Math.random().toString(36).slice(2, 9)}`
+  ).current;
   const lastEmittedFromRef = (0, import_react5.useRef)(
     value !== void 0 ? value == null ? void 0 : value.from : defaultValue == null ? void 0 : defaultValue.from
   );
@@ -1154,9 +1163,11 @@ function DateRangePicker({
                   },
                   onBlur: () => setFocused(false),
                   "aria-label": label != null ? label : "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0438\u043E\u0434",
+                  role: "combobox",
                   "aria-expanded": open,
                   "aria-haspopup": "dialog",
-                  "aria-invalid": inputInvalid || void 0
+                  "aria-controls": open ? popoverId : void 0,
+                  "aria-invalid": failed || inputInvalid || void 0
                 }
               ),
               resolvedIcon && iconPosition === "end" && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { className: "daterly__icon daterly__icon--end", children: resolvedIcon })
@@ -1173,6 +1184,7 @@ function DateRangePicker({
               showTime && "daterly__popover--with-time",
               showTime && `daterly__popover--time-${timePickerType}`
             ].filter(Boolean).join(" "),
+            id: popoverId,
             role: "dialog",
             "aria-label": "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0438\u043E\u0434",
             children: showTime ? timePickerType === "drum" ? /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(import_jsx_runtime7.Fragment, { children: [

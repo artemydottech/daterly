@@ -25,6 +25,9 @@ type Demo = 'single' | 'range' | 'time';
 
 const INSTALL_COMMAND = 'npm install daterly';
 
+// Краткий чейнджсет последнего релиза для eyebrow-блока — обновлять на каждом релизе.
+const RELEASE_SUMMARY = 'ARIA-доступность';
+
 function formatValue(
   demo: Demo,
   date: Date | undefined,
@@ -126,8 +129,7 @@ export default function Landing() {
         <div className={styles.heroInner}>
           <div className={styles.eyebrow}>
             <span className={styles.eyebrowDot} />v
-            {pkg.version.split('.').slice(0, 3).join('.')} — любые локали и
-            форматы даты
+            {pkg.version.split('.').slice(0, 3).join('.')} — {RELEASE_SUMMARY}
           </div>
           <h1 className={styles.title}>
             <span className={styles.titleIcon} aria-hidden>
@@ -179,8 +181,8 @@ export default function Landing() {
             <li className={styles.badge}>
               <Package size={13} strokeWidth={2} />
               <span className={styles.badgeText}>
-                <span className={styles.badgeValue}>~8 KB</span>
-                <span className={styles.badgeLabel}>gzip</span>
+                <span className={styles.badgeValue}>~29 KB</span>
+                <span className={styles.badgeLabel}>brotli</span>
               </span>
             </li>
             <li className={styles.badge}>
@@ -304,8 +306,8 @@ export default function Landing() {
             <span className={styles.bentoTag}>Маска</span>
             <h3>Цифры на нужные позиции</h3>
             <p>
-              Печатай подряд — разделители расставятся сами. Бэкспейс
-              пропускает их, валидность проверяется round-trip&apos;ом.
+              Печатай подряд — разделители расставятся сами. Бэкспейс пропускает
+              их, валидность проверяется round-trip&apos;ом.
             </p>
             <div className={styles.maskDemo}>
               <div className={styles.maskField}>
@@ -323,13 +325,11 @@ export default function Landing() {
           <div className={`${styles.bentoTile} ${styles.bentoBundle}`}>
             <span className={styles.bentoTag}>Бандл</span>
             <div className={styles.bundleSize}>
-              <span className={styles.bundleSizeNumber}>~8</span>
+              <span className={styles.bundleSizeNumber}>~29</span>
               <span className={styles.bundleSizeUnit}>KB</span>
-              <span className={styles.bundleSizeGzip}>gzip</span>
+              <span className={styles.bundleSizeGzip}>brotli</span>
             </div>
-            <p>
-              Без рантайм-зависимостей кроме date-fns и react-day-picker.
-            </p>
+            <p>Без рантайм-зависимостей кроме date-fns и react-day-picker.</p>
             <ul className={styles.bundleBadges}>
               <li>ESM</li>
               <li>CJS</li>

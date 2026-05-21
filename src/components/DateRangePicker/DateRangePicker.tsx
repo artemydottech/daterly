@@ -120,6 +120,9 @@ export function DateRangePicker({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const popoverId = useRef(
+    `daterly-popover-${Math.random().toString(36).slice(2, 9)}`,
+  ).current;
   // Track last emitted range to ignore parent echoing it back
   const lastEmittedFromRef = useRef<Date | undefined>(
     value !== undefined ? value?.from : defaultValue?.from,
@@ -443,9 +446,11 @@ export function DateRangePicker({
           }}
           onBlur={() => setFocused(false)}
           aria-label={label ?? 'Выберите период'}
+          role="combobox"
           aria-expanded={open}
           aria-haspopup="dialog"
-          aria-invalid={inputInvalid || undefined}
+          aria-controls={open ? popoverId : undefined}
+          aria-invalid={failed || inputInvalid || undefined}
         />
         {resolvedIcon && iconPosition === 'end' && (
           <span className="daterly__icon daterly__icon--end">
@@ -465,6 +470,7 @@ export function DateRangePicker({
           ]
             .filter(Boolean)
             .join(' ')}
+          id={popoverId}
           role="dialog"
           aria-label="Выберите период"
         >

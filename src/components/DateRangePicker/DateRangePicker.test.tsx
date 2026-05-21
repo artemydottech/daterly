@@ -29,7 +29,7 @@ function Controlled({
 describe('DateRangePicker', () => {
   it('renders without crashing', () => {
     render(<DateRangePicker />)
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 
   it('renders label', () => {
@@ -40,7 +40,7 @@ describe('DateRangePicker', () => {
   it('applies range mask while typing', async () => {
     const user = userEvent.setup()
     render(<DateRangePicker />)
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     await user.type(input, '0101202431122024')
     expect(input).toHaveValue('01.01.2024 — 31.12.2024')
   })
@@ -48,22 +48,22 @@ describe('DateRangePicker', () => {
   it('shows partial from-date while typing', async () => {
     const user = userEvent.setup()
     render(<DateRangePicker />)
-    await user.type(screen.getByRole('textbox'), '01012024')
-    expect(screen.getByRole('textbox')).toHaveValue('01.01.2024')
+    await user.type(screen.getByRole('combobox'), '01012024')
+    expect(screen.getByRole('combobox')).toHaveValue('01.01.2024')
   })
 
   it('ignores non-digit input', async () => {
     const user = userEvent.setup()
     render(<DateRangePicker />)
-    await user.type(screen.getByRole('textbox'), 'abc')
-    expect(screen.getByRole('textbox')).toHaveValue('')
+    await user.type(screen.getByRole('combobox'), 'abc')
+    expect(screen.getByRole('combobox')).toHaveValue('')
   })
 
   it('calls onChange with from and to on valid complete range input', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<DateRangePicker onChange={onChange} />)
-    await user.type(screen.getByRole('textbox'), '0101202431122024')
+    await user.type(screen.getByRole('combobox'), '0101202431122024')
     const lastCall = onChange.mock.calls.at(-1)?.[0]
     expect(lastCall?.from).toBeInstanceOf(Date)
     expect(lastCall?.to).toBeInstanceOf(Date)
@@ -76,7 +76,7 @@ describe('DateRangePicker', () => {
   it('opens calendar popover on focus', async () => {
     const user = userEvent.setup()
     render(<DateRangePicker />)
-    await user.click(screen.getByRole('textbox'))
+    await user.click(screen.getByRole('combobox'))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
   })
 
@@ -88,7 +88,7 @@ describe('DateRangePicker', () => {
         <button>outside</button>
       </div>,
     )
-    await user.click(screen.getByRole('textbox'))
+    await user.click(screen.getByRole('combobox'))
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'outside' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -96,7 +96,7 @@ describe('DateRangePicker', () => {
 
   it('is disabled when disabled prop is true', () => {
     render(<DateRangePicker disabled />)
-    expect(screen.getByRole('textbox')).toBeDisabled()
+    expect(screen.getByRole('combobox')).toBeDisabled()
   })
 
   it('sets data-failed attribute when failed prop is true', () => {
@@ -113,18 +113,18 @@ describe('DateRangePicker', () => {
         }}
       />,
     )
-    expect(screen.getByRole('textbox')).toHaveValue('01.01.2024 — 31.12.2024')
+    expect(screen.getByRole('combobox')).toHaveValue('01.01.2024 — 31.12.2024')
   })
 
   it('updates input when controlled value changes', () => {
     const { rerender } = render(
       <DateRangePicker value={{ from: new Date(2024, 0, 1, 12, 0, 0), to: new Date(2024, 5, 30, 12, 0, 0) }} />,
     )
-    expect(screen.getByRole('textbox')).toHaveValue('01.01.2024 — 30.06.2024')
+    expect(screen.getByRole('combobox')).toHaveValue('01.01.2024 — 30.06.2024')
     rerender(
       <DateRangePicker value={{ from: new Date(2024, 2, 1, 12, 0, 0), to: new Date(2024, 8, 30, 12, 0, 0) }} />,
     )
-    expect(screen.getByRole('textbox')).toHaveValue('01.03.2024 — 30.09.2024')
+    expect(screen.getByRole('combobox')).toHaveValue('01.03.2024 — 30.09.2024')
   })
 
   it('clears input when controlled value becomes undefined', () => {
@@ -132,7 +132,7 @@ describe('DateRangePicker', () => {
       <DateRangePicker value={{ from: new Date(2024, 0, 1, 12, 0, 0), to: new Date(2024, 11, 31, 12, 0, 0) }} />,
     )
     rerender(<DateRangePicker value={undefined} onChange={vi.fn()} />)
-    expect(screen.getByRole('textbox')).toHaveValue('')
+    expect(screen.getByRole('combobox')).toHaveValue('')
   })
 
   it('renders defaultValue', () => {
@@ -144,7 +144,7 @@ describe('DateRangePicker', () => {
         }}
       />,
     )
-    expect(screen.getByRole('textbox')).toHaveValue('01.01.2024 — 31.12.2024')
+    expect(screen.getByRole('combobox')).toHaveValue('01.01.2024 — 31.12.2024')
   })
 
   it('shows spinner icon when loading', () => {
@@ -173,7 +173,7 @@ describe('DateRangePicker', () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(<DateRangePicker onChange={onChange} />)
-    const input = screen.getByRole('textbox')
+    const input = screen.getByRole('combobox')
     input.focus()
     await user.paste('01/01/2024 — 31/12/2024')
     expect(input).toHaveValue('01.01.2024 — 31.12.2024')
@@ -192,7 +192,7 @@ describe('DateRangePicker', () => {
         }}
       />,
     )
-    const input = screen.getByRole('textbox') as HTMLInputElement
+    const input = screen.getByRole('combobox') as HTMLInputElement
     expect(input.value).toBe('01.01.2024 — 31.12.2024')
     input.focus()
     input.setSelectionRange(13, 13) // inside the " — " separator
@@ -212,7 +212,7 @@ describe('DateRangePicker', () => {
         onChange={onChange}
       />,
     )
-    await user.click(screen.getByRole('textbox'))
+    await user.click(screen.getByRole('combobox'))
     const dialog = screen.getByRole('dialog')
     const days = Array.from(dialog.querySelectorAll('button.rdp-day_button')) as HTMLButtonElement[]
     const day5 = days.find((b) => b.textContent?.trim() === '5')!
@@ -238,7 +238,7 @@ describe('DateRangePicker', () => {
           showTime={{ format: 'HH:mm' }}
         />,
       )
-      await user.click(screen.getByRole('textbox'))
+      await user.click(screen.getByRole('combobox'))
       expect(screen.getByText('Начало')).toBeInTheDocument()
       expect(screen.getByText('Конец')).toBeInTheDocument()
     })
@@ -257,7 +257,7 @@ describe('DateRangePicker', () => {
           onChange={onChange}
         />,
       )
-      await user.click(screen.getByRole('textbox'))
+      await user.click(screen.getByRole('combobox'))
       const fromPanel = container.querySelectorAll('.time-panel')[0]
       const hour15 = Array.from(fromPanel.querySelectorAll('.time-panel__item')).find(
         (el) => el.textContent === '15',
@@ -280,7 +280,7 @@ describe('DateRangePicker', () => {
           onChange={onChange}
         />,
       )
-      await user.click(screen.getByRole('textbox'))
+      await user.click(screen.getByRole('combobox'))
       const fromInput = screen.getByLabelText('Время начала') as HTMLInputElement
       await user.tripleClick(fromInput)
       await user.keyboard('1530')
@@ -299,7 +299,7 @@ describe('DateRangePicker', () => {
           }}
         />,
       )
-      const input = screen.getByRole('textbox') as HTMLInputElement
+      const input = screen.getByRole('combobox') as HTMLInputElement
       expect(input.value).toBe('14.05.2026 — 15.05.2026')
       input.focus()
       input.setSelectionRange(input.value.length, input.value.length)
@@ -334,6 +334,28 @@ describe('DateRangePicker', () => {
       expect(input.value).toBe('14.05.2026 00:0')
     })
 
+    it('updates the to-time when typed into the time input', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DateRangePicker
+          defaultValue={{
+            from: new Date(2024, 2, 1, 10, 0, 0),
+            to: new Date(2024, 2, 10, 18, 0, 0),
+          }}
+          showTime={{ format: 'HH:mm' }}
+          onChange={onChange}
+        />,
+      )
+      await user.click(screen.getByRole('combobox'))
+      const toInput = screen.getByLabelText('Время конца') as HTMLInputElement
+      await user.tripleClick(toInput)
+      await user.keyboard('1645')
+      const last = onChange.mock.calls.at(-1)?.[0]
+      expect(last?.to?.getHours()).toBe(16)
+      expect(last?.to?.getMinutes()).toBe(45)
+    })
+
     it('closes the popover on OK', async () => {
       const user = userEvent.setup()
       render(
@@ -345,7 +367,7 @@ describe('DateRangePicker', () => {
           showTime={{ format: 'HH:mm' }}
         />,
       )
-      await user.click(screen.getByRole('textbox'))
+      await user.click(screen.getByRole('combobox'))
       await user.click(screen.getByRole('button', { name: 'OK' }))
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })

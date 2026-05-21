@@ -4,7 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/daterly?color=green)](https://www.npmjs.com/package/daterly)
 [![CI](https://github.com/artemydottech/daterly/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/daterly/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/artemydottech/daterly/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/daterly)
-[![publish size](https://badgen.net/packagephobia/publish/daterly)](https://packagephobia.com/result?p=daterly)
+[![minzipped size](https://img.shields.io/badge/minzip-~29_kB-blue)](https://bundlephobia.com/package/daterly)
 
 React DatePicker с маской ввода, поддержкой произвольных локалей и форматов даты, выбором диапазона и времени, опциональной интеграцией с react-hook-form. Построен на [react-day-picker v9](https://daypicker.dev/) и [date-fns v4](https://date-fns.org/).
 

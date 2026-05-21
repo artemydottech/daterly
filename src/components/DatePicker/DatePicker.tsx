@@ -42,9 +42,11 @@ export interface DatePickerInputProps {
   onFocus: React.FocusEventHandler<HTMLInputElement>;
   onBlur: React.FocusEventHandler<HTMLInputElement>;
   'aria-label': string;
+  role: 'combobox' | undefined;
   'aria-expanded': boolean | undefined;
   'aria-haspopup': 'dialog' | undefined;
-  'aria-invalid': true | undefined;
+  'aria-controls': string | undefined;
+  'aria-invalid': boolean | undefined;
 }
 
 export interface DatePickerProps {
@@ -131,6 +133,9 @@ export function DatePicker({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const popoverId = useRef(
+    `daterly-popover-${Math.random().toString(36).slice(2, 9)}`,
+  ).current;
   const lastValidRef = useRef(inputValue);
   // Track what we last emitted via onChange so we can ignore parent echoing it back
   const lastEmittedRef = useRef<Date | undefined>(
@@ -368,9 +373,11 @@ export function DatePicker({
               },
               onBlur: handleBlur,
               'aria-label': label ?? 'Выберите дату',
+              role: !noCalendar ? 'combobox' : undefined,
               'aria-expanded': !noCalendar ? open : undefined,
               'aria-haspopup': !noCalendar ? 'dialog' : undefined,
-              'aria-invalid': inputInvalid || undefined,
+              'aria-controls': !noCalendar && open ? popoverId : undefined,
+              'aria-invalid': failed || inputInvalid || undefined,
             };
             if (renderInput) return renderInput(inputProps);
             const { ref, ...rest } = inputProps;
@@ -395,6 +402,7 @@ export function DatePicker({
           ]
             .filter(Boolean)
             .join(' ')}
+          id={popoverId}
           role="dialog"
           aria-label="Календарь"
         >

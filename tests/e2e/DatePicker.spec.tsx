@@ -6,13 +6,13 @@ import { CustomTriggerDatePicker } from './fixtures/CustomTriggerDatePicker'
 test.describe('DatePicker', () => {
   test('renders input', async ({ mount }) => {
     const component = await mount(<DatePicker label="Дата" />)
-    await expect(component.getByRole('textbox')).toBeVisible()
+    await expect(component.getByRole('combobox')).toBeVisible()
     await expect(component.getByText('Дата')).toBeVisible()
   })
 
   test('masks input as user types', async ({ mount }) => {
     const component = await mount(<DatePicker />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('combobox')
     await input.click()
     await input.pressSequentially('01012024')
     await expect(input).toHaveValue('01.01.2024')
@@ -20,7 +20,7 @@ test.describe('DatePicker', () => {
 
   test('ignores non-digit characters', async ({ mount }) => {
     const component = await mount(<DatePicker />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('combobox')
     await input.click()
     await input.pressSequentially('abc!@#')
     await expect(input).toHaveValue('')
@@ -28,7 +28,7 @@ test.describe('DatePicker', () => {
 
   test('opens calendar popover on focus', async ({ mount }) => {
     const component = await mount(<DatePicker />)
-    await component.getByRole('textbox').click()
+    await component.getByRole('combobox').click()
     await expect(component.getByRole('dialog')).toBeVisible()
   })
 
@@ -45,7 +45,7 @@ test.describe('DatePicker', () => {
         <div id="outside" style={{ marginTop: 400, height: 50 }}>outside</div>
       </div>,
     )
-    await component.getByRole('textbox').click()
+    await component.getByRole('combobox').click()
     await expect(component.getByRole('dialog')).toBeVisible()
     await page.mouse.click(10, 500)
     await expect(component.getByRole('dialog')).not.toBeVisible()
@@ -53,7 +53,7 @@ test.describe('DatePicker', () => {
 
   test('selects date from calendar and closes popover', async ({ mount }) => {
     const component = await mount(<DatePicker />)
-    await component.getByRole('textbox').click()
+    await component.getByRole('combobox').click()
     const dialog = component.getByRole('dialog')
     await expect(dialog).toBeVisible()
 
@@ -61,30 +61,30 @@ test.describe('DatePicker', () => {
     await dayButton.click()
 
     await expect(component.getByRole('dialog')).not.toBeVisible()
-    await expect(component.getByRole('textbox')).not.toHaveValue('')
+    await expect(component.getByRole('combobox')).not.toHaveValue('')
   })
 
   test('is disabled — input is not interactive', async ({ mount }) => {
     const component = await mount(<DatePicker disabled />)
-    await expect(component.getByRole('textbox')).toBeDisabled()
+    await expect(component.getByRole('combobox')).toBeDisabled()
   })
 
   test('reflects controlled value on first render', async ({ mount }) => {
     const date = new Date(2024, 2, 15, 12, 0, 0)
     const component = await mount(<DatePicker value={date} />)
-    await expect(component.getByRole('textbox')).toHaveValue('15.03.2024')
+    await expect(component.getByRole('combobox')).toHaveValue('15.03.2024')
   })
 
   test('updates input when controlled value prop changes', async ({ mount }) => {
     const component = await mount(<ControlledDatePicker />)
-    await expect(component.getByRole('textbox')).toHaveValue('01.01.2024')
+    await expect(component.getByRole('combobox')).toHaveValue('01.01.2024')
     await component.getByRole('button', { name: 'Change' }).click()
-    await expect(component.getByRole('textbox')).toHaveValue('15.06.2024')
+    await expect(component.getByRole('combobox')).toHaveValue('15.06.2024')
   })
 
   test('shows datetime mask when showTime is set', async ({ mount }) => {
     const component = await mount(<DatePicker showTime={{ format: 'HH:mm' }} />)
-    const input = component.getByRole('textbox', { name: 'Выберите дату' })
+    const input = component.getByRole('combobox', { name: 'Выберите дату' })
     await input.click()
     await input.pressSequentially('150320241430')
     await expect(input).toHaveValue('15.03.2024 14:30')
@@ -93,12 +93,12 @@ test.describe('DatePicker', () => {
   test('renders customTrigger instead of default input', async ({ mount, page }) => {
     await mount(<CustomTriggerDatePicker />)
     await expect(page.getByTestId('custom-trigger')).toBeVisible()
-    await expect(page.getByRole('textbox')).not.toBeAttached()
+    await expect(page.getByRole('combobox')).not.toBeAttached()
   })
 
   test('backspace removes digits correctly', async ({ mount }) => {
     const component = await mount(<DatePicker />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('combobox')
     await input.click()
     await input.pressSequentially('01012024')
     await expect(input).toHaveValue('01.01.2024')
@@ -112,7 +112,7 @@ test.describe('DatePicker', () => {
 
   test('paste strips non-digits and masks result', async ({ mount }) => {
     const component = await mount(<DatePicker />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('combobox')
     await input.click()
     await input.focus()
     await input.evaluate((el: HTMLInputElement) => {

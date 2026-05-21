@@ -975,7 +975,7 @@
   position: relative;
   display: block;
   height: 40px;
-  background: var(--lp-surface);
+  background: var(--daterly-color-bg, #fff);
   border: 1px solid var(--lp-border);
   border-radius: 8px;
   transition: border-color 0.15s, box-shadow 0.15s;

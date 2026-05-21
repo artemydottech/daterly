@@ -6,13 +6,13 @@ import { RangeSelectionWrapper } from './fixtures/RangeSelectionWrapper'
 test.describe('DateRangePicker', () => {
   test('renders input', async ({ mount }) => {
     const component = await mount(<DateRangePicker label="Период" />)
-    await expect(component.getByRole('textbox')).toBeVisible()
+    await expect(component.getByRole('combobox')).toBeVisible()
     await expect(component.getByText('Период')).toBeVisible()
   })
 
   test('masks input as user types a full range', async ({ mount }) => {
     const component = await mount(<DateRangePicker />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('combobox')
     await input.click()
     await input.pressSequentially('0101202431122024')
     await expect(input).toHaveValue('01.01.2024 — 31.12.2024')
@@ -20,7 +20,7 @@ test.describe('DateRangePicker', () => {
 
   test('shows separator after 8 digits', async ({ mount }) => {
     const component = await mount(<DateRangePicker />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('combobox')
     await input.click()
     await input.pressSequentially('01012024')
     await expect(input).toHaveValue('01.01.2024')
@@ -30,7 +30,7 @@ test.describe('DateRangePicker', () => {
 
   test('ignores non-digit input', async ({ mount }) => {
     const component = await mount(<DateRangePicker />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('combobox')
     await input.click()
     await input.pressSequentially('abc!@#')
     await expect(input).toHaveValue('')
@@ -38,7 +38,7 @@ test.describe('DateRangePicker', () => {
 
   test('opens calendar on focus', async ({ mount }) => {
     const component = await mount(<DateRangePicker />)
-    await component.getByRole('textbox').click()
+    await component.getByRole('combobox').click()
     await expect(component.getByRole('dialog')).toBeVisible()
   })
 
@@ -49,7 +49,7 @@ test.describe('DateRangePicker', () => {
         <div id="outside" style={{ marginTop: 400, height: 50 }}>outside</div>
       </div>,
     )
-    await component.getByRole('textbox').click()
+    await component.getByRole('combobox').click()
     await expect(component.getByRole('dialog')).toBeVisible()
     await page.mouse.click(10, 500)
     await expect(component.getByRole('dialog')).not.toBeVisible()
@@ -57,7 +57,7 @@ test.describe('DateRangePicker', () => {
 
   test('selects range via two calendar clicks', async ({ mount }) => {
     const component = await mount(<RangeSelectionWrapper />)
-    await component.getByRole('textbox').click()
+    await component.getByRole('combobox').click()
     const dialog = component.getByRole('dialog')
     await expect(dialog).toBeVisible()
 
@@ -70,7 +70,7 @@ test.describe('DateRangePicker', () => {
 
   test('is disabled — input is not interactive', async ({ mount }) => {
     const component = await mount(<DateRangePicker disabled />)
-    await expect(component.getByRole('textbox')).toBeDisabled()
+    await expect(component.getByRole('combobox')).toBeDisabled()
   })
 
   test('reflects controlled value on first render', async ({ mount }) => {
@@ -82,19 +82,19 @@ test.describe('DateRangePicker', () => {
         }}
       />,
     )
-    await expect(component.getByRole('textbox')).toHaveValue('01.01.2024 — 31.12.2024')
+    await expect(component.getByRole('combobox')).toHaveValue('01.01.2024 — 31.12.2024')
   })
 
   test('updates input when controlled value changes', async ({ mount }) => {
     const component = await mount(<ControlledDateRangePicker />)
-    await expect(component.getByRole('textbox')).toHaveValue('01.01.2024 — 30.06.2024')
+    await expect(component.getByRole('combobox')).toHaveValue('01.01.2024 — 30.06.2024')
     await component.getByRole('button', { name: 'Change' }).click()
-    await expect(component.getByRole('textbox')).toHaveValue('01.03.2024 — 30.09.2024')
+    await expect(component.getByRole('combobox')).toHaveValue('01.03.2024 — 30.09.2024')
   })
 
   test('paste fills the range input', async ({ mount }) => {
     const component = await mount(<DateRangePicker />)
-    const input = component.getByRole('textbox')
+    const input = component.getByRole('combobox')
     await input.click()
     await input.focus()
     await input.evaluate((el: HTMLInputElement) => {

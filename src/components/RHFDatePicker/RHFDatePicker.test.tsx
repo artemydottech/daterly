@@ -36,7 +36,7 @@ describe('RHFDatePicker', () => {
         <RHFDatePicker<FormValues> name="date" label="Дата" />
       </Wrapper>,
     )
-    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
     expect(screen.getByText('Дата')).toBeInTheDocument()
   })
 
@@ -46,7 +46,7 @@ describe('RHFDatePicker', () => {
         <RHFDatePicker<FormValues> name="date" />
       </Wrapper>,
     )
-    expect(screen.getByRole('textbox')).toHaveValue('15.03.2024')
+    expect(screen.getByRole('combobox')).toHaveValue('15.03.2024')
   })
 
   it('propagates user input to form submit', async () => {
@@ -57,7 +57,7 @@ describe('RHFDatePicker', () => {
         <RHFDatePicker<FormValues> name="date" />
       </Wrapper>,
     )
-    await user.type(screen.getByRole('textbox'), '15032024')
+    await user.type(screen.getByRole('combobox'), '15032024')
     await user.click(screen.getByRole('button', { name: 'submit' }))
     expect(onSubmit).toHaveBeenCalledOnce()
     const submitted = onSubmit.mock.calls[0][0] as FormValues
@@ -72,7 +72,7 @@ describe('RHFDatePicker', () => {
         <RHFDatePicker<FormValues> name="date" showTime={{ format: 'HH:mm' }} />
       </Wrapper>,
     )
-    const input = screen.getByRole('textbox') as HTMLInputElement
+    const input = screen.getByRole('combobox') as HTMLInputElement
     expect(input.value).toBe('14.05.2026 00:00')
     input.focus()
     input.setSelectionRange(input.value.length, input.value.length)
