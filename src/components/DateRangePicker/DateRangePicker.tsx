@@ -30,6 +30,7 @@ import {
 } from '../../utils/range-mask';
 import { DEFAULT_DATE_FORMAT, resolveTimeFormat } from '../../utils/date-mask';
 import { buildFormatSchema } from '../../utils/format-schema';
+import { coerceRange } from '../../utils/coerce-date';
 
 export type { DateRange };
 export type { DatePickerShowTime, DatePickerTimePickerType };
@@ -59,8 +60,8 @@ export interface DateRangePickerProps {
 }
 
 export function DateRangePicker({
-  value,
-  defaultValue,
+  value: valueProp,
+  defaultValue: defaultValueProp,
   onChange,
   label,
   fromDate: fromConstraint,
@@ -91,7 +92,13 @@ export function DateRangePicker({
     icon ?? <CalendarIcon />
   );
 
-  const isControlled = value !== undefined;
+  const value = useMemo(() => coerceRange(valueProp), [valueProp]);
+  const defaultValue = useMemo(
+    () => coerceRange(defaultValueProp),
+    [defaultValueProp],
+  );
+
+  const isControlled = valueProp !== undefined;
   const showSeconds = resolveShowSeconds(showTime);
 
   const fromDay = fromConstraint ? startOfDay(fromConstraint) : undefined;
@@ -125,12 +132,12 @@ export function DateRangePicker({
   ).current;
   // Track last emitted range to ignore parent echoing it back
   const lastEmittedFromRef = useRef<Date | undefined>(
-    value !== undefined ? value?.from : defaultValue?.from,
+    isControlled ? value?.from : defaultValue?.from,
   );
   const lastEmittedToRef = useRef<Date | undefined>(
-    value !== undefined ? value?.to : defaultValue?.to,
+    isControlled ? value?.to : defaultValue?.to,
   );
-  const wasControlledRef = useRef(value !== undefined);
+  const wasControlledRef = useRef(isControlled);
 
   const confirmedFrom = isControlled ? value?.from : internalFrom;
   const confirmedTo = isControlled ? value?.to : internalTo;
@@ -165,7 +172,7 @@ export function DateRangePicker({
 
   // Sync inputValue when value changes externally (e.g. form reset)
   useEffect(() => {
-    if (value !== undefined) wasControlledRef.current = true;
+    if (valueProp !== undefined) wasControlledRef.current = true;
     const newFrom = value?.from;
     const newTo = value?.to;
     const fromTime = newFrom?.getTime() ?? null;
@@ -173,7 +180,7 @@ export function DateRangePicker({
     const lastFromTime = lastEmittedFromRef.current?.getTime() ?? null;
     const lastToTime = lastEmittedToRef.current?.getTime() ?? null;
     if (fromTime === lastFromTime && toTime === lastToTime) return;
-    if (!wasControlledRef.current && value === undefined) return;
+    if (!wasControlledRef.current && valueProp === undefined) return;
 
     setInputValue(formatRange(newFrom, newTo, schema));
     setInputInvalid(false);

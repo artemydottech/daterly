@@ -23,6 +23,7 @@ import {
   toDateOnly,
 } from '../../utils/date-mask';
 import { buildFormatSchema } from '../../utils/format-schema';
+import { coerceDate } from '../../utils/coerce-date';
 
 export type DatePickerSize = 's' | 'm' | 'l';
 export type DatePickerShowTime = boolean | { format: 'HH:mm' | 'HH:mm:ss' };
@@ -74,8 +75,8 @@ export interface DatePickerProps {
 }
 
 export function DatePicker({
-  value,
-  defaultValue,
+  value: valueProp,
+  defaultValue: defaultValueProp,
   onChange,
   label,
   placeholder,
@@ -106,6 +107,12 @@ export function DatePicker({
   const defaultPlaceholder = placeholder ?? schema.placeholder;
   const showSeconds = timeFormat === 'HH:mm:ss';
 
+  const value = useMemo(() => coerceDate(valueProp), [valueProp]);
+  const defaultValue = useMemo(
+    () => coerceDate(defaultValueProp),
+    [defaultValueProp],
+  );
+
   const fromDay = fromDate ? startOfDay(fromDate) : undefined;
   const toDay = toDate ? startOfDay(toDate) : undefined;
   const disabledDays = [
@@ -119,7 +126,7 @@ export function DatePicker({
     icon ?? <CalendarIcon />
   );
 
-  const isControlled = value !== undefined;
+  const isControlled = valueProp !== undefined;
   const [internalDate, setInternalDate] = useState<Date | undefined>(
     defaultValue,
   );

@@ -322,4 +322,14 @@ describe('DatePicker', () => {
     expect(last.getDate()).toBe(20)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
+
+  it('does not crash when value is an ISO string (RHF default from URL)', () => {
+    render(<DatePicker value={'2024-03-15' as unknown as Date} />)
+    expect(screen.getByRole('combobox')).toHaveValue('15.03.2024')
+  })
+
+  it('renders empty without crashing for an unparseable string value', () => {
+    render(<DatePicker value={'not a date' as unknown as Date} />)
+    expect(screen.getByRole('combobox')).toHaveValue('')
+  })
 })
