@@ -42,6 +42,25 @@ import SizePresets from '../../components/SizePresets'
 
 Это работает поверх любого `size` и не требует форка класса-модификатора.
 
+## Ширина
+
+Компонент занимает **100% ширины контейнера** — управляй шириной через обёртку:
+
+```tsx
+<div style={{ width: 240 }}>
+  <DatePicker label="Дата" />
+</div>
+```
+
+Минимальную ширину можно переопределить через CSS-токены:
+
+```css
+:root {
+  --daterly-field-min-width: 180px;  /* DatePicker, default 220px */
+  --daterly-range-min-width: 320px;  /* DateRangePicker, default 280px */
+}
+```
+
 ## Попап календаря
 
 Размер влияет и на класс попапа — `.daterly__popover--s`, `.daterly__popover--m`, `.daterly__popover--l`. По умолчанию визуально это одинаковые попапы; модификатор есть на случай, если ты хочешь подогнать отступ/размер дней под высоту инпута:

@@ -32,6 +32,9 @@
   --daterly-icon-size: 16px;
   --daterly-icon-gap: 6px;
   --daterly-icon-color: #9e9e9e;
+
+  --daterly-field-min-width: 220px;
+  --daterly-range-min-width: 280px;
 }
 
 .daterly--s {
@@ -51,7 +54,8 @@
 .daterly,
 .daterly-range {
   position: relative;
-  display: inline-block;
+  display: block;
+  width: 100%;
   font-family: var(--daterly-font-family);
   font-size: var(--daterly-font-size);
 }
@@ -59,7 +63,8 @@
 .daterly__field {
   position: relative;
   height: var(--daterly-height);
-  min-width: 220px;
+  width: 100%;
+  min-width: var(--daterly-field-min-width);
   background: var(--daterly-color-bg);
   border: 1px solid var(--daterly-color-border);
   border-radius: var(--daterly-radius);
@@ -78,7 +83,7 @@
 }
 
 .daterly-range .daterly__field {
-  min-width: 320px;
+  min-width: var(--daterly-range-min-width);
 }
 
 .daterly[data-focused] .daterly__field {
