@@ -25,7 +25,7 @@ type Demo = 'single' | 'range' | 'time';
 
 const INSTALL_COMMAND = 'npm install daterly';
 
-const RELEASE_SUMMARY = 'ARIA-доступность';
+const RELEASE_SUMMARY = 'Адаптивная ширина';
 
 function formatValue(
   demo: Demo,
