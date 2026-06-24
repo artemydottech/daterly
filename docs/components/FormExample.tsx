@@ -5,10 +5,43 @@ import { ArrowRight } from 'lucide-react';
 import CodeHighlight from './CodeHighlight';
 import styles from './Landing.module.css';
 
+type Lang = 'ru' | 'en';
+
 type FormValues = {
   name: string;
   birthday: Date | null;
   vacation: { from: Date | undefined; to: Date | undefined } | null;
+};
+
+const FORM_DICT = {
+  ru: {
+    h2: 'В реальной форме',
+    pa: 'Через',
+    pb: '— типобезопасный',
+    pc: ', валидация, defaultValues и control из useForm.',
+    name: 'Имя',
+    submit: 'Отправить',
+    error: 'Заполни обязательные поля — имя и дату рождения.',
+    outputLabel: 'onSubmit value',
+    outputPlaceholder: '// Заполни форму и нажми «Отправить»',
+    codeLabel: 'пример кода',
+    birthdayLabel: 'Дата рождения',
+    vacationLabel: 'Отпуск',
+  },
+  en: {
+    h2: 'In a real form',
+    pa: 'Through',
+    pb: '— type-safe',
+    pc: ', validation, defaultValues and control from useForm.',
+    name: 'Name',
+    submit: 'Submit',
+    error: 'Fill in the required fields — name and birthday.',
+    outputLabel: 'onSubmit value',
+    outputPlaceholder: '// Fill in the form and click Submit',
+    codeLabel: 'code example',
+    birthdayLabel: 'Birthday',
+    vacationLabel: 'Vacation',
+  },
 };
 
 const CODE_SNIPPET = `import { useForm, FormProvider } from 'react-hook-form'
@@ -35,8 +68,13 @@ const methods = useForm()
   </form>
 </FormProvider>`;
 
-export default function FormExample() {
+interface Props {
+  lang?: Lang;
+}
+
+export default function FormExample({ lang = 'ru' }: Props) {
   const [submitted, setSubmitted] = useState<FormValues | null>(null);
+  const t = FORM_DICT[lang];
 
   const methods = useForm<FormValues>({
     defaultValues: { name: '', birthday: null, vacation: null },
@@ -49,11 +87,11 @@ export default function FormExample() {
   return (
     <section className={styles.formSection} id="form-example">
       <div className={styles.formHeader}>
-        <h2>В реальной форме</h2>
+        <div className={styles.formEyebrow}>react-hook-form</div>
+        <h2>{t.h2}</h2>
         <p>
-          Через <code>daterly/rhf</code> — типобезопасный{' '}
-          <code>name</code>, валидация, defaultValues, control из{' '}
-          <code>useForm</code>.
+          {t.pa} <code>daterly/rhf</code> {t.pb}{' '}
+          <code>name</code>{t.pc}
         </p>
       </div>
       <div className={styles.formGrid}>
@@ -77,30 +115,28 @@ export default function FormExample() {
                 placeholder=" "
                 {...methods.register('name', { required: true })}
               />
-              <span className={styles.formFloatLabel}>Имя</span>
+              <span className={styles.formFloatLabel}>{t.name}</span>
             </label>
 
-            <div className={`${styles.formPickerSlot}`}>
+            <div className={styles.formPickerSlot}>
               <RHFDatePicker
                 name="birthday"
-                label="Дата рождения"
+                label={t.birthdayLabel}
                 rules={{ required: true }}
               />
             </div>
 
-            <div className={`${styles.formPickerSlot}`}>
-              <RHFDateRangePicker name="vacation" label="Отпуск" />
+            <div className={styles.formPickerSlot}>
+              <RHFDateRangePicker name="vacation" label={t.vacationLabel} />
             </div>
 
             <button type="submit" className={styles.formSubmit}>
-              Отправить
+              {t.submit}
               <ArrowRight size={16} strokeWidth={2.5} />
             </button>
 
             {methods.formState.isSubmitted && !methods.formState.isValid && (
-              <p className={styles.formError}>
-                Заполни обязательные поля — имя и дату рождения.
-              </p>
+              <p className={styles.formError}>{t.error}</p>
             )}
           </form>
         </FormProvider>
@@ -113,13 +149,13 @@ export default function FormExample() {
                 <i />
                 <i />
               </span>
-              <span className={styles.demoOutputLabel}>onSubmit value</span>
+              <span className={styles.demoOutputLabel}>{t.outputLabel}</span>
             </div>
             <pre className={styles.demoOutputBody}>
               <code>
                 {submitted
                   ? JSON.stringify(submitted, dateReplacer, 2)
-                  : '// Заполни форму и нажми «Отправить»'}
+                  : t.outputPlaceholder}
               </code>
             </pre>
           </div>
@@ -127,7 +163,7 @@ export default function FormExample() {
           <div className={styles.codeBlock}>
             <div className={styles.demoOutputHeader}>
               <span className={styles.codeBadge}>tsx</span>
-              <span className={styles.demoOutputLabel}>пример кода</span>
+              <span className={styles.demoOutputLabel}>{t.codeLabel}</span>
             </div>
             <pre className={styles.demoOutputBody}>
               <code>
