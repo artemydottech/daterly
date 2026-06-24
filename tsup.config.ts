@@ -1,5 +1,8 @@
 import { defineConfig } from 'tsup'
-import { cp, mkdir } from 'node:fs/promises'
+import { createRequire } from 'node:module'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+
+const require = createRequire(import.meta.url)
 
 export default defineConfig({
   entry: {
@@ -13,6 +16,15 @@ export default defineConfig({
   external: ['react', 'react-dom', 'react-hook-form', 'date-fns'],
   async onSuccess() {
     await mkdir('dist/styles', { recursive: true })
-    await cp('src/styles/variables.css', 'dist/styles/variables.css')
+    const rdpCss = await readFile(
+      require.resolve('react-day-picker/style.css'),
+      'utf8',
+    )
+    const ownCss = await readFile('src/styles/variables.css', 'utf8')
+    const inlined = ownCss.replace(
+      /^@import\s+['"]react-day-picker\/style\.css['"];?[^\n]*\n?/m,
+      '',
+    )
+    await writeFile('dist/styles/variables.css', `${rdpCss}\n${inlined}`)
   },
 })
