@@ -1,5 +1,11 @@
 # daterly
 
+## 1.3.1
+
+### Patch Changes
+
+- 09c9a10: Inline react-day-picker base styles into the published `dist/styles/variables.css` at build time. The shipped stylesheet no longer contains `@import 'react-day-picker/style.css'`, so consumers' bundlers no longer need to resolve that import from `node_modules` (fixes broken styling in setups like CRA without `react-app-rewired`).
+
 ## 1.3.0
 
 ### Minor Changes
