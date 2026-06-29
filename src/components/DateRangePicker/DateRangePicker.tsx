@@ -59,8 +59,6 @@ export interface DateRangePickerProps {
   className?: string;
   locale?: Locale;
   dateFormat?: string;
-  /** Рендерить popover через React Portal в document.body.
-   *  Решает проблему обрезания popover-а внутри overflow-контейнеров (сайдбар, модал и т.д.) */
   usePortal?: boolean;
 }
 
