@@ -6,9 +6,11 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { format, isValid, startOfDay } from 'date-fns';
 import { ru, type Locale } from 'date-fns/locale';
 import { useClickOutside } from '../../hooks/useClickOutside';
+import { useFloatingPosition } from '../../hooks/useFloatingPosition';
 import { Calendar } from '../Calendar';
 import { TimePanel } from '../TimePanel';
 import { TimeInput } from '../TimeInput';
@@ -72,6 +74,7 @@ export interface DatePickerProps {
   customTrigger?: (value: string, onClick: () => void) => ReactNode;
   locale?: Locale;
   dateFormat?: string;
+  usePortal?: boolean;
 }
 
 export function DatePicker({
@@ -96,6 +99,7 @@ export function DatePicker({
   customTrigger,
   locale = ru,
   dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT,
+  usePortal = false,
 }: DatePickerProps) {
   const timeFormat = resolveTimeFormat(showTime);
   const schema = useMemo(
@@ -140,9 +144,11 @@ export function DatePicker({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
   const popoverId = useRef(
     `daterly-popover-${Math.random().toString(36).slice(2, 9)}`,
   ).current;
+  const floatingPos = useFloatingPosition(containerRef, usePortal && open);
   const lastValidRef = useRef(inputValue);
   // Track what we last emitted via onChange so we can ignore parent echoing it back
   const lastEmittedRef = useRef<Date | undefined>(
@@ -170,7 +176,7 @@ export function DatePicker({
   }, [selected?.getFullYear(), selected?.getMonth()]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const close = useCallback(() => setOpen(false), []);
-  useClickOutside(containerRef, close);
+  useClickOutside(containerRef, close, usePortal ? [popoverRef] : []);
 
   // Sync inputValue when value changes externally (e.g. form reset)
   useEffect(() => {
@@ -399,20 +405,28 @@ export function DatePicker({
           )}
         </div>
       )}
-      {!noCalendar && open && (
-        <div
-          className={[
-            'daterly__popover',
-            `daterly__popover--${size}`,
-            timeFormat && 'daterly__popover--with-time',
-            timeFormat && `daterly__popover--time-${timePickerType}`,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-          id={popoverId}
-          role="dialog"
-          aria-label="Календарь"
-        >
+      {!noCalendar && open && (() => {
+        const popover = (
+          <div
+            ref={popoverRef}
+            className={[
+              'daterly__popover',
+              `daterly__popover--${size}`,
+              usePortal && 'daterly__popover--portal',
+              timeFormat && 'daterly__popover--with-time',
+              timeFormat && `daterly__popover--time-${timePickerType}`,
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            id={popoverId}
+            role="dialog"
+            aria-label="Календарь"
+            style={
+              usePortal
+                ? { top: floatingPos.top, left: floatingPos.left }
+                : undefined
+            }
+          >
           {timeFormat ? (
             timePickerType === 'drum' ? (
               <>
@@ -503,8 +517,12 @@ export function DatePicker({
               locale={locale}
             />
           )}
-        </div>
-      )}
+          </div>
+        );
+        return usePortal
+          ? createPortal(popover, document.body)
+          : popover;
+      })()}
     </div>
   );
 }

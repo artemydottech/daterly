@@ -6,6 +6,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { isValid, startOfDay } from 'date-fns';
 import { ru, type Locale } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
@@ -14,6 +15,7 @@ import type {
   DatePickerTimePickerType,
 } from '../DatePicker/DatePicker';
 import { useClickOutside } from '../../hooks/useClickOutside';
+import { useFloatingPosition } from '../../hooks/useFloatingPosition';
 import { Calendar } from '../Calendar';
 import { TimePanel } from '../TimePanel';
 import { TimeInput } from '../TimeInput';
@@ -57,6 +59,7 @@ export interface DateRangePickerProps {
   className?: string;
   locale?: Locale;
   dateFormat?: string;
+  usePortal?: boolean;
 }
 
 export function DateRangePicker({
@@ -78,6 +81,7 @@ export function DateRangePicker({
   className,
   locale = ru,
   dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT,
+  usePortal = false,
 }: DateRangePickerProps) {
   const timeFormat = resolveTimeFormat(showTime);
   const schema = useMemo(
@@ -127,9 +131,11 @@ export function DateRangePicker({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
   const popoverId = useRef(
     `daterly-popover-${Math.random().toString(36).slice(2, 9)}`,
   ).current;
+  const floatingPos = useFloatingPosition(containerRef, usePortal && open);
   // Track last emitted range to ignore parent echoing it back
   const lastEmittedFromRef = useRef<Date | undefined>(
     isControlled ? value?.from : defaultValue?.from,
@@ -168,7 +174,7 @@ export function DateRangePicker({
     setAnchorDate(undefined);
     setHoveredDate(undefined);
   }, []);
-  useClickOutside(containerRef, close);
+  useClickOutside(containerRef, close, usePortal ? [popoverRef] : []);
 
   // Sync inputValue when value changes externally (e.g. form reset)
   useEffect(() => {
@@ -465,22 +471,30 @@ export function DateRangePicker({
           </span>
         )}
       </div>
-      {open && (
-        <div
-          className={[
-            'daterly__popover',
-            `daterly__popover--${size}`,
-            calendarLayout === 'horizontal' &&
-              'daterly__popover--horizontal',
-            showTime && 'daterly__popover--with-time',
-            showTime && `daterly__popover--time-${timePickerType}`,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-          id={popoverId}
-          role="dialog"
-          aria-label="Выберите период"
-        >
+      {open && (() => {
+        const popover = (
+          <div
+            ref={popoverRef}
+            className={[
+              'daterly__popover',
+              `daterly__popover--${size}`,
+              usePortal && 'daterly__popover--portal',
+              calendarLayout === 'horizontal' &&
+                'daterly__popover--horizontal',
+              showTime && 'daterly__popover--with-time',
+              showTime && `daterly__popover--time-${timePickerType}`,
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            id={popoverId}
+            role="dialog"
+            aria-label="Выберите период"
+            style={
+              usePortal
+                ? { top: floatingPos.top, left: floatingPos.left }
+                : undefined
+            }
+          >
           {showTime ? (
             timePickerType === 'drum' ? (
               <>
@@ -612,8 +626,12 @@ export function DateRangePicker({
               locale={locale}
             />
           )}
-        </div>
-      )}
+          </div>
+        );
+        return usePortal
+          ? createPortal(popover, document.body)
+          : popover;
+      })()}
     </div>
   );
 }

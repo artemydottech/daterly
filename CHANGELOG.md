@@ -1,5 +1,21 @@
 # daterly
 
+## 1.4.0
+
+### Minor Changes
+
+- Добавлен проп `usePortal` для `DatePicker` и `DateRangePicker`.
+
+  При `usePortal={true}` popover рендерится через `React.createPortal` в `document.body` с `position: fixed`, что позволяет ему корректно отображаться внутри `overflow: hidden` контейнеров (сайдбары, модалы и т.д.) без обрезания и горизонтального скролла.
+
+  Изменения:
+
+  - `DatePicker`: новый проп `usePortal?: boolean` (по умолчанию `false`)
+  - `DateRangePicker`: новый проп `usePortal?: boolean` (по умолчанию `false`)
+  - Новый хук `useFloatingPosition` — вычисляет `{ top, left }` для `position: fixed` popover-а, обновляется при scroll и resize
+  - `useClickOutside` расширен параметром `excludeRefs` — клики внутри portal popover-а не закрывают его
+  - CSS: новый класс-модификатор `.daterly__popover--portal` с `position: fixed; z-index: 9999`
+
 ## 1.3.1
 
 ### Patch Changes

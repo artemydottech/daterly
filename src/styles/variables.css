@@ -88,8 +88,7 @@
 
 .daterly[data-focused] .daterly__field {
   border-color: var(--daterly-color-border-focus);
-  box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--daterly-color-border-focus) 15%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--daterly-color-border-focus) 15%, transparent);
 }
 
 .daterly[data-failed] .daterly__field {
@@ -98,8 +97,7 @@
 
 .daterly[data-failed][data-focused] .daterly__field {
   border-color: var(--daterly-color-border-error);
-  box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--daterly-color-border-error) 18%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--daterly-color-border-error) 18%, transparent);
 }
 
 .daterly[data-disabled] .daterly__field {
@@ -200,15 +198,11 @@
 }
 
 .daterly__field[data-icon-start] {
-  --_prefix-extra: calc(
-    var(--daterly-icon-size) + var(--daterly-icon-gap)
-  );
+  --_prefix-extra: calc(var(--daterly-icon-size) + var(--daterly-icon-gap));
 }
 
 .daterly__field[data-icon-end] {
-  --_suffix-extra: calc(
-    var(--daterly-icon-size) + var(--daterly-icon-gap)
-  );
+  --_suffix-extra: calc(var(--daterly-icon-size) + var(--daterly-icon-gap));
 }
 
 .daterly--s .daterly__input {
@@ -237,6 +231,11 @@
   padding: 12px;
 }
 
+.daterly__popover--portal {
+  position: fixed;
+  z-index: 100;
+}
+
 .daterly__popover--horizontal .rdp-months {
   flex-wrap: nowrap;
 }
@@ -245,10 +244,12 @@
   .daterly-range .daterly__field {
     min-width: 0;
   }
+
   .daterly__popover {
     max-width: calc(100vw - 24px);
     overflow-x: auto;
   }
+
   .daterly-range .daterly__popover--horizontal .rdp-months,
   .daterly-range .daterly__popover .rdp-months {
     flex-direction: column;
@@ -308,15 +309,11 @@
   border-radius: var(--daterly-radius);
 }
 
-.daterly-calendar
-  .rdp-day:not(.rdp-selected):not(.rdp-range_middle)
-  .rdp-day_button:hover:not(:disabled) {
+.daterly-calendar .rdp-day:not(.rdp-selected):not(.rdp-range_middle) .rdp-day_button:hover:not(:disabled) {
   background-color: var(--daterly-color-hover);
 }
 
-.daterly-calendar
-  .rdp-today:not(.rdp-outside):not(.rdp-selected):not(.rdp-range_middle)
-  .rdp-day_button {
+.daterly-calendar .rdp-today:not(.rdp-outside):not(.rdp-selected):not(.rdp-range_middle) .rdp-day_button {
   background-color: var(--daterly-color-today-bg);
   color: var(--daterly-color-accent);
 }
@@ -338,11 +335,9 @@
 }
 
 .daterly-calendar .rdp-range_middle .rdp-day_button:hover {
-  background-color: color-mix(
-    in srgb,
-    var(--daterly-color-accent) 20%,
-    transparent
-  );
+  background-color: color-mix(in srgb,
+      var(--daterly-color-accent) 20%,
+      transparent);
 }
 
 .daterly__popover--s .daterly-calendar {
@@ -374,7 +369,7 @@
   align-items: stretch;
 }
 
-.daterly__popover--with-time > * {
+.daterly__popover--with-time>* {
   width: 100%;
   box-sizing: border-box;
 }
@@ -477,8 +472,7 @@
 
 .daterly__time-input:focus {
   border-color: var(--daterly-color-border-focus);
-  box-shadow: 0 0 0 3px
-    color-mix(in srgb, var(--daterly-color-border-focus) 15%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--daterly-color-border-focus) 15%, transparent);
 }
 
 .daterly__time-input:disabled {
@@ -578,11 +572,9 @@
 }
 
 .dp-btn--secondary:hover:not(:disabled) {
-  background: color-mix(
-    in srgb,
-    var(--daterly-color-accent) 8%,
-    transparent
-  );
+  background: color-mix(in srgb,
+      var(--daterly-color-accent) 8%,
+      transparent);
 }
 
 .dp-btn--loading {
