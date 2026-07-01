@@ -49,7 +49,7 @@ interface Dict {
 const DICT: Record<Lang, Dict> = {
   ru: {
     navDocs: 'Документация',
-    badge: `v${pkg.version} — адаптивная ширина`,
+    badge: `v${pkg.version} — usePortal()`,
     h1a: 'Date picker,',
     h1b: 'в который удобно',
     h1c: 'печатать руками',
@@ -58,7 +58,8 @@ const DICT: Record<Lang, Dict> = {
     ctaStart: 'Начать',
     badgeTs: 'TypeScript из коробки',
     demoLabel: 'Маска ввода',
-    demoCaption: 'Печатай подряд — точки расставятся сами. Backspace пропускает разделители, валидность проверяется round-trip\'ом.',
+    demoCaption:
+      "Печатай подряд — точки расставятся сами. Backspace пропускает разделители, валидность проверяется round-trip'ом.",
     trust1: 'brotli, весь пакет',
     trust2: 'runtime-deps кроме date-fns',
     trust3: 'формата: ESM · CJS · .d.ts',
@@ -104,11 +105,12 @@ const DICT: Record<Lang, Dict> = {
     h1b: 'you actually enjoy',
     h1c: 'typing into',
     heroP:
-      "A React DatePicker with input masking. Controlled and uncontrolled, ranges, time, any date-fns locale. Zero overhead when react-hook-form isn’t needed.",
+      'A React DatePicker with input masking. Controlled and uncontrolled, ranges, time, any date-fns locale. Zero overhead when react-hook-form isn’t needed.',
     ctaStart: 'Get started',
     badgeTs: 'TypeScript built-in',
     demoLabel: 'Input mask',
-    demoCaption: 'Type straight through — separators are inserted for you. Backspace skips them, validity is checked round-trip.',
+    demoCaption:
+      'Type straight through — separators are inserted for you. Backspace skips them, validity is checked round-trip.',
     trust1: 'brotli, whole package',
     trust2: 'runtime deps besides date-fns',
     trust3: 'formats: ESM · CJS · .d.ts',
@@ -182,10 +184,18 @@ export default function Landing({
       return;
     }
     const id = setInterval(() => {
-      setN(prev => {
-        if (prev < 8) { holdRef.current = 0; return prev + 1; }
-        if (holdRef.current < 7) { holdRef.current += 1; return prev; }
-        holdRef.current = 0; setDate(randomDate()); return 0;
+      setN((prev) => {
+        if (prev < 8) {
+          holdRef.current = 0;
+          return prev + 1;
+        }
+        if (holdRef.current < 7) {
+          holdRef.current += 1;
+          return prev;
+        }
+        holdRef.current = 0;
+        setDate(randomDate());
+        return 0;
       });
     }, 300);
     return () => clearInterval(id);
@@ -202,7 +212,9 @@ export default function Landing({
     if (pc === '.') {
       maskChars.push({ ch: '.', dim: n < _di });
     } else {
-      maskChars.push(_di < n ? { ch: FULL[_di], dim: false } : { ch: pc, dim: true });
+      maskChars.push(
+        _di < n ? { ch: FULL[_di], dim: false } : { ch: pc, dim: true },
+      );
       _di++;
     }
   }
@@ -382,7 +394,10 @@ export default function Landing({
               </svg>
               <span className={styles.maskStr}>
                 {maskChars.map((c, i) => (
-                  <span key={i} className={c.dim ? styles.maskDim : styles.maskLit}>
+                  <span
+                    key={i}
+                    className={c.dim ? styles.maskDim : styles.maskLit}
+                  >
                     {c.ch}
                   </span>
                 ))}
@@ -476,9 +491,7 @@ export default function Landing({
               </div>
             </div>
             <div className={styles.featureCard}>
-              <span className={styles.featureEyebrow}>
-                {t.cardCtrlEyebrow}
-              </span>
+              <span className={styles.featureEyebrow}>{t.cardCtrlEyebrow}</span>
               <h3 className={styles.featureTitle}>{t.cardCtrlTitle}</h3>
               <pre
                 className={styles.ctrlCode}
