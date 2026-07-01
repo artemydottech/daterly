@@ -17,7 +17,7 @@ npm run release        # build + changeset publish + git tag
 
 ## Architecture
 
-This is a React component library (`@artemy-tech/datepicker`) built on top of **react-day-picker v9** (headless) and **date-fns v4**, targeting the Russian market (locale `ru`, date format `dd.MM.yyyy`).
+This is a React component library (`daterly`) built on top of **react-day-picker v9** (headless) and **date-fns v4**, targeting the Russian market (locale `ru`, date format `dd.MM.yyyy`).
 
 ### Package exports
 
@@ -31,7 +31,7 @@ Build outputs both ESM and CJS via tsup with `.d.ts` declarations.
 
 ### Component layer
 
-- **`Calendar`** — thin wrapper around `DayPicker`, adds `datepicker-calendar` class and bridges `--datepicker-*` tokens to `--rdp-*` variables.
+- **`Calendar`** — thin wrapper around `DayPicker`, adds `daterly-calendar` class and bridges `--daterly-*` tokens to `--rdp-*` variables.
 - **`DatePicker`** — input with a masked text field (`dd.MM.yyyy`) + popover Calendar. Supports controlled (`value`/`onChange`) and uncontrolled (`defaultValue`) modes. Detects controlled mode by checking `value !== undefined`.
 - **`DateRangePicker`** — same pattern, but the mask covers two dates (`dd.MM.yyyy — dd.MM.yyyy`, up to 16 digits). Calendar range selection uses a two-phase click: first click sets the anchor, second click confirms and closes.
 
@@ -46,7 +46,7 @@ Both picker components implement their own digit-only mask without a third-party
 
 ### Styling
 
-All visual tokens are CSS custom properties prefixed `--datepicker-*`. Component state (focus, filled, failed, disabled) is expressed via HTML `data-*` attributes (`data-focused`, `data-filled`, `data-failed`, `data-disabled`) on the root element — no JS class toggling.
+All visual tokens are CSS custom properties prefixed `--daterly-*`. Component state (focus, filled, failed, disabled) is expressed via HTML `data-*` attributes (`data-focused`, `data-filled`, `data-failed`, `data-disabled`) on the root element — no JS class toggling.
 
 ### Versioning
 
@@ -67,7 +67,7 @@ Releases use [Changesets](https://github.com/changesets/changesets).
 
 ```markdown
 ---
-"@artemy-tech/datepicker": patch
+"daterly": patch
 ---
 
 Описание изменений для CHANGELOG.
