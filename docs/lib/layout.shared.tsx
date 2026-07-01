@@ -17,19 +17,13 @@ const Logo = (
       viewBox="0 0 24 24"
       fill="none"
       stroke="var(--color-fd-primary)"
-      strokeWidth="2"
+      strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
     >
-      <rect x="3" y="5" width="18" height="16" rx="3" />
-      <path d="M8 3v4" />
-      <path d="M16 3v4" />
-      <path d="M3 11h18" />
-      <path d="M7 15.5h2" />
-      <path d="M11 15.5h2" />
-      <path d="M15 15.5h2" />
-      <path d="M17 13.5v4" strokeWidth="2.4" />
+      <rect x="3" y="4" width="18" height="18" rx="3" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
     </svg>
     daterly
   </span>

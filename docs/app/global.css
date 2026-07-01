@@ -21,3 +21,41 @@ html > body[data-scroll-locked] {
   margin-right: 0px !important;
   --removed-body-scroll-bar-size: 0px !important;
 }
+
+/* Neutralize Fumadocs prose typography leaking into the react-day-picker table */
+.daterly-calendar table,
+.daterly-calendar thead,
+.daterly-calendar tbody,
+.daterly-calendar tr,
+.daterly-calendar th,
+.daterly-calendar td {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: inherit;
+  text-align: center;
+}
+
+.daterly-calendar table {
+  width: auto;
+  border-collapse: collapse;
+}
+
+/* Dark theme tokens for daterly (library ships no built-in dark theme) */
+html.dark {
+  --daterly-color-text: #e6e7ee;
+  --daterly-color-placeholder: #6a6e80;
+  --daterly-color-border: rgba(255, 255, 255, 0.14);
+  --daterly-color-border-focus: var(--color-fd-primary);
+  --daterly-color-bg: #16161c;
+  --daterly-color-bg-disabled: #1c1c22;
+  --daterly-color-label: #8a8d9c;
+  --daterly-color-label-focus: var(--color-fd-primary);
+  --daterly-color-accent: var(--color-fd-primary);
+  --daterly-color-today-bg: color-mix(in srgb, var(--color-fd-primary) 20%, transparent);
+  --daterly-color-hover: rgba(255, 255, 255, 0.06);
+  --daterly-icon-color: #8a8d9c;
+  --daterly-shadow: 0 0 4px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.5);
+}

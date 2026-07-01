@@ -150,7 +150,6 @@ export default function SizePresets() {
               ) : (
                 <>
                   <Copy size={12} strokeWidth={2} /> {t.copy}
-                  22{' '}
                 </>
               )}
             </button>
