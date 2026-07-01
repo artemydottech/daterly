@@ -1,0 +1,31 @@
+---
+title: "Introduction"
+---
+
+`daterly` is a React library for date input with an input mask, support for arbitrary locales and formats, range and time selection. Optional react-hook-form integration via a separate entry point.
+
+Under the hood — [react-day-picker v9](https://daypicker.dev/) (headless calendar) and [date-fns v4](https://date-fns.org/) (formatting and parsing).
+
+## Why
+
+Most DatePicker libraries either ship their own UI and styling that's hard to bend to your design system, or require a dozen formatter/locale wrappers. Here:
+
+- **Headless at its core** — styling is done entirely through CSS variables and `data-*` attributes.
+- **Input mask out of the box** — no need for `imask` or `react-input-mask`.
+- **Any locale and format** — two props, everything else is derived automatically.
+- **RHF is optional** — `react-hook-form` is an optional `peerDependency`. If you don't use it, it won't end up in your bundle.
+
+## Quick start
+
+```bash
+npm install daterly
+```
+
+```tsx
+import 'daterly/styles'
+import { DatePicker } from 'daterly'
+
+export const Example = () => <DatePicker label="Date of birth" />
+```
+
+Next up — [Installation](/en/docs/installation) and [DatePicker](/en/docs/datepicker).

@@ -1,0 +1,92 @@
+---
+title: "Theming"
+---
+
+import ThemePresets from '@/components/ThemePresets'
+
+All visual configuration is done via CSS variables with the `--daterly-*` prefix. No CSS-in-JS, no className injection.
+
+## Ready-made presets
+
+Click a preset on the left — on the right you'll instantly see a preview and the CSS tokens to copy into your own `:root`.
+
+<ThemePresets />
+
+## Setup
+
+```tsx
+import 'daterly/styles'
+```
+
+This import loads the base variables and `react-day-picker` styles. After that, override the tokens you need via `:root` or a scope selector.
+
+## Core tokens
+
+```css
+:root {
+  /* Colors */
+  --daterly-color-accent: #7c83ff;
+  --daterly-color-text: #1a1a1a;
+  --daterly-color-placeholder: #9e9e9e;
+  --daterly-bg: #ffffff;
+
+  /* Borders */
+  --daterly-border-color: #e0e0e0;
+  --daterly-border-color-focus: var(--daterly-color-accent);
+  --daterly-border-color-failed: #ef4444;
+  --daterly-radius: 8px;
+
+  /* Typography */
+  --daterly-font-family: inherit;
+  --daterly-font-size: 14px;
+
+  /* Field sizes */
+  --daterly-field-min-width: 220px;  /* DatePicker */
+  --daterly-range-min-width: 280px;  /* DateRangePicker */
+
+  /* Calendar */
+  --daterly-day-bg-selected: var(--daterly-color-accent);
+  --daterly-day-bg-hover: rgba(124, 131, 255, 0.1);
+  --daterly-day-bg-range: rgba(124, 131, 255, 0.15);
+}
+```
+
+## States via `data-*`
+
+States aren't set through classes — they're expressed via `data-*` attributes on the root element:
+
+```css
+.daterly[data-focused]  { /* focused or popover open */ }
+.daterly[data-filled]   { /* the input has a value */ }
+.daterly[data-failed]   { /* error state */ }
+.daterly[data-disabled] { /* disabled or loading */ }
+```
+
+This lets you style states without JS classes and without `aria-*` hacks.
+
+## Scope
+
+If you need different themes for different parts of the app, set the variables on a specific ancestor:
+
+```css
+.dark-section {
+  --daterly-bg: #1a1a1a;
+  --daterly-color-text: #e0e0e0;
+  --daterly-border-color: #333;
+}
+```
+
+## Dark theme
+
+The package ships no ready-made `[data-theme="dark"]` theme — it's defined by the user by overriding the variables. A minimal example:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    --daterly-bg: #0a0a0f;
+    --daterly-color-text: #e6e7ee;
+    --daterly-color-placeholder: #6a6e80;
+    --daterly-border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+```

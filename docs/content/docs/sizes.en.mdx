@@ -1,0 +1,75 @@
+---
+title: "Sizes"
+---
+
+import SizePresets from '@/components/SizePresets'
+
+`DatePicker` and `DateRangePicker` have a `size` prop with three presets: `s`, `m`, `l`. The default is `m`.
+
+Pick a preset — on the right you'll instantly see how the height, font, and padding change.
+
+<SizePresets />
+
+`DateRangePicker` accepts the same prop:
+
+```tsx
+<DateRangePicker size="s" label="Period" />
+```
+
+## What changes
+
+A size is a set of CSS tokens swapped in by the `.daterly--s` / `.daterly--l` modifier class (for `m` the base values stay in place):
+
+| Token                       | `s`    | `m` (default) | `l`    |
+| --------------------------- | ------ | ------------- | ------ |
+| `--daterly-height`             | `32px` | `40px`        | `56px` |
+| `--daterly-font-size`          | `14px` | `16px`        | `16px` |
+| `--daterly-padding-h`          | `12px` | `12px`        | `16px` |
+| `--daterly-input-padding-top`  | —      | `20px`        | `24px` |
+| `--daterly-label-top-filled`   | —      | `4px`         | `8px`  |
+
+In size `s` the floating label isn't used — it sits fixed above the field (fitting it inside 32px isn't possible without a visual compromise).
+
+## Customization
+
+If you want a size "in between", override the tokens for the scope you need:
+
+```css
+.compact .daterly {
+  --daterly-height: 36px;
+  --daterly-font-size: 15px;
+  --daterly-padding-h: 10px;
+}
+```
+
+This works on top of any `size` and doesn't require forking the modifier class.
+
+## Width
+
+The component takes up **100% of the container width** — control the width via a wrapper:
+
+```tsx
+<div style={{ width: 240 }}>
+  <DatePicker label="Date" />
+</div>
+```
+
+The minimum width can be overridden via CSS tokens:
+
+```css
+:root {
+  --daterly-field-min-width: 180px;  /* DatePicker, default 220px */
+  --daterly-range-min-width: 320px;  /* DateRangePicker, default 280px */
+}
+```
+
+## Calendar popover
+
+The size also affects the popover class — `.daterly__popover--s`, `.daterly__popover--m`, `.daterly__popover--l`. By default these popovers look identical; the modifier exists in case you want to adjust the padding or day size to match the input height:
+
+```css
+.daterly__popover--s {
+  --rdp-day-width: 32px;
+  --rdp-day-height: 32px;
+}
+```

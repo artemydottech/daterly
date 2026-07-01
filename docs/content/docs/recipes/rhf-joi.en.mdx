@@ -1,0 +1,90 @@
+---
+title: "react-hook-form + Joi"
+---
+
+Joi validates data at runtime, and `@hookform/resolvers/joi` connects it to react-hook-form. It's useful in legacy projects where Joi is already used on the backend.
+
+## Installation
+
+```bash npm2yarn
+npm install react-hook-form joi @hookform/resolvers
+```
+
+## Validation schema
+
+```ts filename="filters-form.validation.ts"
+import Joi from 'joi'
+
+export const filtersFormSchema = Joi.object({
+  status: Joi.string().allow(''),
+  policyTitle: Joi.string().allow(''),
+  signedAfter: Joi.date().optional(),
+  signedBefore: Joi.date().optional(),
+})
+
+export interface FiltersFormValues {
+  status: string
+  policyTitle: string
+  signedAfter?: Date
+  signedBefore?: Date
+}
+```
+
+## Fields
+
+```tsx filename="filters-form.fields.tsx"
+import { RHFDatePicker } from 'daterly/rhf'
+import type { FiltersFormValues } from './filters-form.validation'
+
+export const FiltersFormFields = () => (
+  <>
+    <RHFDatePicker<FiltersFormValues>
+      name="signedAfter"
+      label="Signed up after"
+    />
+    <RHFDatePicker<FiltersFormValues>
+      name="signedBefore"
+      label="Signed up before"
+    />
+  </>
+)
+```
+
+## Form
+
+```tsx filename="filters-form.tsx"
+import { joiResolver } from '@hookform/resolvers/joi'
+import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form'
+import {
+  filtersFormSchema,
+  type FiltersFormValues,
+} from './filters-form.validation'
+import { FiltersFormFields } from './filters-form.fields'
+
+export const FiltersForm = () => {
+  const methods = useForm<FiltersFormValues>({
+    resolver: joiResolver(filtersFormSchema),
+    defaultValues: {
+      status: '',
+      policyTitle: '',
+    },
+  })
+
+  const onSubmit: SubmitHandler<FiltersFormValues> = (values) => {
+    console.log(values)
+  }
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <FiltersFormFields />
+        <button type="submit">Show</button>
+      </form>
+    </FormProvider>
+  )
+}
+```
+
+## Difference from the Zod recipe
+
+The `FiltersFormValues` type is declared manually — Joi does not infer TypeScript types from the schema (unlike Zod). That's the only practical difference on the UI components side.

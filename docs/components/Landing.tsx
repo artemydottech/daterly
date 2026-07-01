@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
@@ -156,8 +158,12 @@ const randomDate = (): { full: string; iso: string } => {
   return { full: dd + mm + yyyy, iso: `${yyyy}-${mm}-${dd}T00:00:00.000Z` };
 };
 
-export default function Landing() {
-  const [lang, setLang] = useState<Lang>('ru');
+export default function Landing({
+  initialLang = 'ru',
+}: {
+  initialLang?: Lang;
+}) {
+  const [lang, setLang] = useState<Lang>(initialLang);
   const [n, setN] = useState(0);
   const [date, setDate] = useState({
     full: '12052026',
@@ -235,7 +241,7 @@ export default function Landing() {
             daterly
           </Link>
           <nav className={styles.navRight}>
-            <Link href="/docs" className={styles.navLink}>
+            <Link href={`/${lang}/docs`} className={styles.navLink}>
               {t.navDocs}
             </Link>
             <a
@@ -309,7 +315,7 @@ export default function Landing() {
           </h1>
           <p className={styles.subtitle}>{t.heroP}</p>
           <div className={styles.ctaRow}>
-            <Link href="/docs" className={styles.btnPrimary}>
+            <Link href={`/${lang}/docs`} className={styles.btnPrimary}>
               {t.ctaStart}
               <ArrowRight size={15} strokeWidth={2.5} />
             </Link>
@@ -519,7 +525,7 @@ export default function Landing() {
                 )}
               </span>
             </button>
-            <Link href="/docs" className={styles.finalDocsBtn}>
+            <Link href={`/${lang}/docs`} className={styles.finalDocsBtn}>
               {t.finalDocs} →
             </Link>
           </div>
@@ -546,7 +552,7 @@ export default function Landing() {
             </span>
           </div>
           <div className={styles.footerLinks}>
-            <Link href="/docs">{t.navDocs}</Link>
+            <Link href={`/${lang}/docs`}>{t.navDocs}</Link>
             <a
               href="https://github.com/artemydottech/daterly"
               target="_blank"

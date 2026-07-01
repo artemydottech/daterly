@@ -1,7 +1,10 @@
+'use client'
+
 import { useState } from 'react'
 import { DatePicker } from 'daterly'
 import { Copy, Check } from 'lucide-react'
 import styles from './ThemePresets.module.css'
+import { useDocsLang } from './use-docs-lang'
 
 type Preset = {
   id: string
@@ -79,6 +82,31 @@ const PRESETS: Preset[] = [
   },
 ]
 
+const DESC_EN: Record<string, string> = {
+  default: 'Ships out of the box',
+  indigo: 'Purple accent, rounded corners',
+  emerald: 'Green, slightly softer radius',
+  rose: 'Pink accent',
+  slate: 'Neutral graphite',
+}
+
+const UI = {
+  ru: {
+    defaultBadge: 'по умолчанию',
+    label: 'Дата',
+    copyAria: 'Скопировать CSS',
+    copied: 'Скопировано',
+    copy: 'Копировать',
+  },
+  en: {
+    defaultBadge: 'default',
+    label: 'Date',
+    copyAria: 'Copy CSS',
+    copied: 'Copied',
+    copy: 'Copy',
+  },
+} as const
+
 function formatCss(preset: Preset) {
   const lines = Object.entries(preset.vars).map(
     ([k, v]) => `  ${k}: ${v};`,
@@ -87,6 +115,9 @@ function formatCss(preset: Preset) {
 }
 
 export default function ThemePresets() {
+  const lang = useDocsLang()
+  const t = UI[lang]
+
   const [activeId, setActiveId] = useState(PRESETS[1].id)
   const [date, setDate] = useState<Date | undefined>()
   const [copied, setCopied] = useState(false)
@@ -125,10 +156,12 @@ export default function ThemePresets() {
             />
             <span className={styles.tabLabel}>
               <span className={styles.tabName}>{preset.name}</span>
-              <span className={styles.tabDesc}>{preset.description}</span>
+              <span className={styles.tabDesc}>
+                {lang === 'en' ? DESC_EN[preset.id] : preset.description}
+              </span>
             </span>
             {preset.id === 'default' && (
-              <span className={styles.defaultBadge}>по умолчанию</span>
+              <span className={styles.defaultBadge}>{t.defaultBadge}</span>
             )}
           </button>
         ))}
@@ -140,7 +173,7 @@ export default function ThemePresets() {
           style={active.vars as React.CSSProperties}
         >
           <DatePicker
-            label="Дата"
+            label={t.label}
             value={date}
             onChange={setDate}
           />
@@ -153,15 +186,15 @@ export default function ThemePresets() {
               type="button"
               className={styles.copyBtn}
               onClick={handleCopy}
-              aria-label="Скопировать CSS"
+              aria-label={t.copyAria}
             >
               {copied ? (
                 <>
-                  <Check size={12} strokeWidth={2.5} /> Скопировано
+                  <Check size={12} strokeWidth={2.5} /> {t.copied}
                 </>
               ) : (
                 <>
-                  <Copy size={12} strokeWidth={2} /> Копировать
+                  <Copy size={12} strokeWidth={2} /> {t.copy}
                 </>
               )}
             </button>

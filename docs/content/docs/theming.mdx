@@ -1,0 +1,92 @@
+---
+title: "Стилизация"
+---
+
+import ThemePresets from '@/components/ThemePresets'
+
+Вся визуальная настройка — через CSS-переменные с префиксом `--daterly-*`. Никакого CSS-in-JS, никаких className-инъекций.
+
+## Готовые пресеты
+
+Кликни по пресету слева — справа сразу видно превью и CSS-токены, которые нужно скопировать в свой `:root`.
+
+<ThemePresets />
+
+## Подключение
+
+```tsx
+import 'daterly/styles'
+```
+
+Этот импорт подгружает базовые переменные и стили `react-day-picker`. После этого переопределяй нужные токены через `:root` или scope-селектор.
+
+## Основные токены
+
+```css
+:root {
+  /* Цвета */
+  --daterly-color-accent: #7c83ff;
+  --daterly-color-text: #1a1a1a;
+  --daterly-color-placeholder: #9e9e9e;
+  --daterly-bg: #ffffff;
+
+  /* Рамки */
+  --daterly-border-color: #e0e0e0;
+  --daterly-border-color-focus: var(--daterly-color-accent);
+  --daterly-border-color-failed: #ef4444;
+  --daterly-radius: 8px;
+
+  /* Типографика */
+  --daterly-font-family: inherit;
+  --daterly-font-size: 14px;
+
+  /* Размеры поля */
+  --daterly-field-min-width: 220px;  /* DatePicker */
+  --daterly-range-min-width: 280px;  /* DateRangePicker */
+
+  /* Календарь */
+  --daterly-day-bg-selected: var(--daterly-color-accent);
+  --daterly-day-bg-hover: rgba(124, 131, 255, 0.1);
+  --daterly-day-bg-range: rgba(124, 131, 255, 0.15);
+}
+```
+
+## Состояния через `data-*`
+
+Состояния не задаются классами — они выражены через `data-*` атрибуты на корневом элементе:
+
+```css
+.daterly[data-focused]  { /* в фокусе или попап открыт */ }
+.daterly[data-filled]   { /* в инпуте есть значение */ }
+.daterly[data-failed]   { /* состояние ошибки */ }
+.daterly[data-disabled] { /* disabled или loading */ }
+```
+
+Это позволяет стилизовать состояния без JS-классов и без `aria-*` костылей.
+
+## Скоуп
+
+Если нужны разные темы для разных частей приложения — задавай переменные на конкретном предке:
+
+```css
+.dark-section {
+  --daterly-bg: #1a1a1a;
+  --daterly-color-text: #e0e0e0;
+  --daterly-border-color: #333;
+}
+```
+
+## Тёмная тема
+
+Готовой `[data-theme="dark"]` темы в пакете нет — задаётся пользователем через переопределение переменных. Минимальный пример:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    --daterly-bg: #0a0a0f;
+    --daterly-color-text: #e6e7ee;
+    --daterly-color-placeholder: #6a6e80;
+    --daterly-border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+```

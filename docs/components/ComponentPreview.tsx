@@ -1,4 +1,7 @@
+'use client'
+
 import { useState, type ReactNode } from 'react'
+import { useDocsLang } from './use-docs-lang'
 import { ru, enUS, de } from 'date-fns/locale'
 import type { Locale } from 'date-fns'
 import {
@@ -39,6 +42,11 @@ const LOCALE_LABEL: Record<LocaleKey, string> = {
   de: 'de',
 }
 
+const UI = {
+  ru: { liveComponent: 'Живой компонент', date: 'Дата', range: 'Период' },
+  en: { liveComponent: 'Live component', date: 'Date', range: 'Range' },
+} as const
+
 export default function ComponentPreview({
   kind,
   title,
@@ -51,6 +59,9 @@ export default function ComponentPreview({
   mode = 'single',
   numberOfMonths,
 }: Props) {
+  const lang = useDocsLang()
+  const t = UI[lang]
+
   const [date, setDate] = useState<Date | undefined>()
   const [range, setRange] = useState<DateRange | undefined>()
   const [multi, setMulti] = useState<Date[] | undefined>()
@@ -71,7 +82,7 @@ export default function ComponentPreview({
       <div className={styles.header}>
         <span className={styles.badge}>preview</span>
         <span className={styles.title}>
-          {title ?? 'Живой компонент'}
+          {title ?? t.liveComponent}
           {titleSuffix && (
             <span className={styles.titleMeta}> · {titleSuffix}</span>
           )}
@@ -80,7 +91,7 @@ export default function ComponentPreview({
       <div className={styles.stage} data-kind={kind}>
         {kind === 'date' && (
           <DatePicker
-            label={label ?? 'Дата'}
+            label={label ?? t.date}
             value={date}
             onChange={setDate}
             showTime={showTime}
@@ -92,7 +103,7 @@ export default function ComponentPreview({
         )}
         {kind === 'range' && (
           <DateRangePicker
-            label={label ?? 'Период'}
+            label={label ?? t.range}
             value={range}
             onChange={setRange}
             showTime={showTime}

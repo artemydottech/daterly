@@ -1,59 +1,74 @@
-import { useState } from 'react'
-import { DatePicker } from 'daterly'
-import { Copy, Check } from 'lucide-react'
-import styles from './ThemePresets.module.css'
+'use client';
 
-type Size = 's' | 'm' | 'l'
+import { useState } from 'react';
+import { DatePicker } from 'daterly';
+import { Copy, Check } from 'lucide-react';
+import styles from './ThemePresets.module.css';
+import { useDocsLang } from './use-docs-lang';
+
+type Size = 's' | 'm' | 'l';
 
 type Preset = {
-  id: Size
-  name: string
-  description: string
-  height: string
-}
+  id: Size;
+  name: string;
+  height: string;
+};
 
 const PRESETS: Preset[] = [
-  {
-    id: 's',
-    name: 'Small',
-    description: 'Высота 32px, шрифт 14px',
-    height: '32px',
-  },
-  {
-    id: 'm',
-    name: 'Medium',
-    description: 'Высота 40px, шрифт 16px',
-    height: '40px',
-  },
-  {
-    id: 'l',
-    name: 'Large',
-    description: 'Высота 56px, шрифт 16px',
-    height: '56px',
-  },
-]
+  { id: 's', name: 'Small', height: '32px' },
+  { id: 'm', name: 'Medium', height: '40px' },
+  { id: 'l', name: 'Large', height: '56px' },
+];
 
-function formatCode(size: Size) {
-  return `<DatePicker size="${size}" label="Дата" />`
-}
+const UI = {
+  ru: {
+    desc: {
+      s: 'Высота 32px, шрифт 14px',
+      m: 'Высота 40px, шрифт 16px',
+      l: 'Высота 56px, шрифт 16px',
+    },
+    codeLabel: 'Дата',
+    liveLabel: 'Дата',
+    defaultBadge: 'по умолчанию',
+    copyAria: 'Скопировать код',
+    copied: 'Скопировано',
+    copy: 'Копировать',
+  },
+  en: {
+    desc: {
+      s: 'Height 32px, font 14px',
+      m: 'Height 40px, font 16px',
+      l: 'Height 56px, font 16px',
+    },
+    codeLabel: 'Date',
+    liveLabel: 'Date',
+    defaultBadge: 'default',
+    copyAria: 'Copy code',
+    copied: 'Copied',
+    copy: 'Copy',
+  },
+} as const;
 
 export default function SizePresets() {
-  const [activeId, setActiveId] = useState<Size>('m')
-  const [date, setDate] = useState<Date | undefined>()
-  const [copied, setCopied] = useState(false)
+  const lang = useDocsLang();
+  const t = UI[lang];
 
-  const active = PRESETS.find((p) => p.id === activeId) ?? PRESETS[1]
-  const code = formatCode(active.id)
+  const [activeId, setActiveId] = useState<Size>('m');
+  const [date, setDate] = useState<Date | undefined>();
+  const [copied, setCopied] = useState(false);
+
+  const active = PRESETS.find((p) => p.id === activeId) ?? PRESETS[1];
+  const code = `<DatePicker size="${active.id}" label="${t.codeLabel}" />`;
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(code)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     } catch {
       /* no-op */
     }
-  }
+  };
 
   return (
     <div className={styles.root}>
@@ -74,7 +89,12 @@ export default function SizePresets() {
               style={{
                 background: 'transparent',
                 border: '1px solid currentColor',
-                height: preset.height === '32px' ? 14 : preset.height === '40px' ? 18 : 22,
+                height:
+                  preset.height === '32px'
+                    ? 14
+                    : preset.height === '40px'
+                    ? 18
+                    : 22,
                 width: 24,
                 borderRadius: 4,
                 boxShadow: 'none',
@@ -87,8 +107,7 @@ export default function SizePresets() {
                 {preset.name}{' '}
                 <code
                   style={{
-                    fontFamily:
-                      "'JetBrains Mono', 'SF Mono', Menlo, monospace",
+                    fontFamily: "'JetBrains Mono', 'SF Mono', Menlo, monospace",
                     fontSize: '11px',
                     opacity: 0.7,
                   }}
@@ -96,10 +115,10 @@ export default function SizePresets() {
                   size=&quot;{preset.id}&quot;
                 </code>
               </span>
-              <span className={styles.tabDesc}>{preset.description}</span>
+              <span className={styles.tabDesc}>{t.desc[preset.id]}</span>
             </span>
             {preset.id === 'm' && (
-              <span className={styles.defaultBadge}>по умолчанию</span>
+              <span className={styles.defaultBadge}>{t.defaultBadge}</span>
             )}
           </button>
         ))}
@@ -109,7 +128,7 @@ export default function SizePresets() {
         <div className={styles.stage}>
           <DatePicker
             size={active.id}
-            label="Дата"
+            label={t.liveLabel}
             value={date}
             onChange={setDate}
           />
@@ -122,15 +141,16 @@ export default function SizePresets() {
               type="button"
               className={styles.copyBtn}
               onClick={handleCopy}
-              aria-label="Скопировать код"
+              aria-label={t.copyAria}
             >
               {copied ? (
                 <>
-                  <Check size={12} strokeWidth={2.5} /> Скопировано
+                  <Check size={12} strokeWidth={2.5} /> {t.copied}
                 </>
               ) : (
                 <>
-                  <Copy size={12} strokeWidth={2} /> Копировать
+                  <Copy size={12} strokeWidth={2} /> {t.copy}
+                  22{' '}
                 </>
               )}
             </button>
@@ -141,5 +161,5 @@ export default function SizePresets() {
         </div>
       </div>
     </div>
-  )
+  );
 }

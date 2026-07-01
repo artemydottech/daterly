@@ -1,0 +1,186 @@
+---
+title: "DatePicker"
+---
+
+import ComponentPreview from '@/components/ComponentPreview';
+
+An input field with a `dd.MM.yyyy` mask and a calendar popover. Controlled and uncontrolled modes.
+
+<ComponentPreview title="DatePicker" kind="date" />
+
+## Basic example
+
+```tsx
+import { DatePicker } from 'daterly';
+
+<DatePicker label="Date of birth" />;
+```
+
+## Controlled
+
+```tsx
+import { useState } from 'react'
+import { DatePicker } from 'daterly'
+
+const [date, setDate] = useState<Date | undefined>()
+
+<DatePicker label="Date" value={date} onChange={setDate} />
+```
+
+If `value` is passed (even `undefined`), the component treats itself as controlled. Use `defaultValue` for uncontrolled mode.
+
+## With time selection
+
+<ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} label="Date and time" />
+
+```tsx
+<DatePicker label="Date and time" showTime={{ format: 'HH:mm' }} />
+
+// or with seconds
+<DatePicker label="Timestamp" showTime />
+```
+
+`showTime={true}` is equivalent to `{ format: 'HH:mm:ss' }`.
+
+### TimePicker variants
+
+The `timePickerType` prop controls how time selection looks in the popover. The default is `'input'`.
+
+**`'input'`** — compact numeric fields next to the OK button, on the same row as the calendar. A good fit when you need quick keyboard entry.
+
+<ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} timePickerType="input" label="TimePicker: input" />
+
+```tsx
+<DatePicker showTime={{ format: 'HH:mm' }} timePickerType="input" />
+```
+
+**`'drum'`** — vertical "drums" below the calendar, scrolled by click or wheel. A good fit for touch devices and scenarios where the time matters more than the date.
+
+<ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} timePickerType="drum" label="TimePicker: drum" />
+
+```tsx
+<DatePicker showTime={{ format: 'HH:mm' }} timePickerType="drum" />
+```
+
+In both modes the popover doesn't close automatically — it closes via the OK button.
+
+## Restricting the range
+
+```tsx
+<DatePicker
+  label="Check-in date"
+  fromDate={new Date()} // no earlier than today
+  toDate={new Date(2027, 11, 31)} // no later than 31.12.2027
+/>
+```
+
+## States
+
+```tsx
+<DatePicker label="Error" failed />
+<DatePicker label="Loading" loading />
+<DatePicker label="Disabled" disabled />
+```
+
+`failed` draws a red border. `loading` replaces the icon with a spinner and blocks input. `disabled` blocks both the input and the popover.
+
+## Sizes
+
+<ComponentPreview kind="date" size="s" label="Small" />
+<ComponentPreview kind="date" size="l" label="Large" />
+
+```tsx
+<DatePicker size="s" />
+<DatePicker size="m" />  {/* default */}
+<DatePicker size="l" />
+```
+
+Read more on the [Sizes](/en/docs/sizes) page.
+
+## Without the calendar
+
+Just the masked input, no popover:
+
+```tsx
+<DatePicker noCalendar label="Date (no calendar)" />
+```
+
+## Icon
+
+```tsx
+<DatePicker icon={false} />                    // hide
+<DatePicker icon={<MyIcon />} />               // replace
+<DatePicker iconPosition="start" />            // on the left instead of the right
+```
+
+## Custom trigger
+
+Replace the entire input with your own element:
+
+```tsx
+<DatePicker
+  customTrigger={(value, onClick) => (
+    <button type="button" onClick={onClick}>
+      {value || 'Pick a date'}
+    </button>
+  )}
+/>
+```
+
+In this case there's no masked input — only a click on the trigger opens the popover.
+
+## Custom input
+
+Keep the mask logic but swap out the `<input>` itself for a component from your UI kit:
+
+```tsx
+import { Input } from 'antd';
+
+<DatePicker
+  renderInput={({ ref, className, ...props }) => (
+    <Input ref={ref as any} {...props} />
+  )}
+/>;
+```
+
+All handlers (`onChange`, `onKeyDown`, `onPaste`, …) are already included in `props`.
+
+## Locale and format
+
+<ComponentPreview kind="date" locale="en" dateFormat="MM/dd/yyyy" label="Birthday" />
+<ComponentPreview kind="date" locale="de" dateFormat="dd.MM.yyyy" label="Geburtstag" />
+
+```tsx
+import { enUS, de } from 'date-fns/locale'
+
+<DatePicker locale={enUS} dateFormat="MM/dd/yyyy" label="Birthday" />
+<DatePicker locale={de}   dateFormat="dd.MM.yyyy" label="Geburtstag" />
+```
+
+See the dedicated [Locales and formats](/en/docs/locales) page.
+
+## Props
+
+| Prop            | Type                                           | Default        | Description                         |
+| --------------- | ---------------------------------------------- | -------------- | ----------------------------------- |
+| `value`         | `Date`                                         | —              | Controlled value                    |
+| `defaultValue`  | `Date`                                         | —              | Uncontrolled initial value          |
+| `onChange`      | `(date: Date \| undefined) => void`            | —              | Callback on change                  |
+| `label`         | `string`                                       | —              | Floating label                      |
+| `placeholder`   | `string`                                       | from format    | Placeholder                         |
+| `locale`        | `Locale` (`date-fns`)                          | `ru`           | Locale                              |
+| `dateFormat`    | `string`                                       | `'dd.MM.yyyy'` | Date format                         |
+| `fromDate`      | `Date`                                         | —              | Minimum allowed                     |
+| `toDate`        | `Date`                                         | —              | Maximum allowed                     |
+| `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —              | Enable time selection               |
+| `timePickerType`| `'input' \| 'drum'`                            | `'input'`      | Time selection appearance           |
+| `noCalendar`    | `boolean`                                      | `false`        | Input only, no popover              |
+| `size`          | `'s' \| 'm' \| 'l'`                            | `'m'`          | Size                                |
+| `disabled`      | `boolean`                                      | `false`        | Disabled                            |
+| `failed`        | `boolean`                                      | `false`        | Error state                         |
+| `loading`       | `boolean`                                      | `false`        | Loading                             |
+| `icon`          | `ReactNode \| false`                           | calendar       | Icon                                |
+| `iconPosition`  | `'start' \| 'end'`                             | `'end'`        | Icon position                       |
+| `renderInput`   | `(props) => ReactNode`                         | —              | Replace `<input>`                   |
+| `customTrigger` | `(value, onClick) => ReactNode`                | —              | Replace the entire trigger          |
+| `className`     | `string`                                       | —              | CSS class on the root               |

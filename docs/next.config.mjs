@@ -1,32 +1,14 @@
-import nextra from 'nextra'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { createMDX } from 'fumadocs-mdx/next'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const libRoot = path.resolve(__dirname, '..')
+const withMDX = createMDX()
 
-const withNextra = nextra({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.tsx',
-  defaultShowCopyCode: true,
-})
-
-export default withNextra({
+/** @type {import('next').NextConfig} */
+const config = {
   output: 'export',
   basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
+  trailingSlash: true,
   images: { unoptimized: true },
   reactStrictMode: true,
-  webpack(config) {
-    config.resolve = config.resolve || {}
-    config.resolve.alias = {
-      ...(config.resolve.alias || {}),
-      'daterly/styles': path.join(
-        libRoot,
-        'src/styles/variables.css',
-      ),
-      'daterly/rhf': path.join(libRoot, 'dist/rhf.js'),
-      daterly$: path.join(libRoot, 'dist/index.js'),
-    }
-    return config
-  },
-})
+}
+
+export default withMDX(config)

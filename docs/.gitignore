@@ -3,3 +3,6 @@ out
 node_modules
 next-env.d.ts
 *.tsbuildinfo
+
+# fumadocs-mdx generated
+.source

@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "index",
+    "installation",
+    "---Components---",
+    "datepicker",
+    "daterangepicker",
+    "calendar",
+    "---Configuration---",
+    "locales",
+    "sizes",
+    "theming",
+    "rhf",
+    "---Recipes---",
+    "recipes"
+  ]
+}

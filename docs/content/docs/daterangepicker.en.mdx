@@ -1,0 +1,103 @@
+---
+title: "DateRangePicker"
+---
+
+import ComponentPreview from '@/components/ComponentPreview';
+
+An input field for a date range. Mask `dd.mm.yyyy — dd.mm.yyyy`, a popover with two months, and a two-phase click in the calendar.
+
+<ComponentPreview title="DateRangePicker" kind="range" />
+
+## Basic example
+
+```tsx
+import { useState } from 'react'
+import { DateRangePicker, type DateRange } from 'daterly'
+
+const [range, setRange] = useState<DateRange | undefined>()
+
+<DateRangePicker
+  label="Stay period"
+  value={range}
+  onChange={setRange}
+/>
+```
+
+## Two-phase selection
+
+The first click in the calendar sets the start of the range (the anchor). The second click confirms the end and closes the popover. As you move the mouse between clicks, the potential range is highlighted.
+
+If you click a date _earlier_ than the anchor, it automatically becomes the start, and the original anchor becomes the end.
+
+## Calendar layout
+
+```tsx
+<DateRangePicker calendarLayout="horizontal" />   {/* by default */}
+<DateRangePicker calendarLayout="vertical" />     {/* stacked */}
+```
+
+## With time selection
+
+<ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} label="Range (HH:mm)" />
+
+```tsx
+<DateRangePicker
+  label="Range down to the minute"
+  showTime={{ format: 'HH:mm' }}
+/>
+```
+
+Two time-selection fields appear below the calendar — one for the start and one for the end of the range. In this mode the popover does not close automatically; it is closed with the OK button.
+
+### TimePicker variants
+
+The `timePickerType` prop controls the appearance of the time selection. The default is `'input'`.
+
+**`'input'`** — two compact numeric fields next to the OK button (Start / End). Convenient for keyboard input.
+
+<ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} timePickerType="input" label="TimePicker: input" />
+
+```tsx
+<DateRangePicker showTime={{ format: 'HH:mm' }} timePickerType="input" />
+```
+
+**`'drum'`** — two "drums" below the calendar, scrolled by click or mouse wheel. Suited for touch devices.
+
+<ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} timePickerType="drum" label="TimePicker: drum" />
+
+```tsx
+<DateRangePicker showTime={{ format: 'HH:mm' }} timePickerType="drum" />
+```
+
+## Locale
+
+<ComponentPreview kind="range" locale="en" dateFormat="MM/dd/yyyy" label="Period" />
+
+```tsx
+import { enUS } from 'date-fns/locale'
+
+<DateRangePicker locale={enUS} dateFormat="MM/dd/yyyy" label="Period" />
+```
+
+## Constraints
+
+```tsx
+<DateRangePicker fromDate={new Date()} toDate={new Date(2027, 11, 31)} />
+```
+
+## All props
+
+The same as [DatePicker](/en/docs/datepicker), plus:
+
+| Prop             | Type                                      | Default        | Description               |
+| ---------------- | ----------------------------------------- | -------------- | ------------------------- |
+| `value`          | `DateRange`                               | —              | `{ from, to }`            |
+| `defaultValue`   | `DateRange`                               | —              | Initial range             |
+| `onChange`       | `(range: DateRange \| undefined) => void` | —              | Callback                  |
+| `calendarLayout` | `'horizontal' \| 'vertical'`              | `'horizontal'` | Layout of the two months  |
+
+`DateRange` is imported from the main entry point:
+
+```tsx
+import type { DateRange } from 'daterly';
+```

@@ -1,0 +1,40 @@
+---
+title: "Installation"
+---
+
+## The package itself
+
+```bash npm2yarn
+npm install daterly
+```
+
+## Peer dependencies
+
+```text
+react >= 17.0.0
+react-hook-form >= 7.0.0  # optional, only if you use /rhf
+```
+
+If you don't need the RHF wrappers, installing `react-hook-form` is not required.
+
+## Adding the styles
+
+In your app's root component (or in `_app.tsx` for Next.js, `main.tsx` for Vite):
+
+```tsx
+import 'daterly/styles'
+```
+
+This import pulls in the base CSS variables and `react-day-picker` styles. Without it, the calendar will look bare.
+
+## What gets exported
+
+| Entry point | What's inside |
+|-------------|------------|
+| `daterly` | `DatePicker`, `DateRangePicker`, `Calendar`, types `DateRange`, `DatePickerProps` |
+| `daterly/rhf` | `RHFDatePicker`, `RHFDateRangePicker` |
+| `daterly/styles` | Base CSS variables and calendar styles |
+
+## TypeScript
+
+Types ship with the package — no separate `@types/*` needed. Every component exports its `*Props` interfaces.

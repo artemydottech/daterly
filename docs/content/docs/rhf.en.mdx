@@ -1,0 +1,86 @@
+---
+title: "react-hook-form"
+---
+
+The `RHFDatePicker` and `RHFDateRangePicker` wrappers live in a separate entry point — if you don't use RHF, they won't end up in your bundle.
+
+```tsx
+import { RHFDatePicker, RHFDateRangePicker } from 'daterly/rhf'
+```
+
+## Basic example
+
+```tsx
+import { FormProvider, useForm } from 'react-hook-form'
+import { RHFDatePicker } from 'daterly/rhf'
+
+interface FormValues {
+  birthDate: Date | undefined
+}
+
+const MyForm = () => {
+  const methods = useForm<FormValues>({
+    defaultValues: { birthDate: undefined },
+  })
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={methods.handleSubmit(console.log)}>
+        <RHFDatePicker<FormValues>
+          name="birthDate"
+          label="Date of birth"
+        />
+        <button type="submit">Submit</button>
+      </form>
+    </FormProvider>
+  )
+}
+```
+
+## Generic parameter
+
+Pass your form values type as a generic — it gives you autocomplete and type safety for `name`:
+
+```tsx
+<RHFDatePicker<FormValues> name="birthDate" />
+//                          ^ autocomplete from the keys of FormValues
+//                            an error if the field name doesn't exist
+```
+
+Without the generic, `name` accepts any string — and a typo won't be caught by the compiler.
+
+## Validation rules
+
+`rules` are the standard `react-hook-form` options:
+
+```tsx
+<RHFDatePicker<FormValues>
+  name="birthDate"
+  label="Date of birth"
+  rules={{
+    required: 'Select a date',
+    validate: (date) => {
+      if (!date) return 'Select a date'
+      if (date > new Date()) return 'The date cannot be in the future'
+      return true
+    },
+  }}
+/>
+```
+
+The error message is rendered under the field automatically, and `failed` is set on the component root.
+
+## All props
+
+**Every** prop of the base `DatePicker` / `DateRangePicker` is accepted (including `locale`, `dateFormat`, `showTime`, etc.), plus:
+
+| Prop | Type | Description |
+|------|-----|----------|
+| `name` | `Path<T>` | Field name (type-safe when using the generic) |
+| `rules` | `RegisterOptions` | react-hook-form validation rules |
+
+## Ready-made recipes
+
+- [With Zod](/en/docs/recipes/rhf-zod) — the recommended stack
+- [With Joi](/en/docs/recipes/rhf-joi) — for legacy projects
+- [With shadcn/ui Form](/en/docs/recipes/shadcn-form) — embedding into a shadcn `<FormField>`
