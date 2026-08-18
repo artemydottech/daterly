@@ -72,7 +72,7 @@
     "test:e2e": "playwright test --config=playwright-ct.config.ts",
     "changeset": "changeset",
     "cs:version": "changeset version",
-    "release": "tsup && changeset publish --no-git-tag && git tag v$(node -p \"require('./package.json').version\")",
+    "release": "tsup && changeset publish --no-git-tag && V=v$(node -p \"require('./package.json').version\") && git tag -a \"$V\" -m \"$V\"",
     "prepare": "husky"
   },
   "dependencies": {
