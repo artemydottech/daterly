@@ -2,12 +2,9 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'vitest-axe'
-import { toHaveNoViolations } from 'vitest-axe/matchers'
 import { Calendar } from './components/Calendar'
 import { DatePicker } from './components/DatePicker'
 import { DateRangePicker } from './components/DateRangePicker'
-
-expect.extend({ toHaveNoViolations })
 
 describe('accessibility', () => {
   it('Calendar has no axe violations', async () => {
