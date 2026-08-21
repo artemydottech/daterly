@@ -47,6 +47,7 @@
       "name": "daterly",
       "path": "dist/index.js",
       "import": "{ Calendar, DatePicker, DateRangePicker }",
+      "limit": "32 kB",
       "ignore": [
         "react",
         "react-dom"
@@ -55,6 +56,7 @@
     {
       "name": "daterly/rhf",
       "path": "dist/rhf.js",
+      "limit": "33 kB",
       "ignore": [
         "react",
         "react-dom",

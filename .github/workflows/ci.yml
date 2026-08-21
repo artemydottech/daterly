@@ -27,6 +27,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Bundle size
+        run: npm run size
+
   test:
     name: Unit & Component Tests
     runs-on: ubuntu-latest
