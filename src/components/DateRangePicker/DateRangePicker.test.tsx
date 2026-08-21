@@ -174,7 +174,7 @@ describe('DateRangePicker', () => {
     const onChange = vi.fn()
     render(<DateRangePicker onChange={onChange} />)
     const input = screen.getByRole('combobox')
-    input.focus()
+    act(() => input.focus())
     await user.paste('01/01/2024 — 31/12/2024')
     expect(input).toHaveValue('01.01.2024 — 31.12.2024')
     const last = onChange.mock.calls.at(-1)?.[0]
@@ -194,7 +194,7 @@ describe('DateRangePicker', () => {
     )
     const input = screen.getByRole('combobox') as HTMLInputElement
     expect(input.value).toBe('01.01.2024 — 31.12.2024')
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(13, 13) // inside the " — " separator
     await user.keyboard('{Backspace}')
     expect(input.value.length).toBeLessThan('01.01.2024 — 31.12.2024'.length)
@@ -301,7 +301,7 @@ describe('DateRangePicker', () => {
       )
       const input = screen.getByRole('combobox') as HTMLInputElement
       expect(input.value).toBe('14.05.2026 — 15.05.2026')
-      input.focus()
+      act(() => input.focus())
       input.setSelectionRange(input.value.length, input.value.length)
       for (let i = 0; i < 8; i++) await user.keyboard('{Backspace}')
       expect(input.value).toBe('14.05.2026')
@@ -324,7 +324,7 @@ describe('DateRangePicker', () => {
       )
       const input = screen.getByLabelText('Выберите период') as HTMLInputElement
       expect(input.value).toBe('14.05.2026 00:00 — 15.05.2026 23:59')
-      input.focus()
+      act(() => input.focus())
       input.setSelectionRange(input.value.length, input.value.length)
       // Erase all `to` digits (12 datetime digits)
       for (let i = 0; i < 12; i++) await user.keyboard('{Backspace}')

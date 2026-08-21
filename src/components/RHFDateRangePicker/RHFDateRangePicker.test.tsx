@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { FormProvider, useForm } from 'react-hook-form'
 import type { ReactNode } from 'react'
@@ -91,7 +91,7 @@ describe('RHFDateRangePicker', () => {
     )
     const input = screen.getByRole('combobox') as HTMLInputElement
     expect(input.value).toBe('14.05.2026 00:00 — 14.05.2026 23:59')
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(input.value.length, input.value.length)
     for (let i = 0; i < 12; i++) await user.keyboard('{Backspace}')
     expect(input.value).toBe('14.05.2026 00:00')

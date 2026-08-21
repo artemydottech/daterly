@@ -275,7 +275,7 @@ describe('DatePicker', () => {
     const onChange = vi.fn()
     render(<DatePicker onChange={onChange} />)
     const input = screen.getByRole('combobox')
-    input.focus()
+    act(() => input.focus())
     await user.paste('15/03/2024')
     expect(input).toHaveValue('15.03.2024')
     const date = onChange.mock.calls.at(-1)?.[0] as Date
@@ -287,7 +287,7 @@ describe('DatePicker', () => {
     render(<DatePicker defaultValue={new Date(2024, 0, 15, 12, 0, 0)} />)
     const input = screen.getByRole('combobox') as HTMLInputElement
     expect(input.value).toBe('15.01.2024')
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(3, 3) // right after the first dot
     await user.keyboard('{Backspace}')
     // "15.01.2024" -> drop "5." -> "101.2024" digits -> remasked "10.12.024"

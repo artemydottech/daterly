@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TimeInput } from './TimeInput'
 
@@ -100,7 +100,7 @@ describe('TimeInput', () => {
     const onChange = vi.fn()
     render(<TimeInput value={new Date(2024, 0, 1, 10, 30, 0)} showSeconds={false} onChange={onChange} />)
     const input = screen.getByRole('textbox') as HTMLInputElement
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(0, 0)
     fireEvent.keyDown(input, { key: 'ArrowUp' })
     expect(onChange).toHaveBeenLastCalledWith(11, 30, 0)
@@ -110,7 +110,7 @@ describe('TimeInput', () => {
     const onChange = vi.fn()
     render(<TimeInput value={new Date(2024, 0, 1, 23, 0, 0)} showSeconds={false} onChange={onChange} />)
     const input = screen.getByRole('textbox') as HTMLInputElement
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(0, 0)
     fireEvent.keyDown(input, { key: 'ArrowUp' })
     expect(onChange).toHaveBeenLastCalledWith(0, 0, 0)
@@ -120,7 +120,7 @@ describe('TimeInput', () => {
     const onChange = vi.fn()
     render(<TimeInput value={new Date(2024, 0, 1, 0, 0, 0)} showSeconds={false} onChange={onChange} />)
     const input = screen.getByRole('textbox') as HTMLInputElement
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(0, 0)
     fireEvent.keyDown(input, { key: 'ArrowDown' })
     expect(onChange).toHaveBeenLastCalledWith(23, 0, 0)
@@ -130,7 +130,7 @@ describe('TimeInput', () => {
     const onChange = vi.fn()
     render(<TimeInput value={new Date(2024, 0, 1, 10, 30, 0)} showSeconds={false} onChange={onChange} />)
     const input = screen.getByRole('textbox') as HTMLInputElement
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(3, 3)
     fireEvent.keyDown(input, { key: 'ArrowDown' })
     expect(onChange).toHaveBeenLastCalledWith(10, 29, 0)
@@ -140,7 +140,7 @@ describe('TimeInput', () => {
     const onChange = vi.fn()
     render(<TimeInput value={new Date(2024, 0, 1, 10, 30, 45)} showSeconds onChange={onChange} />)
     const input = screen.getByRole('textbox') as HTMLInputElement
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(6, 6)
     fireEvent.keyDown(input, { key: 'ArrowUp' })
     expect(onChange).toHaveBeenLastCalledWith(10, 30, 46)
@@ -149,7 +149,7 @@ describe('TimeInput', () => {
   it('moves the caret to the next segment on ArrowRight', () => {
     render(<TimeInput value={new Date(2024, 0, 1, 10, 30, 0)} showSeconds={false} onChange={noop} />)
     const input = screen.getByRole('textbox') as HTMLInputElement
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(0, 0)
     fireEvent.keyDown(input, { key: 'ArrowRight' })
     expect(input.selectionStart).toBe(3)
@@ -159,7 +159,7 @@ describe('TimeInput', () => {
   it('moves the caret to the previous segment on ArrowLeft', () => {
     render(<TimeInput value={new Date(2024, 0, 1, 10, 30, 0)} showSeconds={false} onChange={noop} />)
     const input = screen.getByRole('textbox') as HTMLInputElement
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(3, 3)
     fireEvent.keyDown(input, { key: 'ArrowLeft' })
     expect(input.selectionStart).toBe(0)
@@ -169,7 +169,7 @@ describe('TimeInput', () => {
   it('clamps segment navigation at the last segment', () => {
     render(<TimeInput value={new Date(2024, 0, 1, 10, 30, 0)} showSeconds={false} onChange={noop} />)
     const input = screen.getByRole('textbox') as HTMLInputElement
-    input.focus()
+    act(() => input.focus())
     input.setSelectionRange(3, 3)
     fireEvent.keyDown(input, { key: 'ArrowRight' })
     expect(input.selectionStart).toBe(3)
