@@ -1,6 +1,7 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared'
 import { uiTranslations } from 'fumadocs-ui/i18n'
 import { i18n } from '@/lib/i18n'
+import { LanguageSelect, LanguageSelectText } from '@/components/language-select'
 
 const Logo = (
   <span
@@ -38,6 +39,9 @@ const NpmIcon = (
 export function baseOptions(locale: string): BaseLayoutProps {
   return {
     i18n: true,
+    slots: {
+      languageSelect: { root: LanguageSelect, text: LanguageSelectText },
+    },
     nav: {
       title: Logo,
       url: `/${locale}`,
