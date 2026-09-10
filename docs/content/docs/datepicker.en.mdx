@@ -113,6 +113,26 @@ Just the masked input, no popover:
 <DatePicker iconPosition="start" />            // on the left instead of the right
 ```
 
+## Clearing
+
+With `clearable`, a cross appears in the field as soon as it holds a value. Clicking it resets the date and calls `onChange(undefined)`, leaving focus in the input.
+
+<ComponentPreview kind="date" clearable label="Date" />
+
+```tsx
+<DatePicker clearable label="Date" />
+```
+
+The cross takes the place of the trailing icon. With `iconPosition="start"` the calendar icon stays on the left and the cross sits on the right.
+
+Replace the cross itself through `clearIcon`:
+
+```tsx
+<DatePicker clearable clearIcon={<MyCloseIcon />} />
+```
+
+The prop is only read when `clearable` is set. The icon goes inside the button, so its click handler, `aria-label` and styles stay as they are.
+
 ## Custom trigger
 
 Replace the entire input with your own element:
@@ -181,6 +201,8 @@ See the dedicated [Locales and formats](/en/docs/locales) page.
 | `loading`       | `boolean`                                      | `false`        | Loading                             |
 | `icon`          | `ReactNode \| false`                           | calendar       | Icon                                |
 | `iconPosition`  | `'start' \| 'end'`                             | `'end'`        | Icon position                       |
+| `clearable`     | `boolean`                                      | `false`        | Clear button while the field is filled |
+| `clearIcon`     | `ReactNode`                                    | cross          | Custom clear icon                   |
 | `renderInput`   | `(props) => ReactNode`                         | —              | Replace `<input>`                   |
 | `customTrigger` | `(value, onClick) => ReactNode`                | —              | Replace the entire trigger          |
 | `className`     | `string`                                       | —              | CSS class on the root               |

@@ -113,6 +113,26 @@ const [date, setDate] = useState<Date | undefined>()
 <DatePicker iconPosition="start" />            // слева вместо справа
 ```
 
+## Очистка
+
+С `clearable` в поле появляется крестик, как только в нём есть значение. Клик по нему сбрасывает дату и вызывает `onChange(undefined)`, фокус остаётся в инпуте.
+
+<ComponentPreview kind="date" clearable label="Дата" />
+
+```tsx
+<DatePicker clearable label="Дата" />
+```
+
+Крестик занимает место иконки справа. При `iconPosition="start"` календарная иконка остаётся слева, а крестик встаёт справа.
+
+Сам крестик заменяется через `clearIcon`:
+
+```tsx
+<DatePicker clearable clearIcon={<MyCloseIcon />} />
+```
+
+Проп читается только при `clearable`. Иконка вставляется внутрь кнопки — обработчик клика, `aria-label` и стили кнопки остаются на месте, менять их не нужно.
+
 ## Кастомный триггер
 
 Заменить весь инпут на собственный элемент:
@@ -181,6 +201,8 @@ import { enUS, de } from 'date-fns/locale'
 | `loading`       | `boolean`                                      | `false`        | Загрузка                            |
 | `icon`          | `ReactNode \| false`                           | календарь      | Иконка                              |
 | `iconPosition`  | `'start' \| 'end'`                             | `'end'`        | Позиция иконки                      |
+| `clearable`     | `boolean`                                      | `false`        | Крестик очистки при заполненном поле |
+| `clearIcon`     | `ReactNode`                                    | крестик        | Своя иконка очистки                 |
 | `renderInput`   | `(props) => ReactNode`                         | —              | Заменить `<input>`                  |
 | `customTrigger` | `(value, onClick) => ReactNode`                | —              | Заменить весь триггер               |
 | `className`     | `string`                                       | —              | CSS-класс на корне                  |

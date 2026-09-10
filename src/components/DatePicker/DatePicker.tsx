@@ -15,6 +15,7 @@ import { Calendar } from '../Calendar';
 import { TimePanel } from '../TimePanel';
 import { TimeInput } from '../TimeInput';
 import { CalendarIcon } from '../icons/CalendarIcon';
+import { ClearIcon } from '../icons/ClearIcon';
 import { Spinner } from '../icons/Spinner';
 import {
   applyMask,
@@ -69,6 +70,8 @@ export interface DatePickerProps {
   timePickerType?: DatePickerTimePickerType;
   icon?: ReactNode | false;
   iconPosition?: 'start' | 'end';
+  clearable?: boolean;
+  clearIcon?: ReactNode;
   className?: string;
   renderInput?: (props: DatePickerInputProps) => ReactNode;
   customTrigger?: (value: string, onClick: () => void) => ReactNode;
@@ -94,6 +97,8 @@ export function DatePicker({
   timePickerType = 'input',
   icon,
   iconPosition = 'end',
+  clearable = false,
+  clearIcon,
   className,
   renderInput,
   customTrigger,
@@ -332,6 +337,12 @@ export function DatePicker({
   }
 
   const interactive = !disabled && !loading;
+  const showClear = clearable && filled && interactive;
+
+  function handleClear() {
+    applyValid('', undefined);
+    inputRef.current?.focus();
+  }
 
   return (
     <div
@@ -358,7 +369,9 @@ export function DatePicker({
             resolvedIcon && iconPosition === 'start' ? true : undefined
           }
           data-icon-end={
-            resolvedIcon && iconPosition === 'end' ? true : undefined
+            showClear || (resolvedIcon && iconPosition === 'end')
+              ? true
+              : undefined
           }
           onClick={() => interactive && inputRef.current?.focus()}
         >
@@ -398,10 +411,23 @@ export function DatePicker({
               <input ref={ref as React.RefObject<HTMLInputElement>} {...rest} />
             );
           })()}
-          {resolvedIcon && iconPosition === 'end' && (
-            <span className="daterly__icon daterly__icon--end">
-              {resolvedIcon}
-            </span>
+          {showClear ? (
+            <button
+              type="button"
+              className="daterly__icon daterly__icon--end daterly__clear"
+              aria-label="Очистить"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={handleClear}
+            >
+              {clearIcon ?? <ClearIcon />}
+            </button>
+          ) : (
+            resolvedIcon &&
+            iconPosition === 'end' && (
+              <span className="daterly__icon daterly__icon--end">
+                {resolvedIcon}
+              </span>
+            )
           )}
         </div>
       )}

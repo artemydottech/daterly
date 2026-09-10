@@ -332,4 +332,74 @@ describe('DatePicker', () => {
     render(<DatePicker value={'not a date' as unknown as Date} />)
     expect(screen.getByRole('combobox')).toHaveValue('')
   })
+
+  describe('clearable', () => {
+    it('hides the clear button while the input is empty', () => {
+      render(<DatePicker clearable />)
+      expect(screen.queryByRole('button', { name: 'Очистить' })).not.toBeInTheDocument()
+    })
+
+    it('shows the clear button once a value is typed', async () => {
+      const user = userEvent.setup()
+      render(<DatePicker clearable />)
+      await user.type(screen.getByRole('combobox'), '15032024')
+      expect(screen.getByRole('button', { name: 'Очистить' })).toBeInTheDocument()
+    })
+
+    it('is absent without the prop', async () => {
+      const user = userEvent.setup()
+      render(<DatePicker />)
+      await user.type(screen.getByRole('combobox'), '15032024')
+      expect(screen.queryByRole('button', { name: 'Очистить' })).not.toBeInTheDocument()
+    })
+
+    it('clears the input and emits undefined', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(<DatePicker clearable defaultValue={new Date(2024, 2, 15)} onChange={onChange} />)
+      await user.click(screen.getByRole('button', { name: 'Очистить' }))
+      expect(screen.getByRole('combobox')).toHaveValue('')
+      expect(onChange).toHaveBeenLastCalledWith(undefined)
+    })
+
+    it('keeps focus on the input after clearing', async () => {
+      const user = userEvent.setup()
+      render(<DatePicker clearable defaultValue={new Date(2024, 2, 15)} />)
+      await user.click(screen.getByRole('button', { name: 'Очистить' }))
+      expect(screen.getByRole('combobox')).toHaveFocus()
+    })
+
+    it('stays hidden when disabled', () => {
+      render(<DatePicker clearable disabled defaultValue={new Date(2024, 2, 15)} />)
+      expect(screen.queryByRole('button', { name: 'Очистить' })).not.toBeInTheDocument()
+    })
+
+    it('renders a custom clearIcon', () => {
+      render(
+        <DatePicker
+          clearable
+          clearIcon={<span data-testid="custom-clear">x</span>}
+          defaultValue={new Date(2024, 2, 15)}
+        />,
+      )
+      const button = screen.getByRole('button', { name: 'Очистить' })
+      expect(button).toContainElement(screen.getByTestId('custom-clear'))
+    })
+
+    it('clears through a custom clearIcon', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DatePicker
+          clearable
+          clearIcon={<span data-testid="custom-clear">x</span>}
+          defaultValue={new Date(2024, 2, 15)}
+          onChange={onChange}
+        />,
+      )
+      await user.click(screen.getByRole('button', { name: 'Очистить' }))
+      expect(screen.getByRole('combobox')).toHaveValue('')
+      expect(onChange).toHaveBeenLastCalledWith(undefined)
+    })
+  })
 })

@@ -57,5 +57,7 @@ html.dark {
   --daterly-color-today-bg: color-mix(in srgb, var(--color-fd-primary) 20%, transparent);
   --daterly-color-hover: rgba(255, 255, 255, 0.06);
   --daterly-icon-color: #8a8d9c;
+  --daterly-clear-color: #8a8d9c;
+  --daterly-clear-color-hover: #e6e7ee;
   --daterly-shadow: 0 0 4px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.5);
 }

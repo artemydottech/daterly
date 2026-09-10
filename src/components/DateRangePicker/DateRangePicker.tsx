@@ -20,6 +20,7 @@ import { Calendar } from '../Calendar';
 import { TimePanel } from '../TimePanel';
 import { TimeInput } from '../TimeInput';
 import { CalendarIcon } from '../icons/CalendarIcon';
+import { ClearIcon } from '../icons/ClearIcon';
 import { Spinner } from '../icons/Spinner';
 import {
   applyDateMask,
@@ -56,6 +57,8 @@ export interface DateRangePickerProps {
   timePickerType?: DatePickerTimePickerType;
   icon?: ReactNode | false;
   iconPosition?: 'start' | 'end';
+  clearable?: boolean;
+  clearIcon?: ReactNode;
   className?: string;
   locale?: Locale;
   dateFormat?: string;
@@ -78,6 +81,8 @@ export function DateRangePicker({
   timePickerType = 'input',
   icon,
   iconPosition = 'end',
+  clearable = false,
+  clearIcon,
   className,
   locale = ru,
   dateFormat: dateFormatProp = DEFAULT_DATE_FORMAT,
@@ -409,6 +414,22 @@ export function DateRangePicker({
       ? undefined
       : `${schema.placeholder} — ${schema.placeholder}`;
   const interactive = !disabled && !loading;
+  const showClear = clearable && filled && interactive;
+
+  function handleClear() {
+    setInputValue('');
+    setInputInvalid(false);
+    setAnchorDate(undefined);
+    setHoveredDate(undefined);
+    if (!isControlled) {
+      setInternalFrom(undefined);
+      setInternalTo(undefined);
+    }
+    lastEmittedFromRef.current = undefined;
+    lastEmittedToRef.current = undefined;
+    onChange?.(undefined);
+    inputRef.current?.focus();
+  }
 
   return (
     <div
@@ -432,7 +453,9 @@ export function DateRangePicker({
           resolvedIcon && iconPosition === 'start' ? true : undefined
         }
         data-icon-end={
-          resolvedIcon && iconPosition === 'end' ? true : undefined
+          showClear || (resolvedIcon && iconPosition === 'end')
+            ? true
+            : undefined
         }
         onClick={() => interactive && inputRef.current?.focus()}
       >
@@ -465,10 +488,23 @@ export function DateRangePicker({
           aria-controls={open ? popoverId : undefined}
           aria-invalid={failed || inputInvalid || undefined}
         />
-        {resolvedIcon && iconPosition === 'end' && (
-          <span className="daterly__icon daterly__icon--end">
-            {resolvedIcon}
-          </span>
+        {showClear ? (
+          <button
+            type="button"
+            className="daterly__icon daterly__icon--end daterly__clear"
+            aria-label="Очистить"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={handleClear}
+          >
+            {clearIcon ?? <ClearIcon />}
+          </button>
+        ) : (
+          resolvedIcon &&
+          iconPosition === 'end' && (
+            <span className="daterly__icon daterly__icon--end">
+              {resolvedIcon}
+            </span>
+          )
         )}
       </div>
       {open && (() => {

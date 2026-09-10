@@ -28,6 +28,7 @@ type Props = {
   label?: string
   mode?: CalendarMode
   numberOfMonths?: number
+  clearable?: boolean
 }
 
 const LOCALES: Record<LocaleKey, Locale> = {
@@ -58,6 +59,7 @@ export default function ComponentPreview({
   label,
   mode = 'single',
   numberOfMonths,
+  clearable,
 }: Props) {
   const lang = useDocsLang()
   const t = UI[lang]
@@ -73,6 +75,7 @@ export default function ComponentPreview({
     size && `size=${size}`,
     showTime && (typeof showTime === 'object' ? showTime.format : 'HH:mm:ss'),
     showTime && timePickerType && `timePicker=${timePickerType}`,
+    clearable && 'clearable',
   ]
     .filter(Boolean)
     .join(' · ')
@@ -99,6 +102,7 @@ export default function ComponentPreview({
             locale={localeObj}
             dateFormat={dateFormat}
             size={size}
+            clearable={clearable}
           />
         )}
         {kind === 'range' && (
@@ -111,6 +115,7 @@ export default function ComponentPreview({
             locale={localeObj}
             dateFormat={dateFormat}
             size={size}
+            clearable={clearable}
           />
         )}
         {kind === 'calendar' && mode === 'single' && (

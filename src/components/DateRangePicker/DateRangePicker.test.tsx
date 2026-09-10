@@ -372,4 +372,63 @@ describe('DateRangePicker', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
   })
+
+  describe('clearable', () => {
+    it('hides the clear button while the input is empty', () => {
+      render(<DateRangePicker clearable />)
+      expect(screen.queryByRole('button', { name: 'Очистить' })).not.toBeInTheDocument()
+    })
+
+    it('shows the clear button once a value is typed', async () => {
+      const user = userEvent.setup()
+      render(<DateRangePicker clearable />)
+      await user.type(screen.getByRole('combobox'), '0103202410032024')
+      expect(screen.getByRole('button', { name: 'Очистить' })).toBeInTheDocument()
+    })
+
+    it('is absent without the prop', async () => {
+      const user = userEvent.setup()
+      render(<DateRangePicker />)
+      await user.type(screen.getByRole('combobox'), '0103202410032024')
+      expect(screen.queryByRole('button', { name: 'Очистить' })).not.toBeInTheDocument()
+    })
+
+    it('clears both dates and emits undefined', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DateRangePicker
+          clearable
+          defaultValue={{ from: new Date(2024, 2, 1), to: new Date(2024, 2, 10) }}
+          onChange={onChange}
+        />,
+      )
+      await user.click(screen.getByRole('button', { name: 'Очистить' }))
+      expect(screen.getByRole('combobox')).toHaveValue('')
+      expect(onChange).toHaveBeenLastCalledWith(undefined)
+    })
+
+    it('stays hidden when disabled', () => {
+      render(
+        <DateRangePicker
+          clearable
+          disabled
+          defaultValue={{ from: new Date(2024, 2, 1), to: new Date(2024, 2, 10) }}
+        />,
+      )
+      expect(screen.queryByRole('button', { name: 'Очистить' })).not.toBeInTheDocument()
+    })
+
+    it('renders a custom clearIcon', () => {
+      render(
+        <DateRangePicker
+          clearable
+          clearIcon={<span data-testid="custom-clear">x</span>}
+          defaultValue={{ from: new Date(2024, 2, 1), to: new Date(2024, 2, 10) }}
+        />,
+      )
+      const button = screen.getByRole('button', { name: 'Очистить' })
+      expect(button).toContainElement(screen.getByTestId('custom-clear'))
+    })
+  })
 })

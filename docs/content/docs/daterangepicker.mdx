@@ -85,6 +85,22 @@ import { enUS } from 'date-fns/locale'
 <DateRangePicker fromDate={new Date()} toDate={new Date(2027, 11, 31)} />
 ```
 
+## Очистка
+
+<ComponentPreview kind="range" clearable label="Период" />
+
+```tsx
+<DateRangePicker clearable label="Период" />
+```
+
+Крестик появляется, как только в поле есть значение — в том числе когда выбрана только начальная дата. Клик сбрасывает обе даты и вызывает `onChange(undefined)`.
+
+Своя иконка — через `clearIcon`, как у [DatePicker](/ru/docs/datepicker):
+
+```tsx
+<DateRangePicker clearable clearIcon={<MyCloseIcon />} />
+```
+
 ## Все пропсы
 
 Те же, что и у [DatePicker](/ru/docs/datepicker), плюс:
