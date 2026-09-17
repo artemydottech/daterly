@@ -34,6 +34,11 @@ import {
 import { DEFAULT_DATE_FORMAT, resolveTimeFormat } from '../../utils/date-mask';
 import { buildFormatSchema } from '../../utils/format-schema';
 import { coerceRange } from '../../utils/coerce-date';
+import {
+  buildDisabledMatchers,
+  isDayDisabled,
+  type DisabledDates,
+} from '../../utils/date-constraints';
 
 export type { DateRange };
 export type { DatePickerShowTime, DatePickerTimePickerType };
@@ -48,6 +53,7 @@ export interface DateRangePickerProps {
   label?: string;
   fromDate?: Date;
   toDate?: Date;
+  disabledDates?: DisabledDates;
   disabled?: boolean;
   failed?: boolean;
   loading?: boolean;
@@ -72,6 +78,7 @@ export function DateRangePicker({
   label,
   fromDate: fromConstraint,
   toDate: toConstraint,
+  disabledDates,
   disabled = false,
   failed = false,
   loading = false,
@@ -112,10 +119,10 @@ export function DateRangePicker({
 
   const fromDay = fromConstraint ? startOfDay(fromConstraint) : undefined;
   const toDay = toConstraint ? startOfDay(toConstraint) : undefined;
-  const disabledDays = [
-    ...(fromDay ? [{ before: fromDay }] : []),
-    ...(toDay ? [{ after: toDay }] : []),
-  ];
+  const disabledDays = useMemo(
+    () => buildDisabledMatchers(fromDay, toDay, disabledDates),
+    [fromDay?.getTime(), toDay?.getTime(), disabledDates], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const [internalFrom, setInternalFrom] = useState<Date | undefined>(
     defaultValue?.from,
@@ -214,6 +221,7 @@ export function DateRangePicker({
     : { from: confirmedFrom, to: confirmedTo };
 
   function handleDayClick(day: Date) {
+    if (isDayDisabled(day, disabledDays)) return;
     if (!anchorDate) {
       const fromBase = confirmedFrom ?? draftFromTime;
       const from = showTime
@@ -324,12 +332,16 @@ export function DateRangePicker({
     const toDigits = digits.slice(maxDigits);
     const fromComplete = fromDigits.length === maxDigits;
     const toComplete = toDigits.length === maxDigits;
-    const parsedFrom = fromComplete
+    const rawFrom = fromComplete
       ? parseDate(applyDateMask(fromDigits, schema), schema)
       : undefined;
-    const parsedTo = toComplete
+    const rawTo = toComplete
       ? parseDate(applyDateMask(toDigits, schema), schema)
       : undefined;
+    const parsedFrom =
+      rawFrom && isDayDisabled(rawFrom, disabledDays) ? undefined : rawFrom;
+    const parsedTo =
+      rawTo && isDayDisabled(rawTo, disabledDays) ? undefined : rawTo;
     setInputInvalid((fromComplete && !parsedFrom) || (toComplete && !parsedTo));
 
     if (!isControlled) {
@@ -656,8 +668,9 @@ export function DateRangePicker({
               onDayClick={handleDayClick}
               onDayMouseEnter={handleDayMouseEnter}
               onDayMouseLeave={() => setHoveredDate(undefined)}
-              startMonth={fromConstraint}
-              endMonth={toConstraint}
+              startMonth={fromDay}
+              endMonth={toDay}
+              disabled={disabledDays.length ? disabledDays : undefined}
               numberOfMonths={2}
               locale={locale}
             />

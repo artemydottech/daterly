@@ -402,4 +402,83 @@ describe('DatePicker', () => {
       expect(onChange).toHaveBeenLastCalledWith(undefined)
     })
   })
+
+  describe('date constraints', () => {
+    it('rejects a typed date before fromDate', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(<DatePicker fromDate={new Date(2024, 6, 17)} onChange={onChange} />)
+      await user.type(screen.getByRole('combobox'), '01072024')
+      expect(onChange).toHaveBeenLastCalledWith(undefined)
+      expect(screen.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
+    })
+
+    it('rejects a typed date after toDate', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(<DatePicker toDate={new Date(2024, 8, 17)} onChange={onChange} />)
+      await user.type(screen.getByRole('combobox'), '30092024')
+      expect(onChange).toHaveBeenLastCalledWith(undefined)
+      expect(screen.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
+    })
+
+    it('rejects a typed date matched by disabledDates', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DatePicker disabledDates={[new Date(2024, 6, 25)]} onChange={onChange} />,
+      )
+      await user.type(screen.getByRole('combobox'), '25072024')
+      expect(onChange).toHaveBeenLastCalledWith(undefined)
+      expect(screen.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
+    })
+
+    it('accepts a typed date inside the constraints', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DatePicker
+          fromDate={new Date(2024, 6, 17)}
+          toDate={new Date(2024, 8, 17)}
+          onChange={onChange}
+        />,
+      )
+      await user.type(screen.getByRole('combobox'), '20072024')
+      const last = onChange.mock.calls.at(-1)?.[0]
+      expect(last.getDate()).toBe(20)
+      expect(screen.getByRole('combobox')).not.toHaveAttribute('aria-invalid')
+    })
+
+    it('restores the last valid value on blur after a rejected date', async () => {
+      const user = userEvent.setup()
+      render(
+        <DatePicker
+          defaultValue={new Date(2024, 6, 20)}
+          fromDate={new Date(2024, 6, 17)}
+        />,
+      )
+      const input = screen.getByRole('combobox')
+      await user.type(input, '{selectall}01072024')
+      await user.tab()
+      expect(input).toHaveValue('20.07.2024')
+    })
+
+    it('disables days matched by disabledDates in the calendar', async () => {
+      const user = userEvent.setup()
+      render(
+        <DatePicker
+          defaultValue={new Date(2024, 2, 1)}
+          disabledDates={[new Date(2024, 2, 10)]}
+        />,
+      )
+      await user.click(screen.getByRole('combobox'))
+      const days = Array.from(
+        screen.getByRole('dialog').querySelectorAll('button.rdp-day_button'),
+      ) as HTMLButtonElement[]
+      const byLabel = (label: RegExp) =>
+        days.find((b) => label.test(b.getAttribute('aria-label') ?? ''))
+      expect(byLabel(/10 марта 2024/)).toBeDisabled()
+      expect(byLabel(/11 марта 2024/)).not.toBeDisabled()
+    })
+  })
 })

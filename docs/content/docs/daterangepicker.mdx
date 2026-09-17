@@ -85,6 +85,16 @@ import { enUS } from 'date-fns/locale'
 <DateRangePicker fromDate={new Date()} toDate={new Date(2027, 11, 31)} />
 ```
 
+Ограничение действует и на календарь, и на ручной ввод. Недопустимые дни в календаре не кликаются. Дата, набранная или вставленная в поле вне диапазона, помечается невалидной: поле получает `aria-invalid`, а соответствующий конец диапазона уходит в `onChange` как `undefined`.
+
+Произвольные даты блокируются через `disabledDates` — см. [DatePicker](/ru/docs/datepicker):
+
+```tsx
+<DateRangePicker disabledDates={{ dayOfWeek: [0, 6] }} />
+```
+
+Проверяются обе границы диапазона. Диапазон, перешагивающий заблокированный день, допустим — как и в календаре `react-day-picker` по умолчанию.
+
 ## Очистка
 
 <ComponentPreview kind="range" clearable label="Период" />

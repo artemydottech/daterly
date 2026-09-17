@@ -109,4 +109,28 @@ test.describe('DateRangePicker', () => {
     await mount(<DateRangePicker failed />)
     await expect(page.locator('[data-failed]')).toBeVisible()
   })
+
+  test('does not let a day past toDate be clicked', async ({ mount }) => {
+    const component = await mount(
+      <DateRangePicker
+        defaultValue={{ from: new Date(2026, 8, 10), to: undefined }}
+        toDate={new Date(2026, 8, 17)}
+      />,
+    )
+    await component.getByRole('combobox').click()
+    const blocked = component
+      .getByRole('dialog')
+      .getByRole('button', { name: /30 сентября 2026/ })
+    await expect(blocked).toBeDisabled()
+    await blocked.click({ force: true })
+    await expect(component.getByRole('combobox')).toHaveValue('10.09.2026')
+  })
+
+  test('flags a typed date past toDate as invalid', async ({ mount }) => {
+    const component = await mount(<DateRangePicker toDate={new Date(2026, 8, 17)} />)
+    const input = component.getByRole('combobox')
+    await input.click()
+    await input.pressSequentially('0107202630092026')
+    await expect(input).toHaveAttribute('aria-invalid', 'true')
+  })
 })

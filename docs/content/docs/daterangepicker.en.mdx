@@ -85,6 +85,16 @@ import { enUS } from 'date-fns/locale'
 <DateRangePicker fromDate={new Date()} toDate={new Date(2027, 11, 31)} />
 ```
 
+The constraint applies to both the calendar and manual input. Out-of-range days can't be clicked. A date typed or pasted into the field outside the range is flagged as invalid: the field gets `aria-invalid` and that end of the range reaches `onChange` as `undefined`.
+
+Arbitrary dates are blocked through `disabledDates` — see [DatePicker](/en/docs/datepicker):
+
+```tsx
+<DateRangePicker disabledDates={{ dayOfWeek: [0, 6] }} />
+```
+
+Both ends of the range are checked. A range that spans a blocked day is allowed, same as `react-day-picker`'s calendar by default.
+
 ## Clearing
 
 <ComponentPreview kind="range" clearable label="Period" />

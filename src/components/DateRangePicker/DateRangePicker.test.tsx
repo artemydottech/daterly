@@ -431,4 +431,110 @@ describe('DateRangePicker', () => {
       expect(button).toContainElement(screen.getByTestId('custom-clear'))
     })
   })
+
+  describe('date constraints', () => {
+    function dayButton(label: RegExp) {
+      const dialog = screen.getByRole('dialog')
+      const days = Array.from(
+        dialog.querySelectorAll('button.rdp-day_button'),
+      ) as HTMLButtonElement[]
+      return days.find((b) => label.test(b.getAttribute('aria-label') ?? ''))!
+    }
+
+    it('disables days after toDate in the plain calendar', async () => {
+      const user = userEvent.setup()
+      render(
+        <DateRangePicker
+          defaultValue={{ from: new Date(2024, 2, 1), to: undefined }}
+          toDate={new Date(2024, 2, 15)}
+        />,
+      )
+      await user.click(screen.getByRole('combobox'))
+      expect(dayButton(/10 марта 2024/)).not.toBeDisabled()
+      expect(dayButton(/20 марта 2024/)).toBeDisabled()
+    })
+
+    it('disables days before fromDate in the plain calendar', async () => {
+      const user = userEvent.setup()
+      render(
+        <DateRangePicker
+          defaultValue={{ from: new Date(2024, 2, 20), to: undefined }}
+          fromDate={new Date(2024, 2, 15)}
+        />,
+      )
+      await user.click(screen.getByRole('combobox'))
+      expect(dayButton(/10 марта 2024/)).toBeDisabled()
+      expect(dayButton(/20 марта 2024/)).not.toBeDisabled()
+    })
+
+    it('disables days matched by disabledDates', async () => {
+      const user = userEvent.setup()
+      render(
+        <DateRangePicker
+          defaultValue={{ from: new Date(2024, 2, 1), to: undefined }}
+          disabledDates={[new Date(2024, 2, 10)]}
+        />,
+      )
+      await user.click(screen.getByRole('combobox'))
+      expect(dayButton(/10 марта 2024/)).toBeDisabled()
+      expect(dayButton(/11 марта 2024/)).not.toBeDisabled()
+    })
+
+    it('rejects a typed from-date outside fromDate', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DateRangePicker fromDate={new Date(2024, 6, 17)} onChange={onChange} />,
+      )
+      await user.type(screen.getByRole('combobox'), '01072024')
+      expect(onChange).toHaveBeenLastCalledWith({ from: undefined, to: undefined })
+      expect(screen.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
+    })
+
+    it('rejects a typed to-date outside toDate', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DateRangePicker toDate={new Date(2024, 8, 17)} onChange={onChange} />,
+      )
+      await user.type(screen.getByRole('combobox'), '1707202430092024')
+      const last = onChange.mock.calls.at(-1)?.[0]
+      expect(last.from).toBeInstanceOf(Date)
+      expect(last.to).toBeUndefined()
+      expect(screen.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
+    })
+
+    it('accepts a typed range fully inside the constraints', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DateRangePicker
+          fromDate={new Date(2024, 6, 17)}
+          toDate={new Date(2024, 8, 17)}
+          onChange={onChange}
+        />,
+      )
+      await user.type(screen.getByRole('combobox'), '2007202410082024')
+      const last = onChange.mock.calls.at(-1)?.[0]
+      expect(last.from.getDate()).toBe(20)
+      expect(last.to.getDate()).toBe(10)
+      expect(screen.getByRole('combobox')).not.toHaveAttribute('aria-invalid')
+    })
+
+    it('accepts a typed range spanning a disabled day', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(
+        <DateRangePicker
+          disabledDates={[new Date(2024, 6, 25)]}
+          onChange={onChange}
+        />,
+      )
+      await user.type(screen.getByRole('combobox'), '2007202431072024')
+      const last = onChange.mock.calls.at(-1)?.[0]
+      expect(last.from.getDate()).toBe(20)
+      expect(last.to.getDate()).toBe(31)
+      expect(screen.getByRole('combobox')).not.toHaveAttribute('aria-invalid')
+    })
+  })
 })

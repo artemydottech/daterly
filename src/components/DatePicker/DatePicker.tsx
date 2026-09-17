@@ -27,6 +27,11 @@ import {
 } from '../../utils/date-mask';
 import { buildFormatSchema } from '../../utils/format-schema';
 import { coerceDate } from '../../utils/coerce-date';
+import {
+  buildDisabledMatchers,
+  isDayDisabled,
+  type DisabledDates,
+} from '../../utils/date-constraints';
 
 export type DatePickerSize = 's' | 'm' | 'l';
 export type DatePickerShowTime = boolean | { format: 'HH:mm' | 'HH:mm:ss' };
@@ -61,6 +66,7 @@ export interface DatePickerProps {
   placeholder?: string;
   fromDate?: Date;
   toDate?: Date;
+  disabledDates?: DisabledDates;
   disabled?: boolean;
   failed?: boolean;
   loading?: boolean;
@@ -88,6 +94,7 @@ export function DatePicker({
   placeholder,
   fromDate,
   toDate,
+  disabledDates,
   disabled = false,
   failed = false,
   loading = false,
@@ -124,10 +131,10 @@ export function DatePicker({
 
   const fromDay = fromDate ? startOfDay(fromDate) : undefined;
   const toDay = toDate ? startOfDay(toDate) : undefined;
-  const disabledDays = [
-    ...(fromDay ? [{ before: fromDay }] : []),
-    ...(toDay ? [{ after: toDay }] : []),
-  ];
+  const disabledDays = useMemo(
+    () => buildDisabledMatchers(fromDay, toDay, disabledDates),
+    [fromDay?.getTime(), toDay?.getTime(), disabledDates], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const resolvedIcon = loading ? (
     <Spinner />
@@ -217,7 +224,9 @@ export function DatePicker({
       if (!isControlled) setInternalDate(undefined);
       onChange?.(undefined);
     } else if (digits.length === maxDigits) {
-      const date = parseDateTime(masked, schema);
+      const parsed = parseDateTime(masked, schema);
+      const date =
+        parsed && isDayDisabled(parsed, disabledDays) ? undefined : parsed;
       lastEmittedRef.current = date;
       if (date) lastValidRef.current = masked;
       setInputInvalid(!date);
@@ -298,6 +307,7 @@ export function DatePicker({
   }
 
   function handleCalendarSelect(date: Date | undefined) {
+    if (date && isValid(date) && isDayDisabled(date, disabledDays)) return;
     if (!date || !isValid(date)) {
       applyValid('', undefined);
       if (!timeFormat) setOpen(false);

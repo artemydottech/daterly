@@ -6,3 +6,5 @@ export type { DatePickerProps, DatePickerShowTime, DatePickerInputProps } from '
 
 export { DateRangePicker } from './components/DateRangePicker'
 export type { DateRangePickerProps, DateRange } from './components/DateRangePicker'
+
+export type { DisabledDates, Matcher } from './utils/date-constraints'

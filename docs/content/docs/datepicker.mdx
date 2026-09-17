@@ -74,6 +74,24 @@ const [date, setDate] = useState<Date | undefined>()
 />
 ```
 
+Ограничение действует и на календарь, и на ручной ввод: недопустимый день в календаре не кликается, а набранная или вставленная в поле дата вне диапазона помечается как невалидная — поле получает `aria-invalid`, `onChange` вызывается с `undefined`.
+
+## Блокировка произвольных дат
+
+`disabledDates` блокирует любой набор дат, не обязательно непрерывный. Принимает то же, что `disabled` у `react-day-picker`: `Date`, массив, интервал, день недели, предикат.
+
+```tsx
+<DatePicker label="Дата визита" disabledDates={[new Date(2027, 0, 1), new Date(2027, 0, 7)]} />
+
+<DatePicker label="Только будни" disabledDates={{ dayOfWeek: [0, 6] }} />
+
+<DatePicker label="Кроме января" disabledDates={{ from: new Date(2027, 0, 1), to: new Date(2027, 0, 31) }} />
+
+<DatePicker label="Только чётные" disabledDates={(date) => date.getDate() % 2 !== 0} />
+```
+
+Работает вместе с `fromDate` / `toDate` — условия складываются. У `DateRangePicker` проп такой же, проверяются обе границы диапазона; диапазон, перешагивающий заблокированный день, при этом допустим.
+
 ## Состояния
 
 ```tsx
@@ -192,6 +210,7 @@ import { enUS, de } from 'date-fns/locale'
 | `dateFormat`    | `string`                                       | `'dd.MM.yyyy'` | Формат даты                         |
 | `fromDate`      | `Date`                                         | —              | Минимально допустимая               |
 | `toDate`        | `Date`                                         | —              | Максимально допустимая              |
+| `disabledDates` | `Matcher \| Matcher[]`                         | —              | Заблокированные даты                |
 | `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —              | Включить выбор времени              |
 | `timePickerType`| `'input' \| 'drum'`                            | `'input'`      | Внешний вид выбора времени          |
 | `noCalendar`    | `boolean`                                      | `false`        | Только инпут, без попапа            |

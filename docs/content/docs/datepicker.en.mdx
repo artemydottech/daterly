@@ -74,6 +74,24 @@ In both modes the popover doesn't close automatically — it closes via the OK b
 />
 ```
 
+The constraint applies to both the calendar and manual input: an out-of-range day can't be clicked, and a date typed or pasted into the field is flagged as invalid — the field gets `aria-invalid` and `onChange` fires with `undefined`.
+
+## Blocking arbitrary dates
+
+`disabledDates` blocks any set of dates, contiguous or not. It accepts whatever `react-day-picker`'s `disabled` accepts: a `Date`, an array, an interval, a day of the week, a predicate.
+
+```tsx
+<DatePicker label="Visit date" disabledDates={[new Date(2027, 0, 1), new Date(2027, 0, 7)]} />
+
+<DatePicker label="Weekdays only" disabledDates={{ dayOfWeek: [0, 6] }} />
+
+<DatePicker label="January excluded" disabledDates={{ from: new Date(2027, 0, 1), to: new Date(2027, 0, 31) }} />
+
+<DatePicker label="Even days only" disabledDates={(date) => date.getDate() % 2 !== 0} />
+```
+
+It combines with `fromDate` / `toDate` — the conditions add up. `DateRangePicker` takes the same prop and checks both ends of the range; a range that spans a blocked day is still allowed.
+
 ## States
 
 ```tsx
@@ -192,6 +210,7 @@ See the dedicated [Locales and formats](/en/docs/locales) page.
 | `dateFormat`    | `string`                                       | `'dd.MM.yyyy'` | Date format                         |
 | `fromDate`      | `Date`                                         | —              | Minimum allowed                     |
 | `toDate`        | `Date`                                         | —              | Maximum allowed                     |
+| `disabledDates` | `Matcher \| Matcher[]`                         | —              | Blocked dates                       |
 | `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —              | Enable time selection               |
 | `timePickerType`| `'input' \| 'drum'`                            | `'input'`      | Time selection appearance           |
 | `noCalendar`    | `boolean`                                      | `false`        | Input only, no popover              |
