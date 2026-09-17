@@ -1,5 +1,18 @@
 # daterly
 
+## 2.2.0
+
+### Minor Changes
+
+- Add a `disabledDates` prop to `DatePicker` and `DateRangePicker` for blocking arbitrary dates. It accepts react-day-picker's `Matcher` shapes (`Date`, array, interval, day of week, predicate) and combines with `fromDate` / `toDate`.
+
+  Fix `DateRangePicker` ignoring `fromDate` / `toDate` in two places:
+
+  - the calendar rendered without `showTime` received neither `disabled` nor day-normalized `startMonth` / `endMonth`, so out-of-range days stayed clickable;
+  - typed and pasted input was parsed and emitted through `onChange` without checking the constraints at all.
+
+  Out-of-range input is now flagged invalid (`aria-invalid`, `onChange` receives `undefined` for that end) instead of being accepted.
+
 ## 2.1.0
 
 ### Minor Changes
