@@ -153,7 +153,7 @@ const BookingForm = () => {
 };
 ```
 
-> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/daterly/docs/recipes).
+> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/daterly/ru/docs/recipes).
 
 ## Стилизация
 
@@ -171,11 +171,11 @@ const BookingForm = () => {
 
 Состояния задаются через `data-*`-атрибуты на корневом элементе (`data-focused`, `data-filled`, `data-failed`, `data-disabled`) — стилизуются без JS.
 
-Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/daterly/docs/theming).
+Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/daterly/ru/docs/theming).
 
 ## API
 
-Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/daterly/docs).
+Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/daterly/ru/docs).
 
 ## Лицензия
 
