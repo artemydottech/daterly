@@ -1,5 +1,11 @@
 # daterly
 
+## 2.2.1
+
+### Patch Changes
+
+- Automatically load calendar and input styles when importing from daterly or daterly/rhf, removing the need for a separate daterly/styles import. Preserve the existing stylesheet export and ensure Next.js keeps automatic styles during tree shaking.
+
 ## 2.2.0
 
 ### Minor Changes

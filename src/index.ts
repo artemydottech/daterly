@@ -1,3 +1,5 @@
+import './styles/variables.css'
+
 export { Calendar } from './components/Calendar'
 export type { CalendarProps } from './components/Calendar'
 

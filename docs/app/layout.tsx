@@ -1,5 +1,4 @@
 import '@/app/global.css'
-import 'daterly/styles'
 import { Inter } from 'next/font/google'
 import type { ReactNode } from 'react'
 

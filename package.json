@@ -1,6 +1,6 @@
 {
   "name": "daterly",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "type": "module",
   "description": "daterly — React date & time picker с маской ввода, диапазонами и опциональной интеграцией react-hook-form.",
   "keywords": [
@@ -38,6 +38,13 @@
   "files": [
     "dist"
   ],
+  "sideEffects": [
+    "**/*.css",
+    "./dist/index.js",
+    "./dist/index.cjs",
+    "./dist/rhf.js",
+    "./dist/rhf.cjs"
+  ],
   "workspaces": [
     ".",
     "docs"
@@ -47,7 +54,7 @@
       "name": "daterly",
       "path": "dist/index.js",
       "import": "{ Calendar, DatePicker, DateRangePicker }",
-      "limit": "32 kB",
+      "limit": "34 kB",
       "ignore": [
         "react",
         "react-dom"
@@ -56,7 +63,7 @@
     {
       "name": "daterly/rhf",
       "path": "dist/rhf.js",
-      "limit": "33 kB",
+      "limit": "35 kB",
       "ignore": [
         "react",
         "react-dom",
@@ -70,6 +77,7 @@
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:package": "node --test tests/package/*.test.mjs",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test --config=playwright-ct.config.ts",

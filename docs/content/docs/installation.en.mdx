@@ -19,13 +19,13 @@ If you don't need the RHF wrappers, installing `react-hook-form` is not required
 
 ## Adding the styles
 
-In your app's root component (or in `_app.tsx` for Next.js, `main.tsx` for Vite):
+Styles load automatically when you import components from `daterly` or `daterly/rhf`:
 
 ```tsx
-import 'daterly/styles'
+import { DatePicker } from 'daterly'
 ```
 
-This import pulls in the base CSS variables and `react-day-picker` styles. Without it, the calendar will look bare.
+The package includes the base CSS variables and `react-day-picker` styles. A separate `import 'daterly/styles'` is no longer needed; the previous import remains available for compatibility. Your app's bundler must support CSS imports.
 
 ## What gets exported
 

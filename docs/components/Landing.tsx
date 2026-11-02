@@ -49,7 +49,7 @@ interface Dict {
 const DICT: Record<Lang, Dict> = {
   ru: {
     navDocs: 'Документация',
-    badge: `v${pkg.version} — usePortal()`,
+    badge: `v${pkg.version} — стили автоматически`,
     h1a: 'Date picker,',
     h1b: 'в который удобно',
     h1c: 'печатать руками',
@@ -75,7 +75,7 @@ const DICT: Record<Lang, Dict> = {
     apiP: 'Два пропса покрывают 90% случаев. Остальное — по необходимости.',
     finalH2: 'Готов поставить?',
     finalP:
-      'Рецепты, API и примеры под RHF, Zod, Joi и shadcn/ui — в документации.',
+      'Стили подключаются автоматически. Рецепты, API и примеры под RHF, Zod, Joi и shadcn/ui — в документации.',
     finalDocs: 'Открыть документацию',
     props: [
       { name: 'value', type: 'Date | null', desc: 'Контролируемое значение' },
@@ -100,7 +100,7 @@ const DICT: Record<Lang, Dict> = {
   },
   en: {
     navDocs: 'Docs',
-    badge: `v${pkg.version} — adaptive width`,
+    badge: `v${pkg.version} — automatic styles`,
     h1a: 'A date picker',
     h1b: 'you actually enjoy',
     h1c: 'typing into',
@@ -126,7 +126,7 @@ const DICT: Record<Lang, Dict> = {
     apiP: 'Two props cover 90% of cases. The rest is opt-in.',
     finalH2: 'Ready to install?',
     finalP:
-      'Recipes, API and examples for RHF, Zod, Joi and shadcn/ui — in the docs.',
+      'Styles load automatically. Recipes, API and examples for RHF, Zod, Joi and shadcn/ui — in the docs.',
     finalDocs: 'Open the docs',
     props: [
       { name: 'value', type: 'Date | null', desc: 'Controlled value' },
@@ -358,7 +358,7 @@ export default function Landing({
           </button>
           <ul className={styles.miniBadges}>
             <li className={styles.miniBadge}>
-              <span className={styles.miniBadgeCheck}>•</span> ~29 KB brotli
+              <span className={styles.miniBadgeCheck}>•</span> ~34 KB brotli
             </li>
             <li className={styles.miniBadge}>
               <span className={styles.miniBadgeCheck}>•</span> {t.badgeTs}
@@ -429,7 +429,7 @@ export default function Landing({
       <section className={styles.trustSection}>
         <div className={styles.trustStrip}>
           <div className={styles.trustCell}>
-            <div className={styles.trustNum}>~29 KB</div>
+            <div className={styles.trustNum}>~34 KB</div>
             <div className={styles.trustLabel}>{t.trust1}</div>
           </div>
           <div className={styles.trustCell}>

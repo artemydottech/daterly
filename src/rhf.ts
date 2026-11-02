@@ -1,3 +1,5 @@
+import './styles/variables.css'
+
 export { RHFDatePicker } from './components/RHFDatePicker'
 export type { RHFDatePickerProps } from './components/RHFDatePicker'
 

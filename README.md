@@ -39,7 +39,6 @@ npm install react-hook-form
 ## Quick start
 
 ```tsx
-import 'daterly/styles';
 import { DatePicker } from 'daterly';
 
 export const Example = () => <DatePicker label="Дата рождения" />;
@@ -157,11 +156,9 @@ const BookingForm = () => {
 
 ## Стилизация
 
-Подключите базовые стили и переопределите нужные CSS-переменные:
+Базовые стили подключаются автоматически при импорте из `daterly` или `daterly/rhf`. Переопределите нужные CSS-переменные:
 
 ```css
-@import 'daterly/styles';
-
 :root {
   --daterly-color-accent: #6366f1;
   --daterly-radius: 8px;

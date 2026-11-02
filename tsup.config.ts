@@ -13,7 +13,7 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
-  external: ['react', 'react-dom', 'react-hook-form', 'date-fns'],
+  external: ['react', 'react-dom', 'react-hook-form', 'date-fns', './styles/variables.css'],
   async onSuccess() {
     await mkdir('dist/styles', { recursive: true })
     const rdpCss = await readFile(
