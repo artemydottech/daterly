@@ -6,18 +6,20 @@ const SITE_URL = 'https://artemydottech.github.io/daterly'
 
 type Lang = 'ru' | 'en'
 
-const META: Record<Lang, { title: string; description: string; locale: string }> = {
+const META: Record<Lang, { title: string; description: string; locale: string; image: string }> = {
   ru: {
     title: 'daterly — React DatePicker с маской ввода',
     description:
       'React DatePicker с маской ввода, локалями date-fns, диапазонами, временем и опциональной интеграцией с react-hook-form.',
     locale: 'ru_RU',
+    image: '/og.ru.png',
   },
   en: {
     title: 'daterly — React DatePicker with input masking',
     description:
       'React DatePicker with input masking, date-fns locales, ranges, time and optional react-hook-form integration.',
     locale: 'en_US',
+    image: '/og.png',
   },
 }
 
@@ -29,7 +31,7 @@ export async function generateMetadata(
   props: PageProps<'/[lang]'>,
 ): Promise<Metadata> {
   const { lang } = await props.params
-  const m = META[(lang as Lang) in META ? (lang as Lang) : 'ru']
+  const m = META[(lang as Lang) in META ? (lang as Lang) : 'en']
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -42,20 +44,20 @@ export async function generateMetadata(
       title: m.title,
       description: m.description,
       locale: m.locale,
-      images: '/og.png',
+      images: m.image,
     },
     twitter: {
       card: 'summary_large_image',
       title: m.title,
       description: m.description,
-      images: '/og.png',
+      images: m.image,
     },
   }
 }
 
 export default async function HomePage(props: PageProps<'/[lang]'>) {
   const { lang } = await props.params
-  const key: Lang = (lang as Lang) in META ? (lang as Lang) : 'ru'
+  const key: Lang = (lang as Lang) in META ? (lang as Lang) : 'en'
   const m = META[key]
 
   const jsonLd = {

@@ -1,36 +1,38 @@
 # daterly
 
+**English** | [Русский](README.ru.md)
+
 ![daterly](docs/public/og.png)
 
 [![npm version](https://img.shields.io/npm/v/daterly?color=blue)](https://www.npmjs.com/package/daterly)
 [![npm downloads](https://img.shields.io/npm/dm/daterly?color=green)](https://www.npmjs.com/package/daterly)
 [![CI](https://github.com/artemydottech/daterly/actions/workflows/ci.yml/badge.svg)](https://github.com/artemydottech/daterly/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/artemydottech/daterly/branch/main/graph/badge.svg)](https://codecov.io/gh/artemydottech/daterly)
-[![minzipped size](https://img.shields.io/badge/minzip-~29_kB-blue)](https://bundlephobia.com/package/daterly)
+[![Brotli size](https://img.shields.io/badge/brotli-~34_kB-blue)](https://bundlephobia.com/package/daterly)
 
-React DatePicker с маской ввода, поддержкой произвольных локалей и форматов даты, выбором диапазона и времени, опциональной интеграцией с react-hook-form. Построен на [react-day-picker v9](https://daypicker.dev/) и [date-fns v4](https://date-fns.org/).
+React DatePicker with input masking, custom locales and date formats, range and time selection, and optional react-hook-form integration. Built on [react-day-picker v9](https://daypicker.dev/) and [date-fns v4](https://date-fns.org/).
 
-**📚 [Документация и примеры →](https://artemydottech.github.io/daterly)**
+**📚 [Documentation and examples →](https://artemydottech.github.io/daterly/en/)**
 
-## Возможности
+## Features
 
-- Одиночная дата и диапазон
-- Контролируемый и неконтролируемый режимы
-- Выбор времени (`showTime`)
-- **Произвольная локаль** через проп `locale` (любая локаль `date-fns`)
-- **Произвольный формат даты** через проп `dateFormat` (`dd.MM.yyyy`, `MM/dd/yyyy`, `yyyy-MM-dd`, …) — маска ввода генерится автоматически
-- Кастомный триггер (`customTrigger`) и кастомный инпут (`renderInput`) — интеграция с Ant Design, MUI, shadcn/ui и др.
-- Интеграция с react-hook-form (нулевые издержки если не используется)
-- Стилизация через CSS-переменные `--daterly-*`
-- Полная поддержка TypeScript, в т.ч. дженерики для RHF-компонентов
+- Single dates and date ranges
+- Controlled and uncontrolled modes
+- Time selection (`showTime`)
+- **Custom locale** through the `locale` prop (any `date-fns` locale)
+- **Custom date format** through `dateFormat` (`dd.MM.yyyy`, `MM/dd/yyyy`, `yyyy-MM-dd`, …), with an automatically generated input mask
+- Custom triggers (`customTrigger`) and inputs (`renderInput`) for integration with Ant Design, MUI, shadcn/ui, and other component libraries
+- Optional react-hook-form integration, with no overhead when unused
+- Theming through `--daterly-*` CSS custom properties
+- Full TypeScript support, including generic RHF components
 
-## Установка
+## Installation
 
 ```bash
 npm install daterly
 ```
 
-Для интеграции с react-hook-form установите его как peer-зависимость:
+To use the react-hook-form integration, install its peer dependency:
 
 ```bash
 npm install react-hook-form
@@ -41,10 +43,10 @@ npm install react-hook-form
 ```tsx
 import { DatePicker } from 'daterly';
 
-export const Example = () => <DatePicker label="Дата рождения" />;
+export const Example = () => <DatePicker label="Date of birth" />;
 ```
 
-## Примеры
+## Examples
 
 ### DatePicker
 
@@ -52,18 +54,18 @@ export const Example = () => <DatePicker label="Дата рождения" />;
 import { useState } from 'react';
 import { DatePicker } from 'daterly';
 
-// Неконтролируемый
-<DatePicker label="Дата рождения" />
+// Uncontrolled
+<DatePicker label="Date of birth" />
 
-// Контролируемый
+// Controlled
 const [date, setDate] = useState<Date | undefined>();
-<DatePicker label="Дата" value={date} onChange={setDate} />
+<DatePicker label="Date" value={date} onChange={setDate} />
 
-// С выбором времени
-<DatePicker label="Дата и время" showTime={{ format: 'HH:mm' }} />
+// With time selection
+<DatePicker label="Date and time" showTime={{ format: 'HH:mm' }} />
 
-// Ограничение диапазона
-<DatePicker label="Дата заезда" fromDate={new Date()} />
+// Date constraints
+<DatePicker label="Check-in date" fromDate={new Date()} />
 ```
 
 ### DateRangePicker
@@ -75,16 +77,16 @@ import { DateRangePicker, type DateRange } from 'daterly';
 const [range, setRange] = useState<DateRange | undefined>();
 
 <DateRangePicker
-  label="Период проживания"
+  label="Booking period"
   value={range}
   onChange={setRange}
   calendarLayout="horizontal"
 />;
 ```
 
-### Локали и форматы
+### Locales and formats
 
-По умолчанию: `locale = ru`, `dateFormat = 'dd.MM.yyyy'`. Любую локаль `date-fns` можно подключить точечно — маска и плейсхолдер пересчитаются автоматически.
+Defaults: `locale = ru`, `dateFormat = 'dd.MM.yyyy'`. Import any `date-fns` locale individually; the mask and placeholder update automatically.
 
 ```tsx
 import { enUS, de } from 'date-fns/locale';
@@ -109,11 +111,11 @@ import { DatePicker, DateRangePicker } from 'daterly';
 />
 ```
 
-Поддерживаемые токены в `dateFormat`: `dd`, `MM`, `yyyy`. Разделители — любые одиночные символы (`.`, `/`, `-`, ` `). Время добавляется через проп `showTime`, а не через `dateFormat`.
+Supported `dateFormat` tokens: `dd`, `MM`, `yyyy`. Separators can be any single character (`.`, `/`, `-`, ` `). Add time through `showTime`, rather than `dateFormat`.
 
-### С react-hook-form
+### With react-hook-form
 
-`RHFDatePicker` и `RHFDateRangePicker` принимают дженерик-параметр — тип значений формы. Это даёт автокомплит и типобезопасность для `name`:
+`RHFDatePicker` and `RHFDateRangePicker` accept a generic form values type, providing autocomplete and type safety for `name`:
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form';
@@ -135,45 +137,47 @@ const BookingForm = () => {
       <form onSubmit={methods.handleSubmit(console.log)}>
         <RHFDatePicker<BookingFormValues>
           name="checkIn"
-          label="Дата заезда"
-          rules={{ validate: (v) => v !== undefined || 'Выберите дату' }}
+          label="Check-in date"
+          rules={{ validate: (v) => v !== undefined || 'Choose a date' }}
         />
         <RHFDateRangePicker<BookingFormValues>
           name="period"
-          label="Период"
+          label="Period"
           rules={{
-            validate: (v) => v?.from !== undefined || 'Выберите период',
+            validate: (v) => v?.from !== undefined || 'Choose a period',
           }}
         />
-        <button type="submit">Отправить</button>
+        <button type="submit">Submit</button>
       </form>
     </FormProvider>
   );
 };
 ```
 
-> Полные рецепты для **Zod**, **Joi** и **shadcn/ui Form** — на [странице документации](https://artemydottech.github.io/daterly/ru/docs/recipes).
+> Full recipes for **Zod**, **Joi**, and **shadcn/ui Form** are available in the [documentation](https://artemydottech.github.io/daterly/en/docs/recipes).
 
-## Стилизация
+## Theming
 
-Базовые стили подключаются автоматически при импорте из `daterly` или `daterly/rhf`. Переопределите нужные CSS-переменные:
+Base styles load automatically when importing from `daterly` or `daterly/rhf`. Your app bundler must support CSS imports. Override the CSS custom properties you need:
 
 ```css
 :root {
   --daterly-color-accent: #6366f1;
   --daterly-radius: 8px;
-  --daterly-border-color-focus: #6366f1;
+  --daterly-color-border-focus: #6366f1;
 }
 ```
 
-Состояния задаются через `data-*`-атрибуты на корневом элементе (`data-focused`, `data-filled`, `data-failed`, `data-disabled`) — стилизуются без JS.
+State is exposed through root `data-*` attributes (`data-focused`, `data-filled`, `data-failed`, `data-disabled`), so state styling requires no JavaScript.
 
-Полный список токенов и data-атрибутов — в [разделе Theming](https://artemydottech.github.io/daterly/ru/docs/theming).
+See the [Theming guide](https://artemydottech.github.io/daterly/en/docs/theming) for the complete list of tokens and data attributes.
 
 ## API
 
-Подробная справка по пропсам, типам и edge-cases — в [документации](https://artemydottech.github.io/daterly/ru/docs).
+See the [documentation](https://artemydottech.github.io/daterly/en/docs) for the full reference of props, types, and edge cases.
 
-## Лицензия
+## License
 
 MIT
+
+[Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)

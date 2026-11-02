@@ -2,16 +2,16 @@
   "pages": [
     "index",
     "installation",
-    "---Components---",
+    "---Компоненты---",
     "datepicker",
     "daterangepicker",
     "calendar",
-    "---Configuration---",
+    "---Настройка---",
     "locales",
     "sizes",
     "theming",
     "rhf",
-    "---Recipes---",
+    "---Рецепты---",
     "recipes"
   ]
 }

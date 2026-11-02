@@ -64,7 +64,7 @@ const pill = (strong, rest) =>
     h('span', { color: MUTED }, rest),
   )
 
-const tree = h(
+const tree = (copy) => h(
   'div',
   {
     width: 1200,
@@ -123,7 +123,7 @@ const tree = h(
         backgroundClip: 'text',
         '-webkit-background-clip': 'text',
       },
-      'с маской ввода',
+      copy.title,
     ),
   ),
   h(
@@ -132,24 +132,42 @@ const tree = h(
     h(
       'div',
       { fontSize: 27, color: MUTED },
-      'Диапазоны · Время · Локали date-fns · react-hook-form',
+      copy.description,
     ),
     h(
       'div',
       { display: 'flex', gap: 12 },
-      pill('2', 'зависимости'),
+      pill('2', copy.dependencies),
       pill('ESM', '+ CJS'),
-      pill('TS', 'типы'),
-      pill('RHF', 'опционально'),
+      pill('TS', copy.types),
+      pill('RHF', copy.optional),
     ),
   ),
 )
 
-const svg = await satori(tree, { width: 1200, height: 630, fonts })
-const png = new Resvg(svg, { fitTo: { mode: 'width', value: 1200 } })
-  .render()
-  .asPng()
+const versions = {
+  'og.png': {
+    title: 'with input masking',
+    description: 'Ranges · Time · date-fns locales · react-hook-form',
+    dependencies: 'dependencies',
+    types: 'types',
+    optional: 'optional',
+  },
+  'og.ru.png': {
+    title: 'с маской ввода',
+    description: 'Диапазоны · Время · Локали date-fns · react-hook-form',
+    dependencies: 'зависимости',
+    types: 'типы',
+    optional: 'опционально',
+  },
+}
 
-const out = path.resolve(dir, '../public/og.png')
-writeFileSync(out, png)
-console.log(`og.png written → ${out} (${(png.length / 1024).toFixed(1)} KB)`)
+for (const [filename, copy] of Object.entries(versions)) {
+  const svg = await satori(tree(copy), { width: 1200, height: 630, fonts })
+  const png = new Resvg(svg, { fitTo: { mode: 'width', value: 1200 } })
+    .render()
+    .asPng()
+  const out = path.resolve(dir, '../public', filename)
+  writeFileSync(out, png)
+  console.log(`${filename} written → ${out} (${(png.length / 1024).toFixed(1)} KB)`)
+}

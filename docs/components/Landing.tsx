@@ -161,7 +161,7 @@ const randomDate = (): { full: string; iso: string } => {
 };
 
 export default function Landing({
-  initialLang = 'ru',
+  initialLang = 'en',
 }: {
   initialLang?: Lang;
 }) {

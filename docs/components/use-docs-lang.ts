@@ -6,5 +6,5 @@ export type DocsLang = 'ru' | 'en'
 
 export function useDocsLang(): DocsLang {
   const pathname = usePathname()
-  return pathname?.split('/')[1] === 'en' ? 'en' : 'ru'
+  return pathname?.split('/')[1] === 'ru' ? 'ru' : 'en'
 }

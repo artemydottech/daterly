@@ -2,7 +2,7 @@
   "name": "daterly",
   "version": "2.2.1",
   "type": "module",
-  "description": "daterly — React date & time picker с маской ввода, диапазонами и опциональной интеграцией react-hook-form.",
+  "description": "React date and time picker with input masking, ranges, and optional react-hook-form integration.",
   "keywords": [
     "daterly",
     "react",
@@ -36,7 +36,12 @@
     "./styles": "./dist/styles/variables.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.ru.md",
+    "CONTRIBUTING.md",
+    "CONTRIBUTING.ru.md",
+    "CHANGELOG.md",
+    "CHANGELOG.ru.md"
   ],
   "sideEffects": [
     "**/*.css",

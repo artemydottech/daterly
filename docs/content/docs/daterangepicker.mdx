@@ -4,11 +4,11 @@ title: "DateRangePicker"
 
 import ComponentPreview from '@/components/ComponentPreview';
 
-Поле ввода для диапазона дат. Маска `дд.мм.гггг — дд.мм.гггг`, попап с двумя месяцами, двухфазный клик в календаре.
+An input field for a date range. Mask `dd.mm.yyyy — dd.mm.yyyy`, a popover with two months, and a two-phase click in the calendar.
 
 <ComponentPreview title="DateRangePicker" kind="range" />
 
-## Базовый пример
+## Basic example
 
 ```tsx
 import { useState } from 'react'
@@ -17,43 +17,43 @@ import { DateRangePicker, type DateRange } from 'daterly'
 const [range, setRange] = useState<DateRange | undefined>()
 
 <DateRangePicker
-  label="Период проживания"
+  label="Stay period"
   value={range}
   onChange={setRange}
 />
 ```
 
-## Двухфазный выбор
+## Two-phase selection
 
-Первый клик в календаре — устанавливает начало диапазона (anchor). Второй клик — фиксирует конец и закрывает попап. При движении мыши между кликами подсвечивается потенциальный диапазон.
+The first click in the calendar sets the start of the range (the anchor). The second click confirms the end and closes the popover. As you move the mouse between clicks, the potential range is highlighted.
 
-Если кликнуть на дату _раньше_ anchor — она автоматически станет началом, а первоначальный anchor — концом.
+If you click a date _earlier_ than the anchor, it automatically becomes the start, and the original anchor becomes the end.
 
-## Расположение календаря
+## Calendar layout
 
 ```tsx
-<DateRangePicker calendarLayout="horizontal" />   {/* по умолчанию */}
-<DateRangePicker calendarLayout="vertical" />     {/* в стек */}
+<DateRangePicker calendarLayout="horizontal" />   {/* by default */}
+<DateRangePicker calendarLayout="vertical" />     {/* stacked */}
 ```
 
-## С выбором времени
+## With time selection
 
-<ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} label="Период (HH:mm)" />
+<ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} label="Range (HH:mm)" />
 
 ```tsx
 <DateRangePicker
-  label="Период с точностью до минуты"
+  label="Range down to the minute"
   showTime={{ format: 'HH:mm' }}
 />
 ```
 
-Под календарём появляются два поля выбора времени — для начала и для конца диапазона. Попап в этом режиме не закрывается автоматически — закрытие по кнопке OK.
+Two time-selection fields appear below the calendar — one for the start and one for the end of the range. In this mode the popover does not close automatically; it is closed with the OK button.
 
-### Варианты TimePicker
+### TimePicker variants
 
-Проп `timePickerType` управляет видом выбора времени. По умолчанию — `'input'`.
+The `timePickerType` prop controls the appearance of the time selection. The default is `'input'`.
 
-**`'input'`** — два компактных числовых поля рядом с кнопкой OK (Начало / Конец). Удобно для ввода с клавиатуры.
+**`'input'`** — two compact numeric fields next to the OK button (Start / End). Convenient for keyboard input.
 
 <ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} timePickerType="input" label="TimePicker: input" />
 
@@ -61,7 +61,7 @@ const [range, setRange] = useState<DateRange | undefined>()
 <DateRangePicker showTime={{ format: 'HH:mm' }} timePickerType="input" />
 ```
 
-**`'drum'`** — два «барабана» под календарём, листаются кликом или колесом. Подходит для тач-устройств.
+**`'drum'`** — two "drums" below the calendar, scrolled by click or mouse wheel. Suited for touch devices.
 
 <ComponentPreview kind="range" showTime={{ format: 'HH:mm' }} timePickerType="drum" label="TimePicker: drum" />
 
@@ -69,7 +69,7 @@ const [range, setRange] = useState<DateRange | undefined>()
 <DateRangePicker showTime={{ format: 'HH:mm' }} timePickerType="drum" />
 ```
 
-## Локаль
+## Locale
 
 <ComponentPreview kind="range" locale="en" dateFormat="MM/dd/yyyy" label="Period" />
 
@@ -79,50 +79,50 @@ import { enUS } from 'date-fns/locale'
 <DateRangePicker locale={enUS} dateFormat="MM/dd/yyyy" label="Period" />
 ```
 
-## Ограничение
+## Constraints
 
 ```tsx
 <DateRangePicker fromDate={new Date()} toDate={new Date(2027, 11, 31)} />
 ```
 
-Ограничение действует и на календарь, и на ручной ввод. Недопустимые дни в календаре не кликаются. Дата, набранная или вставленная в поле вне диапазона, помечается невалидной: поле получает `aria-invalid`, а соответствующий конец диапазона уходит в `onChange` как `undefined`.
+The constraint applies to both the calendar and manual input. Out-of-range days can't be clicked. A date typed or pasted into the field outside the range is flagged as invalid: the field gets `aria-invalid` and that end of the range reaches `onChange` as `undefined`.
 
-Произвольные даты блокируются через `disabledDates` — см. [DatePicker](/ru/docs/datepicker):
+Arbitrary dates are blocked through `disabledDates` — see [DatePicker](/en/docs/datepicker):
 
 ```tsx
 <DateRangePicker disabledDates={{ dayOfWeek: [0, 6] }} />
 ```
 
-Проверяются обе границы диапазона. Диапазон, перешагивающий заблокированный день, допустим — как и в календаре `react-day-picker` по умолчанию.
+Both ends of the range are checked. A range that spans a blocked day is allowed, same as `react-day-picker`'s calendar by default.
 
-## Очистка
+## Clearing
 
-<ComponentPreview kind="range" clearable label="Период" />
+<ComponentPreview kind="range" clearable label="Period" />
 
 ```tsx
-<DateRangePicker clearable label="Период" />
+<DateRangePicker clearable label="Period" />
 ```
 
-Крестик появляется, как только в поле есть значение — в том числе когда выбрана только начальная дата. Клик сбрасывает обе даты и вызывает `onChange(undefined)`.
+The cross appears as soon as the field holds a value — including when only the start date is picked. Clicking it resets both dates and calls `onChange(undefined)`.
 
-Своя иконка — через `clearIcon`, как у [DatePicker](/ru/docs/datepicker):
+Use your own icon through `clearIcon`, same as on [DatePicker](/en/docs/datepicker):
 
 ```tsx
 <DateRangePicker clearable clearIcon={<MyCloseIcon />} />
 ```
 
-## Все пропсы
+## All props
 
-Те же, что и у [DatePicker](/ru/docs/datepicker), плюс:
+The same as [DatePicker](/en/docs/datepicker), plus:
 
-| Prop             | Тип                                       | По умолчанию   | Описание                  |
+| Prop             | Type                                      | Default        | Description               |
 | ---------------- | ----------------------------------------- | -------------- | ------------------------- |
 | `value`          | `DateRange`                               | —              | `{ from, to }`            |
-| `defaultValue`   | `DateRange`                               | —              | Начальный диапазон        |
-| `onChange`       | `(range: DateRange \| undefined) => void` | —              | Колбэк                    |
-| `calendarLayout` | `'horizontal' \| 'vertical'`              | `'horizontal'` | Расположение двух месяцев |
+| `defaultValue`   | `DateRange`                               | —              | Initial range             |
+| `onChange`       | `(range: DateRange \| undefined) => void` | —              | Callback                  |
+| `calendarLayout` | `'horizontal' \| 'vertical'`              | `'horizontal'` | Layout of the two months  |
 
-`DateRange` импортируется из основного entry-point:
+`DateRange` is imported from the main entry point:
 
 ```tsx
 import type { DateRange } from 'daterly';

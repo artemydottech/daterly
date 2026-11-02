@@ -17,7 +17,6 @@ npm install daterly
 ```
 
 ```tsx
-import 'daterly/styles' // required once, app entry — base CSS vars + calendar styles
 import { DatePicker } from 'daterly'
 ```
 
@@ -25,7 +24,7 @@ import { DatePicker } from 'daterly'
 
 | Import | Provides |
 |--------|----------|
-| `daterly` | `Calendar`, `DatePicker`, `DateRangePicker`, `Button` + their prop types, `DateRange` |
+| `daterly` | `Calendar`, `DatePicker`, `DateRangePicker` + their prop types, `DateRange` |
 | `daterly/rhf` | `RHFDatePicker`, `RHFDateRangePicker` (react-hook-form wrappers) |
 | `daterly/styles` | CSS variables + react-day-picker base styles |
 
@@ -112,7 +111,7 @@ State attributes on the root: `data-focused`, `data-filled`, `data-failed`, `dat
 
 ## Gotchas
 
-- Import `daterly/styles` exactly once at the app entry — components are unstyled without it.
+- Styles load automatically from `daterly` and `daterly/rhf`; the app bundler must support CSS imports. The `daterly/styles` export remains available for compatibility.
 - Controlled mode = `value` is passed (even `undefined` counts as controlled). For uncontrolled, use `defaultValue` and never pass `value`.
 - Invalid dates (e.g. `32.01.2024`) are rejected by a round-trip check `format(parse(x)) === x`.
 - The mask is digit-only; paste strips non-digits; backspace skips separators.
@@ -126,4 +125,11 @@ npm run test:e2e # playwright component tests
 npm -w docs run dev  # docs site (Next.js + Fumadocs, i18n ru/en)
 ```
 
-Docs live in `docs/` (Fumadocs, App Router). Content: `docs/content/docs/**` — `*.mdx` = ru (default), `*.en.mdx` = en; order/labels in `meta.json` / `meta.en.json`.
+Docs live in `docs/` (Fumadocs, App Router). Content: `docs/content/docs/**` — `*.mdx` = en (default), `*.ru.mdx` = ru; order/labels in `meta.json` / `meta.ru.json`. Both `/en/` and `/ru/` routes remain available.
+
+## Documentation and release languages
+
+- English is primary. Public Markdown documentation uses English in `README.md`, `CONTRIBUTING.md`, and `CHANGELOG.md`, with separate Russian counterparts named `README.ru.md`, `CONTRIBUTING.ru.md`, and `CHANGELOG.ru.md`. Keep language links and both translations synchronized.
+- Write changesets in English. Before publishing, update `CHANGELOG.ru.md` for the same version as `CHANGELOG.md`.
+- Use one version tag for both languages. GitHub Release titles are English; descriptions contain `English` first, then `Русский`, with equivalent changes, migration instructions, and validation results.
+- Publish the tag and GitHub Release only after CI succeeds on the release commit. Documentation updates do not justify moving an existing release tag.

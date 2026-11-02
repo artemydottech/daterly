@@ -1,5 +1,7 @@
 # daterly
 
+**English** | [Русский](CHANGELOG.ru.md)
+
 ## 2.2.1
 
 ### Patch Changes
@@ -42,17 +44,17 @@
 
 ### Minor Changes
 
-- Добавлен проп `usePortal` для `DatePicker` и `DateRangePicker`.
+- Add `usePortal` to `DatePicker` and `DateRangePicker`.
 
-  При `usePortal={true}` popover рендерится через `React.createPortal` в `document.body` с `position: fixed`, что позволяет ему корректно отображаться внутри `overflow: hidden` контейнеров (сайдбары, модалы и т.д.) без обрезания и горизонтального скролла.
+  With `usePortal={true}`, the popover renders into `document.body` through `React.createPortal` with `position: fixed`. This prevents clipping and horizontal scrolling inside containers with `overflow: hidden`, including sidebars and modals.
 
-  Изменения:
+  Changes:
 
-  - `DatePicker`: новый проп `usePortal?: boolean` (по умолчанию `false`)
-  - `DateRangePicker`: новый проп `usePortal?: boolean` (по умолчанию `false`)
-  - Новый хук `useFloatingPosition` — вычисляет `{ top, left }` для `position: fixed` popover-а, обновляется при scroll и resize
-  - `useClickOutside` расширен параметром `excludeRefs` — клики внутри portal popover-а не закрывают его
-  - CSS: новый класс-модификатор `.daterly__popover--portal` с `position: fixed; z-index: 9999`
+  - `DatePicker`: new `usePortal?: boolean` prop, defaulting to `false`.
+  - `DateRangePicker`: new `usePortal?: boolean` prop, defaulting to `false`.
+  - Add `useFloatingPosition` to calculate `{ top, left }` for fixed popovers and update their position on scroll and resize.
+  - Extend `useClickOutside` with `excludeRefs` so clicks inside portal popovers do not close them.
+  - Add `.daterly__popover--portal` with `position: fixed; z-index: 9999`.
 
 ## 1.3.1
 
@@ -64,9 +66,9 @@
 
 ### Minor Changes
 
-- 8462f22: DatePicker и DateRangePicker теперь растягиваются на 100% контейнера (`display: block`) — как в antd. Ширина контролируется обёрткой.
+- 8462f22: Make `DatePicker` and `DateRangePicker` fill their container width with `display: block`, matching Ant Design behavior. Control their width through the wrapper.
 
-  Добавлены CSS-токены `--daterly-field-min-width` (220px) и `--daterly-range-min-width` (280px) для переопределения минимальной ширины без `!important`.
+  Add `--daterly-field-min-width` (220px) and `--daterly-range-min-width` (280px) CSS tokens to override the minimum width without `!important`.
 
 ## 1.2.1
 
@@ -78,34 +80,34 @@
 
 ### Minor Changes
 
-- 63c3784: - a11y: инпут `DatePicker` и `DateRangePicker` получил корректную ARIA-семантику комбобокса — `role="combobox"` с `aria-controls`, ссылающимся на попап-календарь. Раньше `aria-expanded`/`aria-haspopup` стояли на голом textbox, что нарушало `aria-allowed-attr`.
+- 63c3784: Improve accessibility for `DatePicker` and `DateRangePicker` inputs with `role="combobox"`, `aria-controls`, `aria-expanded`, and `aria-haspopup`. Previously, popup attributes were set on a plain textbox, causing an `aria-allowed-attr` violation.
 
-  - a11y: проп `failed` теперь выставляет `aria-invalid` на инпуте (раньше синхронизировался только с `data-failed`).
-  - test: покрытие тестами 92.8% → 97.5% — добавлен набор для `TimeInput` (маска, клавиатурная навигация по сегментам), тесты `showTime`-хендлеров и axe-проверки доступности.
+  - Set `aria-invalid` on the input when `failed` is enabled, in addition to `data-failed` on the root.
+  - Increase test coverage from 92.8% to 97.5% with `TimeInput` masking and keyboard tests, tests for `showTime` handlers, and axe accessibility checks.
 
-  > Замечание для миграции: роль инпута изменилась с `textbox` на `combobox`. Если в тестах вы ищете инпут через `getByRole('textbox')`, замените на `getByRole('combobox')`. Вариант `noCalendar` остаётся `textbox`.
+  > Migration: the input role changed from `textbox` to `combobox`. Replace `getByRole('textbox')` with `getByRole('combobox')` in tests. With `noCalendar`, the role remains `textbox`.
 
 ## 1.1.0
 
 ### Minor Changes
 
-- - feat: добавлен компонент `TimeInput` — альтернатива барабанному `TimePanel` с прямым вводом часов/минут/секунд.
-  - feat: новый проп `timePickerType: 'drum' | 'input'` в `DatePicker` и `DateRangePicker` для выбора варианта ввода времени.
-  - feat: расширен набор CSS-токенов `--datepicker-*` для кастомизации time-инпутов.
-  - fix: `RHFDatePicker` и `RHFDateRangePicker` корректно обрабатывают `null`/`undefined` из react-hook-form (значение больше не «залипает» после сброса формы).
-  - docs: обновлены страницы `datepicker` и `daterangepicker` с примерами `timePickerType`.
+- Add `TimeInput` as an alternative to the drum-style `TimePanel`, with direct hour, minute, and second input.
+- Add `timePickerType: 'drum' | 'input'` to `DatePicker` and `DateRangePicker` to choose the time input mode.
+- Extend `--datepicker-*` CSS tokens for time input customization.
+- Fix `RHFDatePicker` and `RHFDateRangePicker` handling of `null` and `undefined` from react-hook-form so values no longer persist after a form reset.
+- Update the `datepicker` and `daterangepicker` documentation with `timePickerType` examples.
 
 ## 1.0.0
 
-### Major Changes — ребрендинг
+### Major Changes — rebranding
 
-- **Пакет переименован**: `@artemy-tech/rtdp` → **`daterly`** (без скоупа, новый пакет на npm).
-- **Импорты**: `'@artemy-tech/rtdp'` → `'daterly'`, `'@artemy-tech/rtdp/rhf'` → `'daterly/rhf'`, `'@artemy-tech/rtdp/styles'` → `'daterly/styles'`.
-- **CSS-переменные**: префикс `--rtdp-*` → `--daterly-*` (например, `--rtdp-color-accent` → `--daterly-color-accent`).
-- **CSS-классы**: `.rtdp` → `.daterly`, `.rtdp__field` → `.daterly__field`, `.rtdp-calendar` → `.daterly-calendar`, `.rtdp-range` → `.daterly-range`, `.rtdp-spinner` → `.daterly-spinner` и так далее по всем BEM-частям.
-- Имена React-компонентов (`DatePicker`, `DateRangePicker`, `Calendar`, `RHFDatePicker`, `RHFDateRangePicker`) **не изменились** — мигрируется только то, что пишется через дефис.
+- Rename the package from `@artemy-tech/rtdp` to **`daterly`**, published as an unscoped npm package.
+- Update imports: `'@artemy-tech/rtdp'` to `'daterly'`, `'@artemy-tech/rtdp/rhf'` to `'daterly/rhf'`, and `'@artemy-tech/rtdp/styles'` to `'daterly/styles'`.
+- Change the CSS custom property prefix from `--rtdp-*` to `--daterly-*`, for example `--rtdp-color-accent` to `--daterly-color-accent`.
+- Rename CSS classes from `.rtdp` to `.daterly`, `.rtdp__field` to `.daterly__field`, `.rtdp-calendar` to `.daterly-calendar`, `.rtdp-range` to `.daterly-range`, `.rtdp-spinner` to `.daterly-spinner`, and the remaining BEM classes accordingly.
+- React component names (`DatePicker`, `DateRangePicker`, `Calendar`, `RHFDatePicker`, and `RHFDateRangePicker`) remain unchanged.
 
-### Миграция
+### Migration
 
 ```diff
 - npm install @artemy-tech/rtdp

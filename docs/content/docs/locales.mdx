@@ -1,10 +1,10 @@
 ---
-title: "Локали и форматы"
+title: "Locales & formats"
 ---
 
-По умолчанию: `locale = ru`, `dateFormat = 'dd.MM.yyyy'`. Любая локаль `date-fns` подключается одним пропсом — маска ввода, плейсхолдер и парсинг пересчитываются автоматически.
+Defaults: `locale = ru`, `dateFormat = 'dd.MM.yyyy'`. Any `date-fns` locale is plugged in with a single prop — the input mask, placeholder, and parsing are recalculated automatically.
 
-## Пример: en-US
+## Example: en-US
 
 ```tsx
 import { enUS } from 'date-fns/locale'
@@ -17,9 +17,9 @@ import { DatePicker } from 'daterly'
 />
 ```
 
-Маска ввода: `__/__/____`. Плейсхолдер: `mm/dd/yyyy`. Календарь — на английском.
+Input mask: `__/__/____`. Placeholder: `mm/dd/yyyy`. The calendar is in English.
 
-## Пример: ISO
+## Example: ISO
 
 ```tsx
 import { enUS } from 'date-fns/locale'
@@ -31,9 +31,9 @@ import { enUS } from 'date-fns/locale'
 />
 ```
 
-Маска: `____-__-__`. Плейсхолдер: `yyyy-mm-dd`.
+Mask: `____-__-__`. Placeholder: `yyyy-mm-dd`.
 
-## Пример: немецкий
+## Example: German
 
 ```tsx
 import { de } from 'date-fns/locale'
@@ -41,35 +41,35 @@ import { de } from 'date-fns/locale'
 <DatePicker locale={de} dateFormat="dd.MM.yyyy" label="Geburtsdatum" />
 ```
 
-## Поддерживаемые токены `dateFormat`
+## Supported `dateFormat` tokens
 
-| Токен | Значение |
+| Token  | Meaning |
 |-------|----------|
-| `dd`   | День, 2 цифры |
-| `MM`   | Месяц, 2 цифры |
-| `yyyy` | Год, 4 цифры |
+| `dd`   | Day, 2 digits |
+| `MM`   | Month, 2 digits |
+| `yyyy` | Year, 4 digits |
 
-Все три должны присутствовать в формате **ровно по одному разу**. В качестве разделителей принимаются любые одиночные символы (`.`, `/`, `-`, ` `).
+All three must be present in the format **exactly once each**. Any single character is accepted as a separator (`.`, `/`, `-`, ` `).
 
-**Время** — отдельным пропсом `showTime`, не через `dateFormat`. Если передать `HH`, `mm` или `ss` в `dateFormat` — будет ошибка.
+**Time** is set via the separate `showTime` prop, not through `dateFormat`. Passing `HH`, `mm`, or `ss` in `dateFormat` raises an error.
 
-## Плейсхолдер
+## Placeholder
 
-- Для `locale.code === 'ru'` — русские буквы: `дд.мм.гггг`, `чч:мм`.
-- Для остальных локалей — латиница: `dd.mm.yyyy`, `hh:mm`.
+- For `locale.code === 'ru'` — Russian letters: `дд.мм.гггг`, `чч:мм`.
+- For other locales — Latin letters: `dd.mm.yyyy`, `hh:mm`.
 
-Можно переопределить пропом `placeholder`:
+You can override it with the `placeholder` prop:
 
 ```tsx
-<DatePicker placeholder="Выберите дату..." />
+<DatePicker placeholder="Select a date..." />
 ```
 
-## Список локалей
+## List of locales
 
-Все локали `date-fns` импортируются из `date-fns/locale`:
+All `date-fns` locales are imported from `date-fns/locale`:
 
 ```tsx
 import { ru, enUS, enGB, de, fr, es, it, ja, ko, zhCN } from 'date-fns/locale'
 ```
 
-Полный список — [на сайте date-fns](https://date-fns.org/docs/I18n#supported-languages).
+See the [full list on the date-fns site](https://date-fns.org/docs/I18n#supported-languages).

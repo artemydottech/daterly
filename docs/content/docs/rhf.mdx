@@ -2,13 +2,13 @@
 title: "react-hook-form"
 ---
 
-Обёртки `RHFDatePicker` и `RHFDateRangePicker` живут в отдельном entry-point — если RHF не используешь, они не попадут в бандл.
+The `RHFDatePicker` and `RHFDateRangePicker` wrappers live in a separate entry point — if you don't use RHF, they won't end up in your bundle.
 
 ```tsx
 import { RHFDatePicker, RHFDateRangePicker } from 'daterly/rhf'
 ```
 
-## Базовый пример
+## Basic example
 
 ```tsx
 import { FormProvider, useForm } from 'react-hook-form'
@@ -28,59 +28,59 @@ const MyForm = () => {
       <form onSubmit={methods.handleSubmit(console.log)}>
         <RHFDatePicker<FormValues>
           name="birthDate"
-          label="Дата рождения"
+          label="Date of birth"
         />
-        <button type="submit">Отправить</button>
+        <button type="submit">Submit</button>
       </form>
     </FormProvider>
   )
 }
 ```
 
-## Дженерик-параметр
+## Generic parameter
 
-Передавай тип значений формы как дженерик — это даёт автокомплит и типобезопасность для `name`:
+Pass your form values type as a generic — it gives you autocomplete and type safety for `name`:
 
 ```tsx
 <RHFDatePicker<FormValues> name="birthDate" />
-//                          ^ автокомплит из ключей FormValues
-//                            ошибка, если имя поля не существует
+//                          ^ autocomplete from the keys of FormValues
+//                            an error if the field name doesn't exist
 ```
 
-Без дженерика `name` принимает любую строку — и опечатка не поймается компилятором.
+Without the generic, `name` accepts any string — and a typo won't be caught by the compiler.
 
-## Правила валидации
+## Validation rules
 
-`rules` — стандартные опции `react-hook-form`:
+`rules` are the standard `react-hook-form` options:
 
 ```tsx
 <RHFDatePicker<FormValues>
   name="birthDate"
-  label="Дата рождения"
+  label="Date of birth"
   rules={{
-    required: 'Выберите дату',
+    required: 'Select a date',
     validate: (date) => {
-      if (!date) return 'Выберите дату'
-      if (date > new Date()) return 'Дата не может быть в будущем'
+      if (!date) return 'Select a date'
+      if (date > new Date()) return 'The date cannot be in the future'
       return true
     },
   }}
 />
 ```
 
-Сообщение об ошибке отрисовывается под полем автоматически, плюс на корень компонента выставляется `failed`.
+The error message is rendered under the field automatically, and `failed` is set on the component root.
 
-## Все пропсы
+## All props
 
-Принимаются **все** пропсы базового `DatePicker` / `DateRangePicker` (включая `locale`, `dateFormat`, `showTime` и т.д.), плюс:
+**Every** prop of the base `DatePicker` / `DateRangePicker` is accepted (including `locale`, `dateFormat`, `showTime`, etc.), plus:
 
-| Prop | Тип | Описание |
+| Prop | Type | Description |
 |------|-----|----------|
-| `name` | `Path<T>` | Имя поля (типобезопасное при использовании дженерика) |
-| `rules` | `RegisterOptions` | Правила валидации react-hook-form |
+| `name` | `Path<T>` | Field name (type-safe when using the generic) |
+| `rules` | `RegisterOptions` | react-hook-form validation rules |
 
-## Готовые рецепты
+## Ready-made recipes
 
-- [С Zod](/ru/docs/recipes/rhf-zod) — рекомендованный стек
-- [С Joi](/ru/docs/recipes/rhf-joi) — для legacy-проектов
-- [С shadcn/ui Form](/ru/docs/recipes/shadcn-form) — встраивание в shadcn `<FormField>`
+- [With Zod](/en/docs/recipes/rhf-zod) — the recommended stack
+- [With Joi](/en/docs/recipes/rhf-joi) — for legacy projects
+- [With shadcn/ui Form](/en/docs/recipes/shadcn-form) — embedding into a shadcn `<FormField>`

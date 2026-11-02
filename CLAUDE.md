@@ -52,6 +52,10 @@ All visual tokens are CSS custom properties prefixed `--daterly-*`. Component st
 
 Releases use [Changesets](https://github.com/changesets/changesets).
 
+English is the primary documentation language. Public Markdown files have separate `.ru.md` translations; site content uses English `*.mdx` and Russian `*.ru.mdx`. Keep both translations synchronized. Write changesets in English and update `CHANGELOG.ru.md` for the same version before publishing.
+
+Use one version tag for both languages. GitHub Release titles are English. Release descriptions contain `English` first and `Русский` second, with equivalent changes, migration instructions, and validation results. Publish a tag and GitHub Release only after CI passes on that commit. Do not move an existing release tag for documentation updates.
+
 **ВАЖНО: не запускать `npm run changeset` интерактивно.** Пользователь однажды случайно выбрал `minor` вместо `patch` и версия ушла в 0.4.0 вместо 0.3.1.
 
 #### Правильный процесс релиза

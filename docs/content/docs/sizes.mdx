@@ -1,26 +1,26 @@
 ---
-title: "Размеры"
+title: "Sizes"
 ---
 
 import SizePresets from '@/components/SizePresets'
 
-У `DatePicker` и `DateRangePicker` есть проп `size` с тремя пресетами: `s`, `m`, `l`. По умолчанию — `m`.
+`DatePicker` and `DateRangePicker` have a `size` prop with three presets: `s`, `m`, `l`. The default is `m`.
 
-Выбери пресет — справа сразу видно, как меняется высота, шрифт и отступы.
+Pick a preset — on the right you'll instantly see how the height, font, and padding change.
 
 <SizePresets />
 
-Тот же проп есть и у `DateRangePicker`:
+`DateRangePicker` accepts the same prop:
 
 ```tsx
-<DateRangePicker size="s" label="Период" />
+<DateRangePicker size="s" label="Period" />
 ```
 
-## Что меняется
+## What changes
 
-Размер — это набор CSS-токенов, которые подменяются модификатором-классом `.daterly--s` / `.daterly--l` (для `m` остаются базовые значения):
+A size is a set of CSS tokens swapped in by the `.daterly--s` / `.daterly--l` modifier class (for `m` the base values stay in place):
 
-| Токен                       | `s`    | `m` (default) | `l`    |
+| Token                       | `s`    | `m` (default) | `l`    |
 | --------------------------- | ------ | ------------- | ------ |
 | `--daterly-height`             | `32px` | `40px`        | `56px` |
 | `--daterly-font-size`          | `14px` | `16px`        | `16px` |
@@ -28,11 +28,11 @@ import SizePresets from '@/components/SizePresets'
 | `--daterly-input-padding-top`  | —      | `20px`        | `24px` |
 | `--daterly-label-top-filled`   | —      | `4px`         | `8px`  |
 
-В размере `s` плавающий лейбл не используется — он зашит над полем (помещать его внутрь 32px невозможно без визуального компромисса).
+In size `s` the floating label isn't used — it sits fixed above the field (fitting it inside 32px isn't possible without a visual compromise).
 
-## Кастомизация
+## Customization
 
-Если хочется размер «между» — переопредели токены для нужного скоупа:
+If you want a size "in between", override the tokens for the scope you need:
 
 ```css
 .compact .daterly {
@@ -42,19 +42,19 @@ import SizePresets from '@/components/SizePresets'
 }
 ```
 
-Это работает поверх любого `size` и не требует форка класса-модификатора.
+This works on top of any `size` and doesn't require forking the modifier class.
 
-## Ширина
+## Width
 
-Компонент занимает **100% ширины контейнера** — управляй шириной через обёртку:
+The component takes up **100% of the container width** — control the width via a wrapper:
 
 ```tsx
 <div style={{ width: 240 }}>
-  <DatePicker label="Дата" />
+  <DatePicker label="Date" />
 </div>
 ```
 
-Минимальную ширину можно переопределить через CSS-токены:
+The minimum width can be overridden via CSS tokens:
 
 ```css
 :root {
@@ -63,9 +63,9 @@ import SizePresets from '@/components/SizePresets'
 }
 ```
 
-## Попап календаря
+## Calendar popover
 
-Размер влияет и на класс попапа — `.daterly__popover--s`, `.daterly__popover--m`, `.daterly__popover--l`. По умолчанию визуально это одинаковые попапы; модификатор есть на случай, если ты хочешь подогнать отступ/размер дней под высоту инпута:
+The size also affects the popover class — `.daterly__popover--s`, `.daterly__popover--m`, `.daterly__popover--l`. By default these popovers look identical; the modifier exists in case you want to adjust the padding or day size to match the input height:
 
 ```css
 .daterly__popover--s {
@@ -73,4 +73,3 @@ import SizePresets from '@/components/SizePresets'
   --rdp-day-height: 32px;
 }
 ```
-

@@ -1,0 +1,40 @@
+---
+title: "Установка"
+---
+
+## Сам пакет
+
+```bash npm2yarn
+npm install daterly
+```
+
+## Peer-зависимости
+
+```text
+react >= 17.0.0
+react-hook-form >= 7.0.0  # опционально, только если используете /rhf
+```
+
+Если RHF-обёртки не нужны — устанавливать `react-hook-form` не обязательно.
+
+## Подключение стилей
+
+Стили подключаются автоматически при импорте компонентов из `daterly` или `daterly/rhf`:
+
+```tsx
+import { DatePicker } from 'daterly'
+```
+
+Базовые CSS-переменные и стили `react-day-picker` входят в пакет. Отдельный `import 'daterly/styles'` больше не нужен; прежний импорт остаётся доступен для совместимости. Сборщик приложения должен поддерживать импорт CSS.
+
+## Что экспортируется
+
+| Точка входа | Что внутри |
+|-------------|------------|
+| `daterly` | `DatePicker`, `DateRangePicker`, `Calendar`, типы `DateRange`, `DatePickerProps` |
+| `daterly/rhf` | `RHFDatePicker`, `RHFDateRangePicker` |
+| `daterly/styles` | Базовые CSS-переменные и стили календаря |
+
+## TypeScript
+
+Типы поставляются в пакете — отдельный `@types/*` не нужен. Все компоненты экспортируют свои `*Props` интерфейсы.

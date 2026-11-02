@@ -2,15 +2,15 @@
 title: "react-hook-form + Joi"
 ---
 
-Joi validates data at runtime, and `@hookform/resolvers/joi` connects it to react-hook-form. It's useful in legacy projects where Joi is already used on the backend.
+Joi проверяет данные на уровне runtime, а `@hookform/resolvers/joi` подключает её к react-hook-form. Полезен в legacy-проектах, где Joi уже используется на бэкенде.
 
-## Installation
+## Установка
 
 ```bash npm2yarn
 npm install react-hook-form joi @hookform/resolvers
 ```
 
-## Validation schema
+## Схема валидации
 
 ```ts filename="filters-form.validation.ts"
 import Joi from 'joi'
@@ -30,7 +30,7 @@ export interface FiltersFormValues {
 }
 ```
 
-## Fields
+## Поля
 
 ```tsx filename="filters-form.fields.tsx"
 import { RHFDatePicker } from 'daterly/rhf'
@@ -40,17 +40,17 @@ export const FiltersFormFields = () => (
   <>
     <RHFDatePicker<FiltersFormValues>
       name="signedAfter"
-      label="Signed up after"
+      label="Подписан после"
     />
     <RHFDatePicker<FiltersFormValues>
       name="signedBefore"
-      label="Signed up before"
+      label="Подписан до"
     />
   </>
 )
 ```
 
-## Form
+## Форма
 
 ```tsx filename="filters-form.tsx"
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -78,13 +78,13 @@ export const FiltersForm = () => {
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <FiltersFormFields />
-        <button type="submit">Show</button>
+        <button type="submit">Показать</button>
       </form>
     </FormProvider>
   )
 }
 ```
 
-## Difference from the Zod recipe
+## Отличие от Zod-рецепта
 
-The `FiltersFormValues` type is declared manually — Joi does not infer TypeScript types from the schema (unlike Zod). That's the only practical difference on the UI components side.
+Тип `FiltersFormValues` объявляется вручную — Joi не выводит TypeScript-типы из схемы (в отличие от Zod). Это единственное практическое различие на стороне UI-компонентов.

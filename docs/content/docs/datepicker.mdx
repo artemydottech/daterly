@@ -4,19 +4,19 @@ title: "DatePicker"
 
 import ComponentPreview from '@/components/ComponentPreview';
 
-Поле ввода с маской `дд.мм.гггг` и попапом-календарём. Контролируемый и неконтролируемый режимы.
+An input field with a `dd.MM.yyyy` mask and a calendar popover. Controlled and uncontrolled modes.
 
 <ComponentPreview title="DatePicker" kind="date" />
 
-## Базовый пример
+## Basic example
 
 ```tsx
 import { DatePicker } from 'daterly';
 
-<DatePicker label="Дата рождения" />;
+<DatePicker label="Date of birth" />;
 ```
 
-## Контролируемый
+## Controlled
 
 ```tsx
 import { useState } from 'react'
@@ -24,29 +24,29 @@ import { DatePicker } from 'daterly'
 
 const [date, setDate] = useState<Date | undefined>()
 
-<DatePicker label="Дата" value={date} onChange={setDate} />
+<DatePicker label="Date" value={date} onChange={setDate} />
 ```
 
-Если передан `value` (даже `undefined`) — компонент считает себя контролируемым. Используй `defaultValue` для неконтролируемого режима.
+If `value` is passed (even `undefined`), the component treats itself as controlled. Use `defaultValue` for uncontrolled mode.
 
-## С выбором времени
+## With time selection
 
-<ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} label="Дата и время" />
+<ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} label="Date and time" />
 
 ```tsx
-<DatePicker label="Дата и время" showTime={{ format: 'HH:mm' }} />
+<DatePicker label="Date and time" showTime={{ format: 'HH:mm' }} />
 
-// или с секундами
-<DatePicker label="Тайм-штамп" showTime />
+// or with seconds
+<DatePicker label="Timestamp" showTime />
 ```
 
-`showTime={true}` эквивалентно `{ format: 'HH:mm:ss' }`.
+`showTime={true}` is equivalent to `{ format: 'HH:mm:ss' }`.
 
-### Варианты TimePicker
+### TimePicker variants
 
-Проп `timePickerType` управляет тем, как выглядит выбор времени в попапе. По умолчанию — `'input'`.
+The `timePickerType` prop controls how time selection looks in the popover. The default is `'input'`.
 
-**`'input'`** — компактные числовые поля рядом с кнопкой OK, в одну строку с календарём. Подходит, когда нужен быстрый ввод с клавиатуры.
+**`'input'`** — compact numeric fields next to the OK button, on the same row as the calendar. A good fit when you need quick keyboard entry.
 
 <ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} timePickerType="input" label="TimePicker: input" />
 
@@ -54,7 +54,7 @@ const [date, setDate] = useState<Date | undefined>()
 <DatePicker showTime={{ format: 'HH:mm' }} timePickerType="input" />
 ```
 
-**`'drum'`** — вертикальные «барабаны» под календарём, листать кликом или колесом. Подходит для тач-устройств и сценариев, где время важнее даты.
+**`'drum'`** — vertical "drums" below the calendar, scrolled by click or wheel. A good fit for touch devices and scenarios where the time matters more than the date.
 
 <ComponentPreview kind="date" showTime={{ format: 'HH:mm' }} timePickerType="drum" label="TimePicker: drum" />
 
@@ -62,114 +62,114 @@ const [date, setDate] = useState<Date | undefined>()
 <DatePicker showTime={{ format: 'HH:mm' }} timePickerType="drum" />
 ```
 
-В обоих режимах попап не закрывается автоматически — закрытие по кнопке OK.
+In both modes the popover doesn't close automatically — it closes via the OK button.
 
-## Ограничение диапазона
+## Restricting the range
 
 ```tsx
 <DatePicker
-  label="Дата заезда"
-  fromDate={new Date()} // не раньше сегодня
-  toDate={new Date(2027, 11, 31)} // не позже 31.12.2027
+  label="Check-in date"
+  fromDate={new Date()} // no earlier than today
+  toDate={new Date(2027, 11, 31)} // no later than 31.12.2027
 />
 ```
 
-Ограничение действует и на календарь, и на ручной ввод: недопустимый день в календаре не кликается, а набранная или вставленная в поле дата вне диапазона помечается как невалидная — поле получает `aria-invalid`, `onChange` вызывается с `undefined`.
+The constraint applies to both the calendar and manual input: an out-of-range day can't be clicked, and a date typed or pasted into the field is flagged as invalid — the field gets `aria-invalid` and `onChange` fires with `undefined`.
 
-## Блокировка произвольных дат
+## Blocking arbitrary dates
 
-`disabledDates` блокирует любой набор дат, не обязательно непрерывный. Принимает то же, что `disabled` у `react-day-picker`: `Date`, массив, интервал, день недели, предикат.
-
-```tsx
-<DatePicker label="Дата визита" disabledDates={[new Date(2027, 0, 1), new Date(2027, 0, 7)]} />
-
-<DatePicker label="Только будни" disabledDates={{ dayOfWeek: [0, 6] }} />
-
-<DatePicker label="Кроме января" disabledDates={{ from: new Date(2027, 0, 1), to: new Date(2027, 0, 31) }} />
-
-<DatePicker label="Только чётные" disabledDates={(date) => date.getDate() % 2 !== 0} />
-```
-
-Работает вместе с `fromDate` / `toDate` — условия складываются. У `DateRangePicker` проп такой же, проверяются обе границы диапазона; диапазон, перешагивающий заблокированный день, при этом допустим.
-
-## Состояния
+`disabledDates` blocks any set of dates, contiguous or not. It accepts whatever `react-day-picker`'s `disabled` accepts: a `Date`, an array, an interval, a day of the week, a predicate.
 
 ```tsx
-<DatePicker label="Ошибка" failed />
-<DatePicker label="Загрузка" loading />
-<DatePicker label="Отключено" disabled />
+<DatePicker label="Visit date" disabledDates={[new Date(2027, 0, 1), new Date(2027, 0, 7)]} />
+
+<DatePicker label="Weekdays only" disabledDates={{ dayOfWeek: [0, 6] }} />
+
+<DatePicker label="January excluded" disabledDates={{ from: new Date(2027, 0, 1), to: new Date(2027, 0, 31) }} />
+
+<DatePicker label="Even days only" disabledDates={(date) => date.getDate() % 2 !== 0} />
 ```
 
-`failed` рисует красную рамку. `loading` заменяет иконку на спиннер и блокирует ввод. `disabled` блокирует и инпут, и попап.
+It combines with `fromDate` / `toDate` — the conditions add up. `DateRangePicker` takes the same prop and checks both ends of the range; a range that spans a blocked day is still allowed.
 
-## Размеры
+## States
+
+```tsx
+<DatePicker label="Error" failed />
+<DatePicker label="Loading" loading />
+<DatePicker label="Disabled" disabled />
+```
+
+`failed` draws a red border. `loading` replaces the icon with a spinner and blocks input. `disabled` blocks both the input and the popover.
+
+## Sizes
 
 <ComponentPreview kind="date" size="s" label="Small" />
 <ComponentPreview kind="date" size="l" label="Large" />
 
 ```tsx
 <DatePicker size="s" />
-<DatePicker size="m" />  {/* по умолчанию */}
+<DatePicker size="m" />  {/* default */}
 <DatePicker size="l" />
 ```
 
-Подробнее — на странице [Размеры](/ru/docs/sizes).
+Read more on the [Sizes](/en/docs/sizes) page.
 
-## Без календаря
+## Without the calendar
 
-Только инпут с маской, без попапа:
-
-```tsx
-<DatePicker noCalendar label="Дата (без календаря)" />
-```
-
-## Иконка
+Just the masked input, no popover:
 
 ```tsx
-<DatePicker icon={false} />                    // спрятать
-<DatePicker icon={<MyIcon />} />               // заменить
-<DatePicker iconPosition="start" />            // слева вместо справа
+<DatePicker noCalendar label="Date (no calendar)" />
 ```
 
-## Очистка
-
-С `clearable` в поле появляется крестик, как только в нём есть значение. Клик по нему сбрасывает дату и вызывает `onChange(undefined)`, фокус остаётся в инпуте.
-
-<ComponentPreview kind="date" clearable label="Дата" />
+## Icon
 
 ```tsx
-<DatePicker clearable label="Дата" />
+<DatePicker icon={false} />                    // hide
+<DatePicker icon={<MyIcon />} />               // replace
+<DatePicker iconPosition="start" />            // on the left instead of the right
 ```
 
-Крестик занимает место иконки справа. При `iconPosition="start"` календарная иконка остаётся слева, а крестик встаёт справа.
+## Clearing
 
-Сам крестик заменяется через `clearIcon`:
+With `clearable`, a cross appears in the field as soon as it holds a value. Clicking it resets the date and calls `onChange(undefined)`, leaving focus in the input.
+
+<ComponentPreview kind="date" clearable label="Date" />
+
+```tsx
+<DatePicker clearable label="Date" />
+```
+
+The cross takes the place of the trailing icon. With `iconPosition="start"` the calendar icon stays on the left and the cross sits on the right.
+
+Replace the cross itself through `clearIcon`:
 
 ```tsx
 <DatePicker clearable clearIcon={<MyCloseIcon />} />
 ```
 
-Проп читается только при `clearable`. Иконка вставляется внутрь кнопки — обработчик клика, `aria-label` и стили кнопки остаются на месте, менять их не нужно.
+The prop is only read when `clearable` is set. The icon goes inside the button, so its click handler, `aria-label` and styles stay as they are.
 
-## Кастомный триггер
+## Custom trigger
 
-Заменить весь инпут на собственный элемент:
+Replace the entire input with your own element:
 
 ```tsx
 <DatePicker
   customTrigger={(value, onClick) => (
     <button type="button" onClick={onClick}>
-      {value || 'Выбрать дату'}
+      {value || 'Pick a date'}
     </button>
   )}
 />
 ```
 
-В этом случае ввода с маской нет — только клик по триггеру открывает попап.
+In this case there's no masked input — only a click on the trigger opens the popover.
 
-## Кастомный инпут
+## Custom input
 
-Сохранить логику маски, но заменить сам `<input>` на компонент из UI-кита:
+Keep the mask logic but swap out the `<input>` itself for a component from your UI kit:
 
 ```tsx
 import { Input } from 'antd';
@@ -181,9 +181,9 @@ import { Input } from 'antd';
 />;
 ```
 
-Все обработчики (`onChange`, `onKeyDown`, `onPaste`, …) уже включены в `props`.
+All handlers (`onChange`, `onKeyDown`, `onPaste`, …) are already included in `props`.
 
-## Локаль и формат
+## Locale and format
 
 <ComponentPreview kind="date" locale="en" dateFormat="MM/dd/yyyy" label="Birthday" />
 <ComponentPreview kind="date" locale="de" dateFormat="dd.MM.yyyy" label="Geburtstag" />
@@ -195,33 +195,33 @@ import { enUS, de } from 'date-fns/locale'
 <DatePicker locale={de}   dateFormat="dd.MM.yyyy" label="Geburtstag" />
 ```
 
-См. отдельную страницу [Локали и форматы](/ru/docs/locales).
+See the dedicated [Locales and formats](/en/docs/locales) page.
 
-## Пропсы
+## Props
 
-| Prop            | Тип                                            | По умолчанию   | Описание                            |
+| Prop            | Type                                           | Default        | Description                         |
 | --------------- | ---------------------------------------------- | -------------- | ----------------------------------- |
-| `value`         | `Date`                                         | —              | Контролируемое значение             |
-| `defaultValue`  | `Date`                                         | —              | Неконтролируемое начальное значение |
-| `onChange`      | `(date: Date \| undefined) => void`            | —              | Колбэк при изменении                |
-| `label`         | `string`                                       | —              | Плавающий лейбл                     |
-| `placeholder`   | `string`                                       | из формата     | Плейсхолдер                         |
-| `locale`        | `Locale` (`date-fns`)                          | `ru`           | Локаль                              |
-| `dateFormat`    | `string`                                       | `'dd.MM.yyyy'` | Формат даты                         |
-| `fromDate`      | `Date`                                         | —              | Минимально допустимая               |
-| `toDate`        | `Date`                                         | —              | Максимально допустимая              |
-| `disabledDates` | `Matcher \| Matcher[]`                         | —              | Заблокированные даты                |
-| `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —              | Включить выбор времени              |
-| `timePickerType`| `'input' \| 'drum'`                            | `'input'`      | Внешний вид выбора времени          |
-| `noCalendar`    | `boolean`                                      | `false`        | Только инпут, без попапа            |
-| `size`          | `'s' \| 'm' \| 'l'`                            | `'m'`          | Размер                              |
-| `disabled`      | `boolean`                                      | `false`        | Отключено                           |
-| `failed`        | `boolean`                                      | `false`        | Состояние ошибки                    |
-| `loading`       | `boolean`                                      | `false`        | Загрузка                            |
-| `icon`          | `ReactNode \| false`                           | календарь      | Иконка                              |
-| `iconPosition`  | `'start' \| 'end'`                             | `'end'`        | Позиция иконки                      |
-| `clearable`     | `boolean`                                      | `false`        | Крестик очистки при заполненном поле |
-| `clearIcon`     | `ReactNode`                                    | крестик        | Своя иконка очистки                 |
-| `renderInput`   | `(props) => ReactNode`                         | —              | Заменить `<input>`                  |
-| `customTrigger` | `(value, onClick) => ReactNode`                | —              | Заменить весь триггер               |
-| `className`     | `string`                                       | —              | CSS-класс на корне                  |
+| `value`         | `Date`                                         | —              | Controlled value                    |
+| `defaultValue`  | `Date`                                         | —              | Uncontrolled initial value          |
+| `onChange`      | `(date: Date \| undefined) => void`            | —              | Callback on change                  |
+| `label`         | `string`                                       | —              | Floating label                      |
+| `placeholder`   | `string`                                       | from format    | Placeholder                         |
+| `locale`        | `Locale` (`date-fns`)                          | `ru`           | Locale                              |
+| `dateFormat`    | `string`                                       | `'dd.MM.yyyy'` | Date format                         |
+| `fromDate`      | `Date`                                         | —              | Minimum allowed                     |
+| `toDate`        | `Date`                                         | —              | Maximum allowed                     |
+| `disabledDates` | `Matcher \| Matcher[]`                         | —              | Blocked dates                       |
+| `showTime`      | `boolean \| { format: 'HH:mm' \| 'HH:mm:ss' }` | —              | Enable time selection               |
+| `timePickerType`| `'input' \| 'drum'`                            | `'input'`      | Time selection appearance           |
+| `noCalendar`    | `boolean`                                      | `false`        | Input only, no popover              |
+| `size`          | `'s' \| 'm' \| 'l'`                            | `'m'`          | Size                                |
+| `disabled`      | `boolean`                                      | `false`        | Disabled                            |
+| `failed`        | `boolean`                                      | `false`        | Error state                         |
+| `loading`       | `boolean`                                      | `false`        | Loading                             |
+| `icon`          | `ReactNode \| false`                           | calendar       | Icon                                |
+| `iconPosition`  | `'start' \| 'end'`                             | `'end'`        | Icon position                       |
+| `clearable`     | `boolean`                                      | `false`        | Clear button while the field is filled |
+| `clearIcon`     | `ReactNode`                                    | cross          | Custom clear icon                   |
+| `renderInput`   | `(props) => ReactNode`                         | —              | Replace `<input>`                   |
+| `customTrigger` | `(value, onClick) => ReactNode`                | —              | Replace the entire trigger          |
+| `className`     | `string`                                       | —              | CSS class on the root               |

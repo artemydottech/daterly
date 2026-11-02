@@ -1,21 +1,21 @@
 ---
-title: "Введение"
+title: "Introduction"
 ---
 
-`daterly` — React-библиотека для ввода дат с маской, поддержкой произвольных локалей и форматов, выбора диапазона и времени. Опциональная интеграция с react-hook-form через отдельный entry-point.
+`daterly` is a React library for date input with an input mask, support for arbitrary locales and formats, range and time selection. Optional react-hook-form integration via a separate entry point.
 
-Под капотом — [react-day-picker v9](https://daypicker.dev/) (headless-календарь) и [date-fns v4](https://date-fns.org/) (форматирование и парсинг).
+Under the hood — [react-day-picker v9](https://daypicker.dev/) (headless calendar) and [date-fns v4](https://date-fns.org/) (formatting and parsing).
 
-## Зачем
+## Why
 
-Большинство DatePicker-библиотек либо тащат собственный UI и стилизацию, которую сложно подчинить дизайн-системе, либо требуют десятка форматтер/локаль-обёрток. Здесь:
+Most DatePicker libraries either ship their own UI and styling that's hard to bend to your design system, or require a dozen formatter/locale wrappers. Here:
 
-- **Headless по своей сути** — стилизация только через CSS-переменные и `data-*` атрибуты.
-- **Маска ввода из коробки** — не нужен `imask` или `react-input-mask`.
-- **Любая локаль и формат** — два пропса, остальное выводится автоматически.
-- **RHF — опционален** — `react-hook-form` в `peerDependencies` как optional. Если не используете — он не попадёт в бандл.
+- **Headless at its core** — styling is done entirely through CSS variables and `data-*` attributes.
+- **Input mask out of the box** — no need for `imask` or `react-input-mask`.
+- **Any locale and format** — two props, everything else is derived automatically.
+- **RHF is optional** — `react-hook-form` is an optional `peerDependency`. If you don't use it, it won't end up in your bundle.
 
-## Быстрый старт
+## Quick start
 
 ```bash
 npm install daterly
@@ -24,7 +24,7 @@ npm install daterly
 ```tsx
 import { DatePicker } from 'daterly'
 
-export const Example = () => <DatePicker label="Дата рождения" />
+export const Example = () => <DatePicker label="Date of birth" />
 ```
 
-Дальше — [Установка](/ru/docs/installation) и [DatePicker](/ru/docs/datepicker).
+Next up — [Installation](/en/docs/installation) and [DatePicker](/en/docs/datepicker).

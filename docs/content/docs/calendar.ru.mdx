@@ -4,7 +4,7 @@ title: "Calendar"
 
 import ComponentPreview from '@/components/ComponentPreview';
 
-A basic calendar with no input or popover. Use it as a building block or when you need inline selection on a page.
+Базовый календарь без инпута и попапа. Используй как строительный блок или когда нужен inline-выбор на странице.
 
 <ComponentPreview title="Calendar" kind="calendar" />
 
@@ -17,7 +17,7 @@ const [date, setDate] = useState<Date | undefined>()
 <Calendar mode="single" selected={date} onSelect={setDate} />
 ```
 
-## Range
+## Диапазон
 
 <ComponentPreview kind="calendar" mode="range" numberOfMonths={2} title="Calendar mode=range" />
 
@@ -29,7 +29,7 @@ const [range, setRange] = useState<DateRange | undefined>()
 <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2} />
 ```
 
-## Multiple selection
+## Множественный выбор
 
 <ComponentPreview kind="calendar" mode="multiple" title="Calendar mode=multiple" />
 
@@ -39,7 +39,7 @@ const [days, setDays] = useState<Date[] | undefined>()
 <Calendar mode="multiple" selected={days} onSelect={setDays} />
 ```
 
-## A different locale
+## Другая локаль
 
 <ComponentPreview kind="calendar" locale="en" title="Calendar locale=en-US" />
 
@@ -49,8 +49,8 @@ import { enUS } from 'date-fns/locale'
 <Calendar mode="single" locale={enUS} />
 ```
 
-## Under the hood
+## Под капотом
 
-`Calendar` is a thin wrapper around `<DayPicker>` from `react-day-picker`. It accepts **all** DayPicker props (`mode`, `selected`, `onSelect`, `disabled`, `locale`, `numberOfMonths`, `startMonth`, `endMonth`, `fromDate`, `toDate`, `navLayout`, and so on).
+`Calendar` — тонкая обёртка над `<DayPicker>` из `react-day-picker`. Принимает **все** пропсы DayPicker (`mode`, `selected`, `onSelect`, `disabled`, `locale`, `numberOfMonths`, `startMonth`, `endMonth`, `fromDate`, `toDate`, `navLayout` и т.д.).
 
-Full API documentation: [daypicker.dev](https://daypicker.dev/api).
+Документация по полному API: [daypicker.dev](https://daypicker.dev/api).
